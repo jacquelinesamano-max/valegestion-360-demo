@@ -29,8 +29,23 @@ export default function Valeras() {
                   <h2>{v.nombre}</h2>
                   <p className="suave">Formato habitual: {v.formato}</p>
                 </div>
-                {v.cargada ? <Etiqueta tono="ok">Cargada esta quincena</Etiqueta> : <Etiqueta tono="alerta">Por cargar</Etiqueta>}
+                {v.cargada ? <Etiqueta tono="ok">Cargada esta quincena</Etiqueta> : v.sinRelacion ? <Etiqueta tono="neutro">Sin relación esta quincena</Etiqueta> : v.enRevision ? <Etiqueta tono="info">En revisión</Etiqueta> : <Etiqueta tono="alerta">Por cargar</Etiqueta>}
               </div>
+              {!v.cargada && s.quincena.estado === 'preparacion' && (
+                <div className="acciones">
+                  {v.sinRelacion ? (
+                    <>
+                      <p className="suave">Indicaste que no recibiste su relación. Puedes confirmar la cobranza sin ella.</p>
+                      <Boton tipo="texto" onClick={() => dispatch({ type: 'MARCAR_SIN_RELACION', valeraId: v.id, valor: false })}>Deshacer: sí la recibí</Boton>
+                    </>
+                  ) : (
+                    <>
+                      <Enlace a="/subir" className="btn btn-secundario">Subir su relación</Enlace>
+                      <Boton tipo="secundario" onClick={() => dispatch({ type: 'MARCAR_SIN_RELACION', valeraId: v.id, valor: true })}>No recibí relación de esta valera</Boton>
+                    </>
+                  )}
+                </div>
+              )}
               {imp && (
                 <p>
                   Archivo: <strong>{imp.archivo}</strong> · fecha de corte {fechaLarga(imp.corte)} · fecha límite de pago {fechaLarga(imp.fechaPago)}

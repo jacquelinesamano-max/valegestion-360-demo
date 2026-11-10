@@ -6,6 +6,7 @@ export const VALERAS = [
   { id: 'alfa', nombre: 'Valera Alfa', formato: 'Excel', diasPago: 10 },
   { id: 'beta', nombre: 'Valera Beta', formato: 'PDF', diasPago: 12 },
   { id: 'gama', nombre: 'Valera Gama', formato: 'PDF', diasPago: 10 },
+  { id: 'delta', nombre: 'Valera Delta', formato: 'Excel', diasPago: 10 },
 ];
 
 // [id, nombre, responsable (null = paga directamente), dato opcional que distingue homónimos]
@@ -95,8 +96,8 @@ export const HISTORIAL = [
     id: 'q-2026-11-a', label: '1.ª quincena de noviembre 2026', estado: 'cerrada',
     pagadores: hist([
       ['Rosa Martínez', 980, 980, 2], ['Laura Hernández', 1310, 1310, 1], ['Carmen González', 760, 760, 0],
-      ['Teresa Nava', 540, 540, 1], ['Héctor Barrera', 1000, 1000, 0], ['María Guadalupe López', 700, 700, 0],
-      ['Mónica Fuentes', 640, 640, 0], ['Daniela Ortega', 480, 480, 0], ['Juan Carlos Pérez (cel. ••4821)', 800, 800, 0],
+      ['Teresa Nava', 540, 540, 1], ['Héctor Barrera', 1000, 580, 0], ['María Guadalupe López', 700, 700, 0],
+      ['Mónica Fuentes', 640, 340, 0], ['Daniela Ortega', 480, 480, 0], ['Juan Carlos Pérez (cel. ••4821)', 800, 800, 0],
     ]),
   },
   {
@@ -108,6 +109,23 @@ export const HISTORIAL = [
     ]),
   },
 ];
+
+// Lo que traía cada valera en su corte anterior (vale e importe). Sirve para comparar con el corte nuevo.
+const a = (vale, nombre, importe) => ({ vale, nombre, importe: p(importe) });
+export const ANTERIOR = {
+  alfa: [
+    a('A-0101', 'Rosa Martínez', 400), a('A-0102', 'Ana López', 300), a('A-0103', 'Laura Hernández', 520), a('A-0104', 'Laura Hernández', 380),
+    a('A-0105', 'Carmen González', 450), a('A-0106', 'Alberto Cruz', 275), a('A-0107', 'Héctor Barrera', 590), a('A-0108', 'María Guadalupe López', 340),
+    a('A-0109', 'Juan Carlos Pérez', 500), a('A-0110', 'Mónica Fuentes', 360), a('A-0090', 'Ernesto Salas', 215),
+  ],
+  beta: [
+    a('B-2201', 'Rosa Martínez', 250), a('B-2202', 'María G. López', 410), a('B-2203', 'Laura Hernández', 300), a('B-2204', 'Ernesto Salas', 220),
+    a('B-2205', 'Carmen González', 390), a('B-2206', 'Daniela Ortega', 480), a('B-2208', 'Héctor Barrera', 420), a('B-2190', 'Rosa Martínez', 180),
+  ],
+  gama: [
+    a('C-3301', 'Pedro Ruiz', 200), a('C-3303', 'Mónica Fuentes', 300), a('C-3305', 'Alberto Cruz', 190), a('C-3290', 'Pedro Ruiz', 150),
+  ],
+};
 
 export function estadoBase() {
   const clientes = {};
@@ -143,5 +161,8 @@ export function estadoBase() {
     quincena: { id: 'q-2026-11-b', label: '2.ª quincena de noviembre 2026', estado: 'preparacion', snapshot: null, confirmadaEl: null, cerradaEl: null },
     pagos: [],
     reqIds: {},
+    volumen: false,
+    sinRelacion: {},
+    leidas: [],
   };
 }

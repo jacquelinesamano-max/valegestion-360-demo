@@ -1,9 +1,11 @@
-import { Aviso, Tarjeta } from '../components/ui.jsx';
+import { Aviso, Tarjeta, useAviso } from '../components/ui.jsx';
 import { Enlace } from '../router.jsx';
 import { useStore } from '../state/store.jsx';
 
 export default function Mas() {
   const { s, dispatch } = useStore();
+  const avisar = useAviso();
+  const bloqueada = s.quincena.estado !== 'preparacion';
   return (
     <div className="pagina">
       <div className="pagina-head">
@@ -24,6 +26,24 @@ export default function Mas() {
             <br /><small className="suave">Cada línea del aviso indica de qué valera es el vale.</small>
           </span>
           <input type="checkbox" checked={s.ajustes.mostrarValera} onChange={(e) => dispatch({ type: 'SET_AJUSTE', clave: 'mostrarValera', valor: e.target.checked })} />
+        </label>
+      </Tarjeta>
+
+      <Tarjeta titulo="Volumen">
+        <label className="interruptor">
+          <span>
+            <strong>Simular una mayorista con unos 600 clientes</strong>
+            <br /><small className="suave">Agrega clientes ficticios repartidos entre las valeras ya cargadas, para probar búsquedas, filtros y «Mostrar más». Se puede apagar. {bloqueada ? 'No está disponible con la cobranza ya confirmada: reinicia la demo para usarlo.' : ''}</small>
+          </span>
+          <input
+            type="checkbox"
+            checked={Boolean(s.volumen)}
+            disabled={bloqueada}
+            onChange={(e) => {
+              dispatch({ type: 'SET_VOLUMEN', activo: e.target.checked });
+              avisar(e.target.checked ? 'Simulando unos 600 clientes.' : 'Volvimos a los datos de ejemplo pequeños.');
+            }}
+          />
         </label>
       </Tarjeta>
 

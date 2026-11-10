@@ -268,3 +268,9 @@ textarea { min-height: 84px; }
 .fila .avatar { margin-right: -2px; }
 .cabecera-saludo { display: flex; align-items: center; gap: 12px; }
 .cabecera-saludo small { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.74rem; color: var(--suave); font-weight: 700; }
+
+.orden { display: inline-flex; align-items: center; gap: 8px; }
+.orden select { width: auto; min-height: 44px; }
+.hoja-pie { display: flex; justify-content: space-between; gap: 12px; font-size: 0.85rem; color: #333; margin-top: 12px; }
+.hoja-corta { margin-bottom: 20px; }
+@media print { .hoja-corta { break-after: page; page-break-after: always; margin: 0; } .hoja-corta:last-of-type { break-after: auto; page-break-after: auto; } .hoja-pie { display: none; } }

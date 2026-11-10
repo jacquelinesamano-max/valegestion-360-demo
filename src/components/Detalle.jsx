@@ -3,7 +3,7 @@ import { Aviso, Boton, Etiqueta, Tarjeta } from './ui.jsx';
 import { AnularPago, PagoSheet } from './PagoSheet.jsx';
 import { Enlace } from '../router.jsx';
 import { useStore } from '../state/store.jsx';
-import { pagosVigentes, vistaCobranza } from '../lib/calc.js';
+import { pagosVigentes, pendienteAnterior, vistaCobranza } from '../lib/calc.js';
 import { fechaCorta } from '../lib/dates.js';
 import { mx } from '../lib/money.js';
 
@@ -28,6 +28,7 @@ export function Detalle({ id }) {
   const mostrarValera = s.ajustes.mostrarValera;
   const pagos = s.pagos.filter((x) => x.payerId === id);
   const pagoVigente = pagosVigentes(s, id);
+  const anterior = pendienteAnterior(p.nombre);
 
   return (
     <Tarjeta className="detalle">
@@ -54,6 +55,12 @@ export function Detalle({ id }) {
         {p.recomendados.length > 0 && <div className="linea"><strong>Subtotal de recomendados</strong><strong className="num">{mx(p.recTotal)}</strong></div>}
         <div className="linea total"><span>Total a cobrar</span><span className="num">{mx(p.total)}</span></div>
       </div>
+
+      {anterior && (
+        <Aviso tono="info" titulo={`De la ${anterior.quincena} quedaron ${mx(anterior.importe)} sin pagar`}>
+          Se muestra aparte y no se suma a este total. Si la valera lo vuelve a incluir en su relación, ya viene dentro de los importes de arriba.
+        </Aviso>
+      )}
 
       <div className="stats">
         <div className="stat"><span className="stat-label">Registrado</span><span className="stat-value">{mx(p.pagado)}</span></div>

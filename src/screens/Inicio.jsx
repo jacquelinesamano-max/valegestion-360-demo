@@ -12,7 +12,7 @@ export default function Inicio() {
   const t = totales(s);
   const grupos = gruposPendientes(s);
   const valeras = valerasCargadas(s);
-  const faltan = valeras.filter((v) => !v.cargada);
+  const faltan = valeras.filter((v) => !v.cargada && !v.sinRelacion);
   const q = s.quincena;
   const [textoEstado] = ESTADOS[q.estado];
   const limite = minFecha(s.importaciones.filter((i) => !i.reemplazada).map((i) => i.fechaPago));
@@ -33,7 +33,7 @@ export default function Inicio() {
         : { texto: 'Ver la relación de cobranza', a: '/cobranza' };
 
   const pasos = [
-    { t: 'Subir relaciones', hecho: !faltan.length, d: `${valeras.length - faltan.length} de ${valeras.length} valeras cargadas`, a: '/subir' },
+    { t: 'Subir relaciones', hecho: !faltan.length, d: `${valeras.filter((v) => v.cargada).length} de ${valeras.length} valeras cargadas${valeras.some((v) => v.sinRelacion) ? ` · ${valeras.filter((v) => v.sinRelacion).length} sin relación` : ''}`, a: '/subir' },
     { t: 'Revisar clientes y quién paga', hecho: !faltan.length && !grupos.length, d: grupos.length ? `${grupos.length} por revisar` : 'Sin revisiones pendientes', a: '/revisar' },
     { t: 'Confirmar cobranza', hecho: !enPrep, d: enPrep ? 'Falta confirmar' : 'Confirmada', a: '/confirmar' },
     { t: 'Preparar avisos de cobro', hecho: false, d: enPrep ? 'Disponibles al confirmar' : 'Listos para imprimir', a: enPrep ? '/confirmar' : '/avisos' },
@@ -72,13 +72,18 @@ export default function Inicio() {
           const r = porValera(v.id);
           const sigla = v.nombre.replace(/^Valera\s+/i, '').slice(0, 2).toUpperCase();
           return (
-            <Enlace a={v.cargada ? '/valeras' : '/subir'} className="empresa" key={v.id}>
+            <Enlace a={v.cargada || v.sinRelacion ? '/valeras' : '/subir'} className="empresa" key={v.id}>
               <span className={`sigla tono-${i % 4}`}>{sigla}</span>
               <strong>{v.nombre}</strong>
               {v.cargada ? (
                 <>
                   <strong className="monto">{mx(r.total)}</strong>
                   <small>{r.vales} movimientos</small>
+                </>
+              ) : v.sinRelacion ? (
+                <>
+                  <strong className="monto" style={{ color: 'var(--suave)' }}>Sin relación</strong>
+                  <small>Indicaste que no la recibiste</small>
                 </>
               ) : (
                 <>

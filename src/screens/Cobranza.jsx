@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Aviso, Avatar, Boton, Cifra, Dialogo, Etiqueta, Icono, Vacio, useAviso } from '../components/ui.jsx';
 import { Detalle, TONO_ESTADO } from '../components/Detalle.jsx';
+import { MostrarMas, Orden, usePaginado } from '../components/Paginado.jsx';
 import { PagoSheet } from '../components/PagoSheet.jsx';
 import { Enlace, ir, useAncho } from '../router.jsx';
 import { useStore } from '../state/store.jsx';
@@ -39,6 +40,7 @@ export default function Cobranza({ seleccionado }) {
   const ancho = useAncho('(min-width: 1180px)');
   const [q, setQ] = useState('');
   const [filtro, setFiltro] = useState('Todos');
+  const [orden, setOrden] = useState('nombre');
   const [pagando, setPagando] = useState(null);
   const [corrigiendo, setCorrigiendo] = useState(false);
   const [cerrando, setCerrando] = useState(false);
@@ -46,7 +48,11 @@ export default function Cobranza({ seleccionado }) {
   const t = totales(s);
   const todos = vistaCobranza(s);
   const estado = s.quincena.estado;
-  const lista = todos.filter((p) => normalizar(p.nombre).includes(normalizar(q))).filter((p) => filtro === 'Todos' || p.estado === filtro);
+  const lista = todos
+    .filter((p) => normalizar(p.nombre).includes(normalizar(q)))
+    .filter((p) => filtro === 'Todos' || p.estado === filtro)
+    .sort((a, b) => (orden === 'total' ? b.total - a.total : orden === 'falta' ? b.pendiente - a.pendiente : a.nombre.localeCompare(b.nombre, 'es')));
+  const pag = usePaginado(lista, 25, `${q}|${filtro}|${orden}`);
   const idDetalle = seleccionado || (ancho ? lista[0]?.id : null);
   const soloDetalle = Boolean(seleccionado) && !ancho;
   const [textoEstado, tono] = ESTADOS_COBRANZA[estado];
@@ -97,6 +103,7 @@ export default function Cobranza({ seleccionado }) {
           <Icono nombre="buscar" tam={20} />
           <input type="search" aria-label="Buscar responsable por nombre" placeholder="Buscar por nombre" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
+        <Orden valor={orden} onCambio={setOrden} opciones={[['nombre', 'Nombre (A–Z)'], ['total', 'Total a cobrar (mayor)'], ['falta', 'Lo que falta (mayor)']]} />
       </div>
       <div className="filtros" role="group" aria-label="Filtrar por estado">
         {['Todos', 'Pendiente', 'Abono', 'Pagado'].map((f) => (
@@ -107,7 +114,7 @@ export default function Cobranza({ seleccionado }) {
       <div className={ancho ? 'partido' : ''}>
         <div className="lista" aria-label="Responsables de pago">
           {lista.length === 0 && <Vacio titulo="Nadie coincide">Prueba con otro nombre o con otro estado.</Vacio>}
-          {lista.map((p) => (
+          {pag.items.map((p) => (
             <div key={p.id} className={`fila ${ancho && idDetalle === p.id ? 'activa' : ''}`}>
               <Avatar nombre={p.nombre} />
               <div className="fila-main">
@@ -124,6 +131,7 @@ export default function Cobranza({ seleccionado }) {
               </span>
             </div>
           ))}
+          <MostrarMas pag={pag} etiqueta="responsables" />
         </div>
         {ancho && idDetalle && <div className="sticky"><Detalle key={idDetalle} id={idDetalle} /></div>}
       </div>

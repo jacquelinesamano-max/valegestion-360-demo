@@ -3,7 +3,7 @@ import { Enlace, ir } from '../router.jsx';
 import { useStore } from '../state/store.jsx';
 
 const GUION = [
-  ['Inicio', 'Muestra la quincena activa, qué valeras ya subieron y qué falta. «Alfa ya está; faltan Beta y Gama».'],
+  ['Inicio', 'Muestra la quincena activa, qué valeras ya subieron y qué falta. «Alfa ya está; faltan Beta y Gama, y Delta no tiene archivo».'],
   ['Subir Valera Beta', 'Elige el PDF de ejemplo. En la revisión: hay un importe que no se pudo leer y la suma no cuadra con el total hasta que lo completas. El préstamo personal queda fuera de lo que cobras a clientes.'],
   ['Revisar clientes', 'Confirma de golpe las coincidencias seguras. Revisa «María G. López» (probable) y a «Sofía Valdés», cliente nueva que paga directamente.'],
   ['Subir Valera Gama', 'No trae fecha de pago: se usa el calendario de la valera. Hay un movimiento repetido y dos personas llamadas Juan Carlos Pérez: el sistema no elige por ti. Gloria Mejía pasa a cargo de Carmen González.'],
@@ -23,7 +23,12 @@ const ESCENARIOS = [
   ['Cliente con varios movimientos en una valera', 'Laura Hernández con dos vales en Alfa', 'Cobranza → detalle'],
   ['Archivo posiblemente duplicado', 'Beta reenviada (después de incorporar Beta) y vale repetido de Pedro Ruiz en Gama', 'Subir relación'],
   ['Fila con importe faltante', 'Héctor Barrera en Beta', 'Revisión de la importación'],
-  ['Relación pendiente de cargar', 'Beta y Gama al empezar', 'Inicio'],
+  ['Relación pendiente de cargar', 'Beta, Gama y Delta al empezar', 'Inicio'],
+  ['«No recibí relación de esta valera»', 'Valera Delta no tiene archivo: se marca y se confirma sin ella', 'Valeras'],
+  ['Comparación con el corte anterior', 'Vales nuevos, vales que ya no aparecen e importes que cambiaron', 'Revisión de la importación'],
+  ['Pendiente de la quincena anterior', 'Héctor Barrera dejó $420 sin pagar: se muestra aparte y no se suma', 'Cobranza → detalle'],
+  ['Resumen con cuatro pendientes', 'Valeras por cargar, importaciones por revisar, nombres parecidos y clientes nuevos', 'Atajo «con pendientes»'],
+  ['Mayorista con unos 600 clientes', 'Búsqueda, filtros, orden y «Mostrar más» en cada lista', 'Más → Volumen'],
   ['Relación sin fecha de pago', 'Gama usa el calendario de la valera', 'Revisión de la importación'],
   ['Concepto propio de la mayorista', 'Préstamo personal de Beta: no se cobra a clientes', 'Revisión de la importación'],
   ['Pago completo, abono y corrección', 'Rosa, Laura y Héctor (con el atajo de abajo)', 'Cobranza → detalle'],
@@ -40,6 +45,8 @@ const SUPUESTOS = [
   'Las coincidencias de nombre se sugieren por niveles (segura, probable, dudosa) y siempre las confirma una persona; confirmar en bloque las seguras es una propuesta.',
   'Registrar pagos es opcional. Los recordatorios están apagados por defecto y «cobrado» significa «según lo registrado».',
   'Un abono no se reparte entre valeras ni entre recomendados.',
+  'Lo que quedó pendiente en la quincena anterior se muestra aparte y no se suma a la cobranza actual.',
+  'La comparación con el corte anterior es solo informativa.',
   'Las personas se reconocen por el número de vale (una vez conocido) y por el nombre. No hay CURP ni folio de cliente.',
   'No incluye cuentas auxiliares, descuento por pronto pago ni puntaje de riesgo.',
 ];
@@ -79,8 +86,10 @@ export default function Guia() {
         <div className="acciones">
           <Boton tipo="secundario" onClick={() => { dispatch({ type: 'RESET' }); avisar('Demostración reiniciada.'); ir('/inicio'); }}>Reiniciar desde el principio</Boton>
           <Boton onClick={() => { dispatch({ type: 'ATAJO_COBRANZA_LISTA' }); avisar('Listo: cobranza confirmada con pagos de ejemplo.'); ir('/cobranza'); }}>Ir a una cobranza ya confirmada, con pagos</Boton>
+          <Boton tipo="secundario" onClick={() => { dispatch({ type: 'ATAJO_PENDIENTES' }); avisar('Listo: hay un ejemplo de cada pendiente.'); ir('/confirmar'); }}>Ir al resumen con pendientes</Boton>
+          <Enlace a="/mas" className="btn btn-secundario">Simular 600 clientes (en Más)</Enlace>
         </div>
-        <p className="hint">El segundo atajo reemplaza lo que lleves hecho: recorre el flujo con las decisiones esperadas.</p>
+        <p className="hint">Los dos atajos de color reemplazan lo que lleves hecho. El primero recorre el flujo con las decisiones esperadas; el segundo deja un ejemplo de cada pendiente (valera por cargar, importación por revisar, nombres parecidos y cliente nuevo) para ver el resumen antes de confirmar.</p>
       </Tarjeta>
 
       <Tarjeta titulo="Guion breve">

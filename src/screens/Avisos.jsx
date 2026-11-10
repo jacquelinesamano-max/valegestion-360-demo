@@ -1,8 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Aviso as Nota, Avatar, Boton, Etiqueta, Icono, Tarjeta, Vacio } from '../components/ui.jsx';
+import { MostrarMas, usePaginado } from '../components/Paginado.jsx';
 import { Enlace, useAncho } from '../router.jsx';
 import { useStore } from '../state/store.jsx';
 import { vistaCobranza } from '../lib/calc.js';
+import { normalizar } from '../lib/names.js';
 import { fechaLarga, HOY } from '../lib/dates.js';
 import { mx } from '../lib/money.js';
 
@@ -63,19 +65,23 @@ export function AvisoDeCobro({ p, activo, mostrarValera, version, quincena }) {
 export default function Avisos({ seleccionado }) {
   const { s, dispatch } = useStore();
   const ancho = useAncho('(min-width: 1180px)');
+  const [q, setQ] = useState('');
+  const [modo, setModo] = useState(null); // 'uno' | 'todos' mientras se imprime: así no se dibujan cientos de avisos ocultos
   const confirmada = s.quincena.estado !== 'preparacion';
   const lista = confirmada ? vistaCobranza(s) : [];
-  const sel = lista.find((p) => p.id === seleccionado) ?? (ancho ? lista[0] : null);
+  const filtrada = lista.filter((p) => normalizar(p.nombre).includes(normalizar(q)));
+  const pag = usePaginado(filtrada, 25, q);
+  const sel = lista.find((p) => p.id === seleccionado) ?? (ancho ? filtrada[0] : null);
 
   useEffect(() => {
-    const limpiar = () => document.body.classList.remove('solo-uno');
+    const limpiar = () => setModo(null);
     window.addEventListener('afterprint', limpiar);
     return () => window.removeEventListener('afterprint', limpiar);
   }, []);
 
   const imprimir = (uno) => {
-    document.body.classList.toggle('solo-uno', uno);
-    window.setTimeout(() => window.print(), 60);
+    setModo(uno ? 'uno' : 'todos');
+    window.setTimeout(() => window.print(), 120);
   };
 
   if (!confirmada) {
@@ -90,6 +96,13 @@ export default function Avisos({ seleccionado }) {
   }
 
   const vista = sel ?? null;
+  const paraImprimir = modo === 'todos' ? lista : modo === 'uno' && vista ? [vista] : [];
+  const imprimibles = (
+    <div className="print-only">
+      {paraImprimir.map((p) => <AvisoDeCobro key={p.id} p={p} activo mostrarValera={s.ajustes.mostrarValera} version={p.version ?? 1} quincena={s.quincena.label} />)}
+    </div>
+  );
+
   if (!ancho && seleccionado && vista) {
     return (
       <div className="pagina">
@@ -101,9 +114,7 @@ export default function Avisos({ seleccionado }) {
           </div>
           <AvisoDeCobro p={vista} activo mostrarValera={s.ajustes.mostrarValera} version={vista.version ?? 1} quincena={s.quincena.label} />
         </Tarjeta>
-        <div className="print-only">
-          <AvisoDeCobro p={vista} activo mostrarValera={s.ajustes.mostrarValera} version={vista.version ?? 1} quincena={s.quincena.label} />
-        </div>
+        {imprimibles}
       </div>
     );
   }
@@ -112,7 +123,7 @@ export default function Avisos({ seleccionado }) {
       <div className="pagina-head no-print">
         <div>
           <h1>Avisos de cobro</h1>
-          <p>Un aviso por responsable de pago, con el detalle de sus recomendados. Es informativo: no es factura ni comprobante.</p>
+          <p>Un aviso por responsable de pago ({lista.length}), con el detalle de sus recomendados. Es informativo: no es factura ni comprobante.</p>
         </div>
         <div className="acciones">
           <Boton onClick={() => imprimir(false)}><Icono nombre="imprimir" tam={18} /> Imprimir todos</Boton>
@@ -130,7 +141,11 @@ export default function Avisos({ seleccionado }) {
 
       <div className={`${ancho ? 'partido' : ''} no-print`}>
         <div className="lista">
-          {lista.map((p) => (
+          <div className="buscador">
+            <Icono nombre="buscar" tam={20} />
+            <input type="search" aria-label="Buscar aviso por nombre" placeholder="Buscar por nombre" value={q} onChange={(e) => setQ(e.target.value)} />
+          </div>
+          {pag.items.map((p) => (
             <Enlace key={p.id} a={`/avisos/${p.id}`} className={`fila ${vista?.id === p.id ? 'activa' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }}>
               <Avatar nombre={p.nombre} />
               <div className="fila-main">
@@ -140,6 +155,7 @@ export default function Avisos({ seleccionado }) {
               <Icono nombre="flecha" tam={18} />
             </Enlace>
           ))}
+          <MostrarMas pag={pag} etiqueta="avisos" />
         </div>
         <div className="sticky">
           {vista ? (
@@ -157,10 +173,8 @@ export default function Avisos({ seleccionado }) {
         </div>
       </div>
 
-      {/* Todos los avisos para imprimir. Se acomodan según su tamaño y ninguno se corta entre páginas. */}
-      <div className="print-only">
-        {lista.map((p) => <AvisoDeCobro key={p.id} p={p} activo={vista?.id === p.id} mostrarValera={s.ajustes.mostrarValera} version={p.version ?? 1} quincena={s.quincena.label} />)}
-      </div>
+      {/* Al imprimir todos, se acomodan según su tamaño y ninguno se corta entre páginas. */}
+      {imprimibles}
     </div>
   );
 }

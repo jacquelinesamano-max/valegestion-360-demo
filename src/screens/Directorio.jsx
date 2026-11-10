@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Avatar, Boton, Campo, Dialogo, Etiqueta, Icono, Vacio, useAviso } from '../components/ui.jsx';
+import { MostrarMas, Orden, usePaginado } from '../components/Paginado.jsx';
 import { Enlace } from '../router.jsx';
 import { useStore } from '../state/store.jsx';
 import { listaClientes, nombreVisible, porNombre, recomendadosDe } from '../lib/calc.js';
@@ -49,10 +50,13 @@ export default function Directorio() {
   const [q, setQ] = useState('');
   const [filtro, setFiltro] = useState('todos');
   const [nuevo, setNuevo] = useState(false);
+  const [orden, setOrden] = useState('nombre');
   const todos = listaClientes(s).sort(porNombre);
   const lista = todos
     .filter((c) => normalizar(c.nombre).includes(normalizar(q)))
-    .filter((c) => (filtro === 'directos' ? !c.responsableId : filtro === 'recomendados' ? c.responsableId : filtro === 'conRecomendados' ? recomendadosDe(s, c.id).length > 0 : true));
+    .filter((c) => (filtro === 'directos' ? !c.responsableId : filtro === 'recomendados' ? c.responsableId : filtro === 'conRecomendados' ? recomendadosDe(s, c.id).length > 0 : true))
+    .sort((a, b) => (orden === 'cargo' ? recomendadosDe(s, b.id).length - recomendadosDe(s, a.id).length || porNombre(a, b) : porNombre(a, b)));
+  const pag = usePaginado(lista, 25, `${q}|${filtro}|${orden}`);
   const directos = todos.filter((c) => !c.responsableId).length;
 
   return (
@@ -69,6 +73,7 @@ export default function Directorio() {
           <Icono nombre="buscar" tam={20} />
           <input type="search" aria-label="Buscar cliente por nombre" placeholder="Buscar por nombre" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
+        <Orden valor={orden} onCambio={setOrden} opciones={[['nombre', 'Nombre (A–Z)'], ['cargo', 'Más personas a su cargo']]} />
       </div>
       <div className="filtros" role="group" aria-label="Filtrar clientes">
         {[['todos', 'Todos'], ['directos', 'Pagan directamente'], ['recomendados', 'Recomendados'], ['conRecomendados', 'Con personas a su cargo']].map(([k, t]) => (
@@ -77,7 +82,7 @@ export default function Directorio() {
       </div>
       {lista.length === 0 && <Vacio titulo="Nadie coincide">Prueba con otro nombre o quita el filtro.</Vacio>}
       <div className="lista">
-        {lista.map((c) => {
+        {pag.items.map((c) => {
           const n = recomendadosDe(s, c.id).length;
           return (
             <Enlace key={c.id} a={`/clientes/${c.id}`} className="fila" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -91,6 +96,7 @@ export default function Directorio() {
           );
         })}
       </div>
+      <MostrarMas pag={pag} etiqueta="clientes" />
       {nuevo && <NuevoCliente onCerrar={() => setNuevo(false)} />}
     </div>
   );

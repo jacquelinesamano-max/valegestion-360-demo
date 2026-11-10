@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Aviso, Boton, Cifra, Etiqueta, Tarjeta } from '../components/ui.jsx';
 import { ir } from '../router.jsx';
 import { useStore } from '../state/store.jsx';
 import { RELACIONES } from '../data/seed.js';
-import { diffReemplazo, revisarImportacion } from '../lib/calc.js';
+import { compararConAnterior, diffReemplazo, revisarImportacion } from '../lib/calc.js';
 import { addDays, fechaLarga, quincenaDe } from '../lib/dates.js';
 import { leerImporte, mx } from '../lib/money.js';
 import { useAviso } from '../components/ui.jsx';
@@ -34,6 +34,10 @@ export default function RevisionImport({ relId }) {
   const avisar = useAviso();
   const rel = RELACIONES.find((r) => r.id === relId && !r.foto);
   const [decision, setDecision] = useState(null);
+  const idRel = rel?.id;
+  useEffect(() => {
+    if (idRel) dispatch({ type: 'LEER_RELACION', relId: idRel }); // queda como «importación por revisar» hasta que se incorpore
+  }, [idRel, dispatch]);
   if (!rel) return <Aviso tono="error" titulo="No encontramos ese archivo">Vuelve a «Subir relación» y elige uno de los ejemplos.</Aviso>;
 
   const valera = s.valeras.find((v) => v.id === rel.valeraId);
@@ -45,6 +49,7 @@ export default function RevisionImport({ relId }) {
   const confirmada = s.quincena.estado !== 'preparacion';
   const diff = esReemplazo ? diffReemplazo(s, rel, rel.reemplazaA) : null;
   const yaIncorporada = s.importaciones.some((i) => i.relId === rel.id && !i.reemplazada);
+  const cmp = compararConAnterior(rel.valeraId, r.filas);
   const bloqueadaPorReemplazo = esReemplazo && !decision;
   const puedeIncorporar = !confirmada && !yaIncorporada && r.porRevisar === 0 && !bloqueadaPorReemplazo;
 
@@ -142,6 +147,23 @@ export default function RevisionImport({ relId }) {
               Reemplazar una importación de una cobranza confirmada es una corrección: se haría una versión 2 y se conservarían los avisos anteriores. Esa parte se resuelve en una fase posterior.
             </Aviso>
           )}
+        </Tarjeta>
+      )}
+
+      {cmp.hayCorteAnterior && !esReemplazo && (
+        <Tarjeta titulo="Comparado con el corte anterior">
+          <div className="stats">
+            <Cifra etiqueta="Vales nuevos" valor={String(cmp.nuevos.length)} nota={cmp.nuevos.length ? mx(cmp.nuevos.reduce((t, x) => t + x.importe, 0)) : undefined} />
+            <Cifra etiqueta="Ya no aparecen" valor={String(cmp.ausentes.length)} nota={cmp.ausentes.length ? mx(cmp.ausentes.reduce((t, x) => t + x.importe, 0)) : undefined} />
+            <Cifra etiqueta="Importe que cambió" valor={String(cmp.cambios.length)} />
+          </div>
+          <ul style={{ margin: 0, paddingLeft: 20, display: 'grid', gap: 4 }}>
+            {cmp.nuevos.map((x) => <li key={x.id}>Vale nuevo: {x.vale} ({x.nombre}), {mx(x.importe)}</li>)}
+            {cmp.ausentes.map((x) => <li key={x.vale}>Ya no aparece: {x.vale} ({x.nombre}), antes {mx(x.importe)}. Suele estar liquidado.</li>)}
+            {cmp.cambios.map((x) => <li key={x.vale}>Cambió el importe de {x.vale} ({x.nombre}): de {mx(x.antes)} a {mx(x.despues)}</li>)}
+            {!cmp.nuevos.length && !cmp.ausentes.length && !cmp.cambios.length && <li>Es igual al corte anterior.</li>}
+          </ul>
+          <p className="hint">Es solo informativo: no suma ni resta nada de la cobranza.</p>
         </Tarjeta>
       )}
 

@@ -31,8 +31,11 @@ La demo no guarda nada en un servidor: el avance vive en el navegador de cada pe
 ## Qué se puede probar de verdad
 
 - Flujo completo: subir relación → revisar lo leído → coincidencias de clientes → quién paga → confirmar → avisos de cobro → relación general → registrar pagos → historial.
-- Totales derivados de los movimientos: el desglose de cada aviso, la relación general y el resumen siempre suman lo mismo (hay pruebas automáticas).
+- Totales derivados de los movimientos: el desglose de cada aviso, la relación general y el resumen siempre suman lo mismo (26 pruebas automáticas).
 - Reglas: cada movimiento se cuenta una vez; un recomendado tiene un solo responsable (sin cadenas ni ciclos); un responsable sin vales propios sigue recibiendo la cobranza de sus recomendados; un abono no se reparte entre valeras.
+- Volumen: en Más → Volumen se simula una mayorista con unos 600 clientes. Las listas tienen búsqueda, filtros, orden y «Mostrar más», y la relación impresa se reparte por hojas.
+- Comparación con el corte anterior al revisar una relación (vales nuevos, vales que ya no aparecen e importes que cambiaron), y el pendiente de la quincena anterior, que se muestra aparte y no se suma.
+- «No recibí relación de esta valera» (Valera Delta no tiene archivo) y el resumen antes de confirmar con cuatro pendientes y botón «Atender».
 - Impresión: avisos de cobro (uno o todos) y relación general en tamaño carta, blanco y negro. Se prueba con el botón de imprimir del navegador.
 
 ## Qué está simulado o por definir

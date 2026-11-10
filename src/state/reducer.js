@@ -2,11 +2,14 @@
 import { RELACIONES } from '../data/seed.js';
 import { addDays, HOY } from '../lib/dates.js';
 import { claveNombre } from '../lib/names.js';
+import { PREFIJO_CLIENTE, PREFIJO_MOV, TOTAL_VOLUMEN, clientesVolumen, movimientosVolumen } from '../data/volumen.js';
 import {
   gruposPendientes, listaClientes, llaveGrupo, pagadoresVivos, pagadoDe, recomendadosDe, vistaCobranza,
 } from '../lib/calc.js';
 
 const nuevoId = (prefijo, existentes) => `${prefijo}-${existentes + 1}`;
+// Identificador nuevo que no choca aunque se hayan quitado clientes (por ejemplo, al apagar la simulación de volumen).
+const siguienteId = (prefijo, ids) => `${prefijo}-${1 + Math.max(0, ...ids.filter((i) => i.startsWith(`${prefijo}-`)).map((i) => Number(i.slice(prefijo.length + 1)) || 0))}`;
 
 // Asigna un cliente a movimientos y recuerda la decisión: el vale y (si no es ambiguo) el nombre tal como aparece.
 function asignar(s, movs, clienteId) {
@@ -76,14 +79,46 @@ function importar(s, a) {
   }
   const drafts = { ...s.drafts };
   delete drafts[rel.id];
-  return {
+  const resultado = {
     ...s,
     drafts,
+    leidas: (s.leidas || []).filter((id) => id !== rel.id),
     movimientos: [...movimientos, ...nuevos],
     importaciones: [
       ...importaciones.filter((i) => i.relId !== rel.id),
       { relId: rel.id, valeraId: rel.valeraId, archivo: rel.archivo, fecha: HOY, fechaPago, fechaOrigen, corte: rel.corte, conceptos: rel.conceptos, reemplazada: false },
     ],
+  };
+  return conVolumen(resultado, rel.valeraId, rel.id, rel.corte);
+}
+
+// Reparte los clientes de volumen en una valera ya cargada (solo la primera vez que se incorpora).
+function conVolumen(s, valeraId, relId, corte) {
+  if (!s.volumen) return s;
+  if (s.movimientos.some((m) => m.id.startsWith(`${PREFIJO_MOV}${valeraId}-`))) return s;
+  const clientes = s.ordenClientes.filter((id) => id.startsWith(PREFIJO_CLIENTE)).map((id) => s.clientes[id]);
+  const idx = s.valeras.findIndex((v) => v.id === valeraId);
+  return { ...s, movimientos: [...s.movimientos, ...movimientosVolumen(clientes, valeraId, idx, relId, corte)] };
+}
+
+function activarVolumen(s) {
+  const faltan = Math.max(0, TOTAL_VOLUMEN - s.ordenClientes.length);
+  const nuevos = clientesVolumen(faltan);
+  const clientes = { ...s.clientes };
+  nuevos.forEach((c) => (clientes[c.id] = c));
+  let t = { ...s, clientes, ordenClientes: [...s.ordenClientes, ...nuevos.map((c) => c.id)], volumen: true };
+  for (const imp of s.importaciones.filter((i) => !i.reemplazada)) t = conVolumen(t, imp.valeraId, imp.relId, imp.corte);
+  return t;
+}
+
+function quitarVolumen(s) {
+  const clientes = Object.fromEntries(Object.entries(s.clientes).filter(([id]) => !id.startsWith(PREFIJO_CLIENTE)));
+  return {
+    ...s,
+    clientes,
+    ordenClientes: s.ordenClientes.filter((id) => !id.startsWith(PREFIJO_CLIENTE)),
+    movimientos: s.movimientos.filter((m) => !m.id.startsWith(PREFIJO_MOV)),
+    volumen: false,
   };
 }
 
@@ -93,7 +128,7 @@ function crearCliente(s, a) {
   let t = s;
   let responsableId = null;
   if (a.nuevoResponsable?.trim()) {
-    responsableId = nuevoId('c-n', Object.keys(t.clientes).length);
+    responsableId = siguienteId('c-n', Object.keys(t.clientes));
     t = {
       ...t,
       clientes: { ...t.clientes, [responsableId]: { id: responsableId, nombre: a.nuevoResponsable.trim(), responsableId: null, celular: null, curp: null } },
@@ -104,7 +139,7 @@ function crearCliente(s, a) {
     if (!r || r.responsableId) return s; // el responsable debe cobrar directamente: no hay cadenas
     responsableId = a.responsableId;
   }
-  const id = nuevoId('c-n', Object.keys(t.clientes).length);
+  const id = siguienteId('c-n', Object.keys(t.clientes));
   t = {
     ...t,
     clientes: { ...t.clientes, [id]: { id, nombre: a.nombre?.trim() || g.nombreOriginal, responsableId, celular: null, curp: null } },
@@ -173,6 +208,19 @@ export function reducer(s, a) {
     }
     case 'IMPORTAR':
       return importar(s, a);
+    case 'LEER_RELACION': {
+      const rel = RELACIONES.find((r) => r.id === a.relId);
+      if (!rel || rel.foto || s.quincena.estado !== 'preparacion' || s.importaciones.some((i) => i.relId === rel.id && !i.reemplazada)) return s;
+      return (s.leidas || []).includes(rel.id) ? s : { ...s, leidas: [...(s.leidas || []), rel.id] };
+    }
+    case 'MARCAR_SIN_RELACION': {
+      if (s.quincena.estado !== 'preparacion' || s.importaciones.some((i) => i.valeraId === a.valeraId && !i.reemplazada)) return s;
+      return { ...s, sinRelacion: { ...(s.sinRelacion || {}), [a.valeraId]: Boolean(a.valor) } };
+    }
+    case 'SET_VOLUMEN': {
+      if (s.quincena.estado !== 'preparacion' || Boolean(a.activo) === Boolean(s.volumen)) return s;
+      return a.activo ? activarVolumen(s) : quitarVolumen(s);
+    }
 
     case 'CONFIRMAR_GRUPO': {
       const g = gruposPendientes(s).find((x) => x.key === a.key);
@@ -202,7 +250,7 @@ export function reducer(s, a) {
       const nombre = a.nombre?.trim();
       if (!nombre) return s;
       if (a.responsableId && (!s.clientes[a.responsableId] || s.clientes[a.responsableId].responsableId)) return s;
-      const id = nuevoId('c-n', Object.keys(s.clientes).length);
+      const id = siguienteId('c-n', Object.keys(s.clientes));
       return {
         ...s,
         clientes: { ...s.clientes, [id]: { id, nombre, responsableId: a.responsableId || null, celular: null, curp: null } },

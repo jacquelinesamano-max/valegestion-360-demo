@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Aviso, Boton, Campo, Dialogo, Etiqueta, Tarjeta, Vacio, useAviso } from '../components/ui.jsx';
+import { MostrarMas, usePaginado } from '../components/Paginado.jsx';
 import { Enlace } from '../router.jsx';
 import { useStore } from '../state/store.jsx';
 import { gruposPendientes, listaClientes, nombreVisible, valeraNombre } from '../lib/calc.js';
@@ -186,6 +187,9 @@ export default function Revisar() {
   const coincidencias = grupos.filter((g) => g.nivel === 'probable' || g.nivel === 'dudoso' || (g.nivel === 'seguro' && g.postergado));
   const nuevos = grupos.filter((g) => g.nivel === 'nuevo');
   const grupoBuscando = grupos.find((g) => g.key === buscando);
+  const pagSeguras = usePaginado(seguros, 10, String(seguros.length));
+  const pagNuevos = usePaginado(nuevos, 10, String(nuevos.length));
+  const pagCoinc = usePaginado(coincidencias, 10, String(coincidencias.length));
 
   return (
     <div className="pagina">
@@ -222,7 +226,7 @@ export default function Revisar() {
         >
           <Aviso tono="info">Son nombres con las mismas palabras que un cliente que ya conoces. Mira la lista y confirma todas de una vez, o aparta la que no sea.</Aviso>
           <div className="lista">
-            {seguros.map((g) => (
+            {pagSeguras.items.map((g) => (
               <div className="fila" key={g.key}>
                 <div className="fila-main">
                   <strong>«{g.nombreOriginal}» <span className="valera-tag">{valeraNombre(s, g.valeraId)}</span></strong>
@@ -232,20 +236,23 @@ export default function Revisar() {
               </div>
             ))}
           </div>
+          <MostrarMas pag={pagSeguras} etiqueta="coincidencias seguras" />
         </Tarjeta>
       )}
 
       {coincidencias.length > 0 && (
         <section className="pagina" aria-label="Coincidencias por confirmar">
           <h2>Coincidencias por confirmar ({coincidencias.length})</h2>
-          {coincidencias.map((g) => <Coincidencia key={g.key} g={g} onBuscar={() => setBuscando(g.key)} />)}
+          {pagCoinc.items.map((g) => <Coincidencia key={g.key} g={g} onBuscar={() => setBuscando(g.key)} />)}
+          <MostrarMas pag={pagCoinc} etiqueta="coincidencias" />
         </section>
       )}
 
       {nuevos.length > 0 && (
         <section className="pagina" aria-label="Clientes nuevos">
           <h2>Encontramos {nuevos.length} {nuevos.length === 1 ? 'cliente nuevo' : 'clientes nuevos'} para esta quincena</h2>
-          {nuevos.map((g) => <ClienteNuevo key={g.key} g={g} />)}
+          {pagNuevos.items.map((g) => <ClienteNuevo key={g.key} g={g} />)}
+          <MostrarMas pag={pagNuevos} etiqueta="clientes nuevos" />
         </section>
       )}
 

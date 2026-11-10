@@ -6,7 +6,7 @@ import { RELACIONES } from '../data/seed.js';
 import { valerasCargadas } from '../lib/calc.js';
 
 export default function Subir() {
-  const { s } = useStore();
+  const { s, dispatch } = useStore();
   const valeras = valerasCargadas(s);
   const primera = valeras.find((v) => !v.cargada) ?? valeras[0];
   const [valeraId, setValeraId] = useState(primera.id);
@@ -46,7 +46,7 @@ export default function Subir() {
             <label key={v.id} className="opcion">
               <input type="radio" name="valera" checked={valeraId === v.id} onChange={() => { setValeraId(v.id); setRelId(null); }} />
               <span>
-                <strong>{v.nombre}</strong> {v.cargada ? <Etiqueta tono="ok">Ya cargada</Etiqueta> : <Etiqueta tono="alerta">Por cargar</Etiqueta>}
+                <strong>{v.nombre}</strong> {v.cargada ? <Etiqueta tono="ok">Ya cargada</Etiqueta> : v.sinRelacion ? <Etiqueta tono="neutro">Sin relación</Etiqueta> : <Etiqueta tono="alerta">Por cargar</Etiqueta>}
               </span>
             </label>
           ))}
@@ -54,7 +54,14 @@ export default function Subir() {
       </Tarjeta>
 
       <Tarjeta titulo="2. Elige un archivo de ejemplo">
-        {archivos.length === 0 && <p className="suave">Esta valera no tiene archivos de ejemplo en la demostración.</p>}
+        {archivos.length === 0 && (
+          <div className="lista">
+            <p className="suave">Esta valera no tiene archivos de ejemplo en la demostración. Si no te entregó su relación esta quincena, puedes indicarlo y confirmar la cobranza sin ella.</p>
+            {s.sinRelacion?.[valeraId]
+              ? <Boton tipo="texto" onClick={() => dispatch({ type: 'MARCAR_SIN_RELACION', valeraId, valor: false })}>Deshacer: sí la recibí</Boton>
+              : <Boton tipo="secundario" disabled={confirmada} onClick={() => dispatch({ type: 'MARCAR_SIN_RELACION', valeraId, valor: true })}>No recibí relación de esta valera</Boton>}
+          </div>
+        )}
         <div className="opciones" role="radiogroup" aria-label="Archivo">
           {archivos.map((r) => {
             const yaEsta = r.principal && incorporada(r.id);

@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { pesos as p } from '../src/lib/money.js';
 import { reducer } from '../src/state/reducer.js';
-import { crearInicial, avanzado } from '../src/state/initial.js';
+import { crearInicial, avanzado, conPendientes } from '../src/state/initial.js';
 import { RELACIONES } from '../src/data/seed.js';
-import { componer, diffReemplazo, gruposPendientes, movsActivos, pagadorDe, revisarImportacion, totales, vistaCobranza } from '../src/lib/calc.js';
+import { compararConAnterior, componer, diffReemplazo, gruposPendientes, pendienteAnterior, pendientesResumen, valerasCargadas, movsActivos, pagadorDe, revisarImportacion, totales, vistaCobranza } from '../src/lib/calc.js';
 import { buscarCandidatos, clasificar, claveNombre } from '../src/lib/names.js';
 import { listaClientes } from '../src/lib/calc.js';
 
@@ -108,9 +108,9 @@ test('cada movimiento se cuenta una sola vez y todas las vistas suman lo mismo',
   assert.equal(dueños.length, activos.length);
 });
 
-test('hay 3 valeras, 16 clientes y el posible duplicado queda a la vista (no se borra)', () => {
+test('hay 4 valeras, 16 clientes y el posible duplicado queda a la vista (no se borra)', () => {
   const s = avanzado();
-  assert.equal(s.valeras.length, 3);
+  assert.equal(s.valeras.length, 4);
   assert.equal(Object.keys(s.clientes).length, 16);
   const omitidos = s.movimientos.filter((m) => m.omitido);
   assert.equal(omitidos.length, 1);
@@ -200,4 +200,81 @@ test('reemplazar una relación muestra qué cambia y no deja movimientos viejos'
 test('el clientes con varios vales no cuenta un vale repetido', () => {
   const rel = RELACIONES.find((r) => r.id === 'rel-gama');
   assert.equal(revisarImportacion(rel, {}).clientesConVariosVales, 0);
+});
+
+test('con la simulación de 600 clientes, todo sigue sumando lo mismo y se puede apagar', () => {
+  const base = crearInicial();
+  const con = reducer(base, { type: 'SET_VOLUMEN', activo: true });
+  assert.equal(con.ordenClientes.length, 600);
+  const activos = movsActivos(con);
+  assert.equal(new Set(activos.map((m) => m.id)).size, activos.length, 'ningún movimiento repetido');
+  const inicio = Date.now();
+  const vista = vistaCobranza(con);
+  assert.ok(Date.now() - inicio < 1500, 'la vista se calcula rápido');
+  assert.equal(suma(vista.map((x) => x.total)), suma(activos.map((m) => m.importe)));
+  assert.equal(totales(con).total, suma(activos.map((m) => m.importe)));
+  assert.ok(vista.length > 300);
+  // al incorporar otra valera, los clientes de volumen se reparten también ahí
+  let t = reducer(con, { type: 'DRAFT_IMPORTE', relId: 'rel-beta', rowId: 'b8', importe: p(420) });
+  t = reducer(t, { type: 'IMPORTAR', relId: 'rel-beta' });
+  assert.ok(t.movimientos.some((m) => m.id.startsWith('m-v-beta-')));
+  // apagarla deja todo como estaba
+  const sin = reducer(t, { type: 'SET_VOLUMEN', activo: false });
+  assert.equal(sin.ordenClientes.length, 14);
+  assert.equal(sin.movimientos.some((m) => m.id.startsWith('m-v-')), false);
+});
+
+test('no se puede simular volumen con la cobranza ya confirmada', () => {
+  const s = avanzado();
+  assert.equal(reducer(s, { type: 'SET_VOLUMEN', activo: true }), s);
+});
+
+test('compara con el corte anterior: nuevos, ausentes y cambios de importe', () => {
+  const rel = RELACIONES.find((r) => r.id === 'rel-alfa');
+  const r = revisarImportacion(rel, {});
+  const d = compararConAnterior('alfa', r.filas);
+  assert.deepEqual(d.nuevos.map((x) => x.vale), ['A-0111']);
+  assert.deepEqual(d.ausentes.map((x) => x.vale), ['A-0090']);
+  assert.equal(d.cambios.length, 1);
+  assert.equal(d.cambios[0].antes, p(590));
+  assert.equal(d.cambios[0].despues, p(610));
+});
+
+test('el pendiente de la quincena anterior se muestra aparte y no se suma', () => {
+  assert.equal(pendienteAnterior('Héctor Barrera').importe, p(420));
+  assert.equal(pendienteAnterior('Rosa Martínez'), null);
+  const s = avanzado();
+  const hector = vistaCobranza(s).find((x) => x.id === 'c-hector');
+  assert.equal(hector.total, p(1030), 'el total de esta cobranza no incluye lo anterior');
+});
+
+test('«No recibí relación de esta valera» se puede marcar y deshacer, y solo si no se subió', () => {
+  let s = crearInicial();
+  assert.equal(valerasCargadas(s).find((v) => v.id === 'delta').sinRelacion, false);
+  s = reducer(s, { type: 'MARCAR_SIN_RELACION', valeraId: 'delta', valor: true });
+  assert.equal(valerasCargadas(s).find((v) => v.id === 'delta').sinRelacion, true);
+  s = reducer(s, { type: 'MARCAR_SIN_RELACION', valeraId: 'delta', valor: false });
+  assert.equal(valerasCargadas(s).find((v) => v.id === 'delta').sinRelacion, false);
+  const alfa = reducer(s, { type: 'MARCAR_SIN_RELACION', valeraId: 'alfa', valor: true });
+  assert.equal(valerasCargadas(alfa).find((v) => v.id === 'alfa').sinRelacion, false, 'Alfa ya está cargada');
+});
+
+test('el atajo «con pendientes» deja un ejemplo de cada uno de los cuatro pendientes', () => {
+  const r = pendientesResumen(conPendientes());
+  assert.equal(r.porCargar.length, 1);
+  assert.equal(r.porCargar[0].id, 'delta');
+  assert.equal(r.porRevisar.length, 1);
+  assert.equal(r.porRevisar[0].id, 'beta');
+  assert.ok(r.parecidos.length >= 1);
+  assert.equal(r.nuevos.length, 1);
+});
+
+test('un vale con importe sin leer no se confunde con uno que «ya no aparece»', () => {
+  const rel = RELACIONES.find((r) => r.id === 'rel-beta');
+  const sin = compararConAnterior('beta', revisarImportacion(rel, {}).filas);
+  assert.equal(sin.ausentes.some((x) => x.vale === 'B-2208'), false);
+  assert.deepEqual(sin.ausentes.map((x) => x.vale), ['B-2190']);
+  const con = compararConAnterior('beta', revisarImportacion(rel, { importes: { b8: p(420) } }).filas);
+  assert.equal(con.cambios.length, 0);
+  assert.deepEqual(con.nuevos.map((x) => x.vale), ['B-2207']);
 });

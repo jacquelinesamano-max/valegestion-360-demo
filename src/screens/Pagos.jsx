@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Etiqueta, Vacio } from '../components/ui.jsx';
+import { MostrarMas, usePaginado } from '../components/Paginado.jsx';
 import { Enlace } from '../router.jsx';
 import { useStore } from '../state/store.jsx';
 import { vistaCobranza } from '../lib/calc.js';
@@ -11,6 +12,7 @@ export default function Pagos() {
   const [filtro, setFiltro] = useState('todos');
   const nombres = Object.fromEntries((s.quincena.estado === 'preparacion' ? [] : vistaCobranza(s)).map((p) => [p.id, p.nombre]));
   const pagos = [...s.pagos].reverse().filter((p) => filtro === 'todos' || (filtro === 'vigentes' ? p.estado === 'vigente' : p.estado === 'anulado'));
+  const pag = usePaginado(pagos, 25, filtro);
   const vigentes = suma(s.pagos.filter((p) => p.estado === 'vigente').map((p) => p.importe));
 
   return (
@@ -33,7 +35,7 @@ export default function Pagos() {
         </Vacio>
       )}
       <div className="lista">
-        {pagos.map((p) => (
+        {pag.items.map((p) => (
           <div className="fila" key={p.id} style={p.estado === 'anulado' ? { opacity: 0.7 } : undefined}>
             <div className="fila-main">
               <Enlace a={`/cobranza/${p.payerId}`}><strong>{nombres[p.payerId] ?? s.clientes[p.payerId]?.nombre}</strong></Enlace>
@@ -48,6 +50,7 @@ export default function Pagos() {
           </div>
         ))}
       </div>
+      <MostrarMas pag={pag} etiqueta="pagos" />
     </div>
   );
 }

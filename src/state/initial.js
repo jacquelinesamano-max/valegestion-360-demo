@@ -30,6 +30,7 @@ export function avanzado() {
       run({ type: 'CONFIRMAR_GRUPO', key: g.key, clienteId: g.candidatos[0].cliente.id });
     }
   }
+  run({ type: 'MARCAR_SIN_RELACION', valeraId: 'delta', valor: true });
   run({ type: 'CONFIRMAR_COBRANZA' });
   run({ type: 'REGISTRAR_PAGO', reqId: 'demo-1', payerId: 'c-rosa', importe: p(1150), fecha: '2026-11-16', nota: 'Pagó completo' });
   run({ type: 'REGISTRAR_PAGO', reqId: 'demo-2', payerId: 'c-laura', importe: p(700), fecha: '2026-11-16', nota: 'Primer abono' });
@@ -37,5 +38,17 @@ export function avanzado() {
   run({ type: 'REGISTRAR_PAGO', reqId: 'demo-4', payerId: 'c-hector', importe: p(830), fecha: '2026-11-17', nota: '' });
   const equivocado = s.pagos.find((x) => x.reqId === 'demo-4');
   run({ type: 'CORREGIR_PAGO', reqId: 'demo-5', pagoId: equivocado.id, importe: p(1030), fecha: '2026-11-17', motivo: 'Eran $1,030, no $830' });
+  return s;
+}
+
+// Atajo: deja un ejemplo de cada pendiente que impide confirmar (valera por cargar, importación por revisar, nombres parecidos y cliente nuevo).
+export function conPendientes() {
+  let s = { ...crearInicial(), sesion: true, onboarding: false };
+  const run = (a) => {
+    s = reducer(s, a);
+  };
+  run({ type: 'DRAFT_ACCION', relId: 'rel-gama', rowId: 'g2', accion: 'omitir' });
+  run({ type: 'IMPORTAR', relId: 'rel-gama' });
+  run({ type: 'LEER_RELACION', relId: 'rel-beta' });
   return s;
 }

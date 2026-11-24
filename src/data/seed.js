@@ -3,28 +3,28 @@ import { pesos as p } from '../lib/money.js';
 import { claveNombre } from '../lib/names.js';
 
 export const VALERAS = [
-  { id: 'alfa', nombre: 'Valera Alfa', formato: 'Excel', diasPago: 10 },
-  { id: 'beta', nombre: 'Valera Beta', formato: 'PDF', diasPago: 12 },
-  { id: 'gama', nombre: 'Valera Gama', formato: 'PDF', diasPago: 10 },
-  { id: 'delta', nombre: 'Valera Delta', formato: 'Excel', diasPago: 10 },
+  { id: 'alfa', nombre: 'Valera Alfa', formato: 'Excel', diasPago: 10, comision: 10 },
+  { id: 'beta', nombre: 'Valera Beta', formato: 'PDF', diasPago: 12, comision: 12 },
+  { id: 'gama', nombre: 'Valera Gama', formato: 'PDF', diasPago: 10, comision: 8 },
+  { id: 'delta', nombre: 'Valera Delta', formato: 'Excel', diasPago: 10, comision: 10 },
 ];
 
 // [id, nombre, responsable (null = paga directamente), dato opcional que distingue homónimos]
 const CLIENTES = [
-  ['c-rosa', 'Rosa Martínez', null],
-  ['c-ana', 'Ana López', 'c-rosa'],
-  ['c-pedro', 'Pedro Ruiz', 'c-rosa'],
-  ['c-laura', 'Laura Hernández', null],
-  ['c-ernesto', 'Ernesto Salas', 'c-laura'],
-  ['c-carmen', 'Carmen González', null],
-  ['c-teresa', 'Teresa Nava', null],
-  ['c-alberto', 'Alberto Cruz', 'c-teresa'],
-  ['c-monica', 'Mónica Fuentes', null],
-  ['c-mgl', 'María Guadalupe López', null],
-  ['c-hector', 'Héctor Barrera', null],
-  ['c-jcp1', 'Juan Carlos Pérez', null, 'cel. ••4821'],
-  ['c-jcp2', 'Juan Carlos Pérez', null, 'cel. ••7305'],
-  ['c-daniela', 'Daniela Ortega', null],
+  ['c-rosa', 'Rosa Martínez', null, 'cel. ••3318', 'Centro'],
+  ['c-ana', 'Ana López', 'c-rosa', null, 'Centro'],
+  ['c-pedro', 'Pedro Ruiz', 'c-rosa', null, 'Las Flores'],
+  ['c-laura', 'Laura Hernández', null, 'cel. ••9042', 'Santa Lucía'],
+  ['c-ernesto', 'Ernesto Salas', 'c-laura', null, 'Santa Lucía'],
+  ['c-carmen', 'Carmen González', null, null, 'San Miguel'],
+  ['c-teresa', 'Teresa Nava', null, null, 'Las Flores'],
+  ['c-alberto', 'Alberto Cruz', 'c-teresa', null, 'Las Flores'],
+  ['c-monica', 'Mónica Fuentes', null, null, 'Centro'],
+  ['c-mgl', 'María Guadalupe López', null, null, 'San Miguel'],
+  ['c-hector', 'Héctor Barrera', null, null, 'Santa Lucía'],
+  ['c-jcp1', 'Juan Carlos Pérez', null, 'cel. ••4821', 'Centro'],
+  ['c-jcp2', 'Juan Carlos Pérez', null, 'cel. ••7305', 'San Miguel'],
+  ['c-daniela', 'Daniela Ortega', null, null, 'Las Flores'],
 ];
 
 const f = (id, nombre, vale, canje, avance, importe) => ({ id, nombre, vale, canje, avance, importe: importe == null ? null : p(importe) });
@@ -130,8 +130,8 @@ export const ANTERIOR = {
 export function estadoBase() {
   const clientes = {};
   const ordenClientes = [];
-  for (const [id, nombre, responsableId, celular] of CLIENTES) {
-    clientes[id] = { id, nombre, responsableId, celular: celular ?? null, curp: null };
+  for (const [id, nombre, responsableId, celular, colonia] of CLIENTES) {
+    clientes[id] = { id, nombre, responsableId, celular: celular ?? null, colonia: colonia ?? null, curp: null };
     ordenClientes.push(id);
   }
   // Lo que ya se conoce de la quincena anterior: qué vale es de quién y cómo aparecen los nombres en Alfa.
@@ -149,7 +149,7 @@ export function estadoBase() {
   return {
     sesion: false,
     onboarding: true,
-    ajustes: { notif: false, mostrarValera: true },
+    ajustes: { notif: false, mostrarValera: true, hide: false, fs: 'm' },
     valeras: VALERAS.map((v) => ({ ...v })),
     clientes,
     ordenClientes,
@@ -164,5 +164,7 @@ export function estadoBase() {
     volumen: false,
     sinRelacion: {},
     leidas: [],
+    valeraPagada: {},
+    preCierre: false,
   };
 }

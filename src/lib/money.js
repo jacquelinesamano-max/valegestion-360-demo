@@ -1,7 +1,12 @@
 // Los importes se guardan en centavos (enteros) para no arrastrar errores de punto flotante.
 export const pesos = (n) => Math.round(n * 100);
 
+// Con «ocultar montos» activo, las pantallas de trabajo muestran puntos; los avisos y la impresión siempre muestran el importe real.
+let oculto = false;
+export const ocultarMontos = (v) => { oculto = Boolean(v); };
+
 export function mx(centavos) {
+  if (oculto) return '$•••••';
   const neg = centavos < 0;
   const abs = Math.abs(centavos);
   const enteros = Math.floor(abs / 100);

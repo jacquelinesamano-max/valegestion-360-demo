@@ -268,3 +268,59 @@ export function pendientesResumen(s) {
     nuevos: grupos.filter((g) => g.nivel === 'nuevo'),
   };
 }
+
+// ——— Rediseño operativo: pagos a valeras (aproximado), siguiente paso y filtros ———
+export const coloniaDe = (s, id) => s.clientes[id]?.colonia || '';
+export const ultimos4 = (s, id) => (s.clientes[id]?.celular || '').replace(/\D/g, '').slice(-4);
+
+export const movsDe = (s, payerId) => movsPorPagador(s).get(payerId) || [];
+
+// Fecha límite de cada valera: la de su relación vigente (o null si aún no hay).
+export function vencimientoValera(s, valeraId) {
+  const i = s.importaciones.find((x) => x.valeraId === valeraId && !x.reemplazada);
+  return i?.fechaPago ?? null;
+}
+
+// Cálculo APROXIMADO por valera: solo cuenta a quienes pagaron completo; los parciales no suman hasta liquidar.
+export function pagosAValeras(s) {
+  const vista = s.quincena.estado === 'preparacion' ? [] : vistaCobranza(s);
+  return s.valeras
+    .filter((v) => s.importaciones.some((i) => i.valeraId === v.id && !i.reemplazada))
+    .map((v) => {
+      const movs = movsActivos(s).filter((m) => m.valeraId === v.id);
+      const total = suma(movs.map((m) => m.importe));
+      const juntado = suma(
+        vista.filter((p) => p.estado === 'Pagado').flatMap((p) => movsDe(s, p.id).filter((m) => m.valeraId === v.id).map((m) => m.importe)),
+      );
+      const vence = vencimientoValera(s, v.id);
+      return {
+        id: v.id, nombre: v.nombre, total, juntado, vence, comision: v.comision ?? 0,
+        ganancia: Math.round((juntado * (v.comision ?? 0)) / 100),
+        pagada: Boolean(s.valeraPagada?.[v.id]),
+      };
+    })
+    .sort((a, b) => (a.vence || '9999').localeCompare(b.vence || '9999'));
+}
+
+// A quién cobrar primero: pendientes ordenados por la valera que vence antes, con la razón.
+export function cobrarPrimero(s) {
+  if (s.quincena.estado !== 'confirmada') return [];
+  return vistaCobranza(s)
+    .filter((p) => p.pendiente > 0)
+    .map((p) => {
+      const porValera = new Map();
+      for (const m of movsDe(s, p.id)) {
+        const f = vencimientoValera(s, m.valeraId);
+        if (f && (!porValera.has(m.valeraId) || f < porValera.get(m.valeraId))) porValera.set(m.valeraId, f);
+      }
+      const [valeraId, vence] = [...porValera.entries()].sort((a, b) => a[1].localeCompare(b[1]))[0] || [null, null];
+      return { ...p, valeraId, vence, valeraNombre: valeraId ? valeraNombre(s, valeraId) : null };
+    })
+    .sort((a, b) => (a.vence || '9999').localeCompare(b.vence || '9999') || b.pendiente - a.pendiente);
+}
+
+// Registro parcial: hay pagos vigentes pero aún falta cobrar a alguien.
+export function registroParcial(s) {
+  if (s.quincena.estado !== 'confirmada') return false;
+  return s.pagos.some((p) => p.estado === 'vigente') && vistaCobranza(s).some((p) => p.pendiente > 0);
+}

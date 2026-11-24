@@ -1,8 +1,8 @@
 import { Aviso, Boton, Etiqueta, Icono, Tarjeta } from '../components/ui.jsx';
 import { Enlace, ir } from '../router.jsx';
 import { useStore } from '../state/store.jsx';
-import { gruposPendientes, movsActivos, totales, valerasCargadas, vistaCobranza } from '../lib/calc.js';
-import { fechaLarga, minFecha } from '../lib/dates.js';
+import { cobrarPrimero, gruposPendientes, movsActivos, pagosAValeras, totales, valerasCargadas, vistaCobranza } from '../lib/calc.js';
+import { fechaCorta, fechaLarga, minFecha } from '../lib/dates.js';
 import { mx, suma } from '../lib/money.js';
 
 const ESTADOS = { preparacion: ['Cobranza en preparación', 'alerta'], confirmada: ['Cobranza confirmada', 'primario'], cerrada: ['Quincena cerrada', 'neutro'] };
@@ -24,6 +24,8 @@ export default function Inicio() {
     return { total: suma(movs.map((m) => m.importe)), vales: movs.length };
   };
 
+  const primeros = cobrarPrimero(s);
+  const proxima = pagosAValeras(s).find((v) => v.vence && !v.pagada && v.juntado < v.total);
   const principal = faltan.length
     ? { texto: `Subir la relación de ${faltan[0].nombre}`, a: '/subir' }
     : grupos.length
@@ -62,6 +64,30 @@ export default function Inicio() {
           <span>{limite ? `Fecha límite: ${fechaLarga(limite)}` : 'Aún sin fecha límite'}</span>
         </div>
       </section>
+
+      {q.estado === 'confirmada' && proxima && (
+        <section className="siguiente" aria-label="Tu siguiente paso">
+          <small>Tu siguiente paso</small>
+          <strong>Cobra primero lo de {proxima.nombre} antes del {fechaCorta(proxima.vence)}</strong>
+          <span>Juntado {mx(proxima.juntado)} de {mx(proxima.total)} (cálculo aproximado).</span>
+          <Boton onClick={() => ir(`/cobrar/${proxima.id}`)}>Ver a quién cobrar</Boton>
+        </section>
+      )}
+
+      {q.estado === 'confirmada' && primeros.length > 0 && (
+        <Tarjeta titulo="Cobrar primero" accion={<Enlace a="/cobranza">Ver todos</Enlace>}>
+          <div className="lista">
+            {primeros.slice(0, 3).map((p) => (
+              <Enlace key={p.id} a={`/cobranza/${p.id}`} className="fila">
+                <div className="fila-main">
+                  <strong>{p.nombre}</strong>
+                  <small>Falta {mx(p.pendiente)} · vence {p.valeraNombre} el {p.vence ? fechaCorta(p.vence) : '—'}</small>
+                </div>
+              </Enlace>
+            ))}
+          </div>
+        </Tarjeta>
+      )}
 
       <div className="seccion-titulo">
         <h2>Por valera</h2>

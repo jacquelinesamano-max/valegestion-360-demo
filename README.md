@@ -4,6 +4,8 @@ Prototipo navegable para conversar con mayoristas. **Todo es ficticio**: cliente
 
 > El nombre y la imagen son provisionales. No corresponden a la identidad oficial de ninguna empresa.
 
+> **Importante:** la demostración que se publica ahora es el **prototipo del artifact** (carpeta `public/prototipo/`, se abre desde `index.html`), con nombres reales de valeras y todo lo aprobado. El código React de `src/` es la maqueta anterior: se conserva con sus pruebas, pero ya no es la pantalla de entrada.
+
 ## Cómo verlo
 
 ```bash
@@ -27,6 +29,19 @@ Lo que hagas se guarda solo en el navegador (localStorage), únicamente para la 
 - **GitHub Pages:** publica el contenido de `dist/` en la rama `gh-pages` o desde una acción.
 
 La demo no guarda nada en un servidor: el avance vive en el navegador de cada persona. Incluye `noindex`, así que los buscadores no la listan, pero cualquiera con el enlace la puede abrir. Los datos son ficticios.
+
+## Rediseño operativo (nuevo)
+
+Tomado del artifact «Rediseño operativo», sin tocar lo que ya teníamos:
+
+- **Preferencias de lectura** (barra superior): ojo para ocultar montos y tres «A» para tamaño de letra (Pequeña, Mediana, Grande).
+- **Cobranza › Pagos a tus valeras** con la leyenda «Cálculo aproximado»: solo cuenta a quienes pagaron completo; los parciales no suman hasta liquidar. «Ya le pagué» es opcional y reversible.
+- **Inicio › Tu siguiente paso y Cobrar primero**, por la valera que vence antes.
+- **Relación:** filtro por valera, «Ruta por colonia», búsqueda por nombre, colonia o últimos 4 dígitos, orden «Cobrar primero» e insignia de pendientes en el menú.
+- **Panel de cobro** lateral (hoja inferior en teléfono): Liquidar y Mitad, aviso de abono, forma de pago, «¿Por qué esta cantidad?», mensajes de WhatsApp (requiere tener WhatsApp instalado) y **Deshacer durante 7 s**.
+- **Registro de abonos opcional:** si se cierra la quincena sin ningún registro, todo se da por cubierto. «Demo: día antes del cierre» muestra el aviso «Faltan abonos por registrar» con «Marcar todo como pagado» (no se puede revertir).
+
+Pendiente de definir: qué pasa al cierre cuando el registro quedó parcial. Idea a futuro: filtrar por **sector** (agrupa colonias y códigos postales) en lugar de por colonia.
 
 ## Qué se puede probar de verdad
 

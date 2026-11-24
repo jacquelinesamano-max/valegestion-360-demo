@@ -5,7 +5,8 @@ import { MostrarMas, Orden, usePaginado } from '../components/Paginado.jsx';
 import { PagoSheet } from '../components/PagoSheet.jsx';
 import { Enlace, ir, useAncho } from '../router.jsx';
 import { useStore } from '../state/store.jsx';
-import { totales, vistaCobranza } from '../lib/calc.js';
+import { cobrarPrimero, coloniaDe, movsDe, pagosAValeras, registroParcial, totales, ultimos4, vistaCobranza } from '../lib/calc.js';
+import { fechaCorta } from '../lib/dates.js';
 import { normalizar } from '../lib/names.js';
 import { mx } from '../lib/money.js';
 
@@ -34,25 +35,82 @@ function CorregirCobranza({ onCerrar }) {
   );
 }
 
-export default function Cobranza({ seleccionado }) {
+// «Pagos a tus valeras»: cálculo APROXIMADO. Solo cuenta a quienes pagaron completo; los parciales no suman hasta liquidar.
+function PagosAValeras() {
+  const { s, dispatch } = useStore();
+  const avisar = useAviso();
+  const filas = pagosAValeras(s);
+  if (!filas.length) return null;
+  return (
+    <section className="card vpay" aria-label="Pagos a tus valeras">
+      <header className="card-head">
+        <h2>Pagos a tus valeras</h2>
+        <Etiqueta tono="info">Cálculo aproximado</Etiqueta>
+      </header>
+      <p className="hint">Solo cuenta a quienes pagaron completo. Un pago parcial no suma hasta que liquide, porque no se sabe a qué valera abona cada clienta.</p>
+      {filas.map((v) => {
+        const pct = v.total ? Math.min(100, Math.round((v.juntado / v.total) * 100)) : 0;
+        return (
+          <div className="vprow" key={v.id}>
+            <div className="vpinfo">
+              <strong>{v.nombre}</strong>
+              <small className="suave">{v.vence ? `Vence el ${fechaCorta(v.vence)}` : 'Sin fecha de pago'} · ganancia posible ≈ {mx(v.ganancia)} ({v.comision}% de ejemplo)</small>
+            </div>
+            <div className="vpmonto">
+              <span className="num">{mx(v.juntado)} de {mx(v.total)}</span>
+              <div className="progreso" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct} aria-label={`Juntado para ${v.nombre}`}><span style={{ width: `${pct}%` }} /></div>
+            </div>
+            <Boton
+              tipo={v.pagada ? 'texto' : 'secundario'}
+              onClick={() => {
+                dispatch({ type: 'TOGGLE_VALERA_PAGADA', valeraId: v.id });
+                avisar(v.pagada ? `Quitaste la marca de pago a ${v.nombre}.` : `Marcaste a ${v.nombre} como pagada.`, { accion: { texto: 'Deshacer', hacer: () => dispatch({ type: 'TOGGLE_VALERA_PAGADA', valeraId: v.id }) } });
+              }}
+            >
+              {v.pagada ? '✓ Ya le pagué · deshacer' : 'Ya le pagué'}
+            </Boton>
+          </div>
+        );
+      })}
+    </section>
+  );
+}
+
+export default function Cobranza({ seleccionado, valeraInicial = 'todas' }) {
   const { s, dispatch } = useStore();
   const avisar = useAviso();
   const ancho = useAncho('(min-width: 1180px)');
   const [q, setQ] = useState('');
   const [filtro, setFiltro] = useState('Todos');
   const [orden, setOrden] = useState('nombre');
+  const [valera, setValera] = useState(valeraInicial);
+  const [colonia, setColonia] = useState('todas');
   const [pagando, setPagando] = useState(null);
+  const [cerrandoTodo, setCerrandoTodo] = useState(false);
   const [corrigiendo, setCorrigiendo] = useState(false);
   const [cerrando, setCerrando] = useState(false);
 
   const t = totales(s);
   const todos = vistaCobranza(s);
   const estado = s.quincena.estado;
+  const primero = new Map(cobrarPrimero(s).map((p, i) => [p.id, { ...p, i }]));
+  const colonias = [...new Set(todos.map((p) => coloniaDe(s, p.id)).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es'));
+  const valerasEnLista = s.valeras.filter((v) => s.importaciones.some((i) => i.valeraId === v.id && !i.reemplazada));
+  const coincide = (p) => {
+    const n = normalizar(q);
+    return !n || normalizar(p.nombre).includes(n) || normalizar(coloniaDe(s, p.id)).includes(n) || (n.length >= 3 && /^\d+$/.test(n) && ultimos4(s, p.id).includes(n));
+  };
   const lista = todos
-    .filter((p) => normalizar(p.nombre).includes(normalizar(q)))
+    .filter(coincide)
     .filter((p) => filtro === 'Todos' || p.estado === filtro)
-    .sort((a, b) => (orden === 'total' ? b.total - a.total : orden === 'falta' ? b.pendiente - a.pendiente : a.nombre.localeCompare(b.nombre, 'es')));
-  const pag = usePaginado(lista, 25, `${q}|${filtro}|${orden}`);
+    .filter((p) => valera === 'todas' || movsDe(s, p.id).some((m) => m.valeraId === valera))
+    .filter((p) => colonia === 'todas' || coloniaDe(s, p.id) === colonia)
+    .sort((a, b) => {
+      if (orden === 'vence') return (primero.get(a.id)?.i ?? 1e9) - (primero.get(b.id)?.i ?? 1e9) || a.nombre.localeCompare(b.nombre, 'es');
+      return orden === 'total' ? b.total - a.total : orden === 'falta' ? b.pendiente - a.pendiente : a.nombre.localeCompare(b.nombre, 'es');
+    });
+  const pag = usePaginado(lista, 25, `${q}|${filtro}|${orden}|${valera}|${colonia}`);
+  const aviso = estado === 'confirmada' && s.preCierre && registroParcial(s);
   const idDetalle = seleccionado || (ancho ? lista[0]?.id : null);
   const soloDetalle = Boolean(seleccionado) && !ancho;
   const [textoEstado, tono] = ESTADOS_COBRANZA[estado];
@@ -84,11 +142,21 @@ export default function Cobranza({ seleccionado }) {
         </Aviso>
       )}
 
+      {aviso && (
+        <Aviso tono="alerta" titulo="Faltan abonos por registrar">
+          Mañana es el cierre. ¿Deseas marcar todo como pagado? El registro es opcional: si lo prefieres, llévalo en papel con la versión imprimible.{' '}
+          <Boton tipo="secundario" onClick={() => setCerrandoTodo(true)}>Marcar todo como pagado</Boton>{' '}
+          <Boton tipo="texto" onClick={() => dispatch({ type: 'SET_PRECIERRE', valor: false })}>Ahora no</Boton>
+        </Aviso>
+      )}
+
       <div className="stats">
         <Cifra etiqueta="Total a cobrar" valor={mx(t.total)} nota={`${t.n} responsables de pago`} />
         <Cifra etiqueta="Cobrado" valor={mx(t.cobrado)} tono="ok" nota="Según lo registrado" />
         <Cifra etiqueta="Pendiente de cobrar" valor={mx(t.pendiente)} tono="alerta" nota={`${contar('Pendiente')} sin pago · ${contar('Abono')} con abono`} />
       </div>
+
+      {estado !== 'preparacion' && <PagosAValeras />}
 
       <div className="acciones">
         <Enlace a="/imprimir" className="btn btn-secundario"><Icono nombre="imprimir" tam={18} /> Imprimir relación</Enlace>
@@ -101,15 +169,33 @@ export default function Cobranza({ seleccionado }) {
       <div className="acciones">
         <div className="buscador">
           <Icono nombre="buscar" tam={20} />
-          <input type="search" aria-label="Buscar responsable por nombre" placeholder="Buscar por nombre" value={q} onChange={(e) => setQ(e.target.value)} />
+          <input type="search" aria-label="Buscar responsable por nombre, colonia o últimos 4 dígitos" placeholder="Nombre, colonia o últimos 4 dígitos" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
-        <Orden valor={orden} onCambio={setOrden} opciones={[['nombre', 'Nombre (A–Z)'], ['total', 'Total a cobrar (mayor)'], ['falta', 'Lo que falta (mayor)']]} />
+        <Orden valor={orden} onCambio={setOrden} opciones={[['nombre', 'Nombre (A–Z)'], ['total', 'Total a cobrar (mayor)'], ['falta', 'Lo que falta (mayor)'], ...(estado === 'confirmada' ? [['vence', 'Cobrar primero (vence antes)']] : [])]} />
       </div>
       <div className="filtros" role="group" aria-label="Filtrar por estado">
         {['Todos', 'Pendiente', 'Abono', 'Pagado'].map((f) => (
           <button key={f} type="button" className="filtro" aria-pressed={filtro === f} onClick={() => setFiltro(f)}>{f}{f !== 'Todos' ? ` (${contar(f)})` : ''}</button>
         ))}
       </div>
+
+      {valerasEnLista.length > 1 && (
+        <div className="filtros" role="group" aria-label="Filtrar por valera">
+          <button type="button" className="filtro" aria-pressed={valera === 'todas'} onClick={() => setValera('todas')}>Todas las valeras</button>
+          {valerasEnLista.map((v) => (
+            <button key={v.id} type="button" className="filtro" aria-pressed={valera === v.id} onClick={() => setValera(v.id)}>{v.nombre.replace(/^Valera\s+/i, '')}</button>
+          ))}
+        </div>
+      )}
+      {colonias.length > 0 && (
+        <label className="orden">
+          <span className="suave">Ruta por colonia</span>
+          <select value={colonia} onChange={(e) => setColonia(e.target.value)} aria-label="Ruta por colonia">
+            <option value="todas">Todas las colonias</option>
+            {colonias.map((c) => <option key={c} value={c}>{c} ({todos.filter((p) => coloniaDe(s, p.id) === c).length})</option>)}
+          </select>
+        </label>
+      )}
 
       <div className={ancho ? 'partido' : ''}>
         <div className="lista" aria-label="Responsables de pago">
@@ -121,8 +207,9 @@ export default function Cobranza({ seleccionado }) {
                 <Enlace a={`/cobranza/${p.id}`}><strong>{p.nombre}</strong></Enlace>
                 <small>
                   {p.nRecomendados ? `${p.nRecomendados} ${p.nRecomendados === 1 ? 'recomendado' : 'recomendados'} · ` : ''}
-                  Total {mx(p.total)} · Pagado {mx(p.pagado)} · Falta {mx(p.pendiente)}
+                  {coloniaDe(s, p.id) ? `Col. ${coloniaDe(s, p.id)} · ` : ''}Total {mx(p.total)} · Pagado {mx(p.pagado)} · Falta {mx(p.pendiente)}
                 </small>
+                {primero.get(p.id)?.vence && <small className="vence">Vence {primero.get(p.id).valeraNombre} · {fechaCorta(primero.get(p.id).vence)}{primero.get(p.id).i === 0 ? ' · cobra primero' : ''}</small>}
               </div>
               <Etiqueta tono={TONO_ESTADO[p.estado]}>{p.estado}</Etiqueta>
               <span className="acciones">
@@ -135,6 +222,21 @@ export default function Cobranza({ seleccionado }) {
         </div>
         {ancho && idDetalle && <div className="sticky"><Detalle key={idDetalle} id={idDetalle} /></div>}
       </div>
+
+      {cerrandoTodo && (
+        <Dialogo
+          titulo="Marcar todo como pagado"
+          onCerrar={() => setCerrandoTodo(false)}
+          pie={
+            <>
+              <Boton tipo="secundario" onClick={() => setCerrandoTodo(false)}>Cancelar</Boton>
+              <Boton tipo="peligro" onClick={() => { dispatch({ type: 'MARCAR_TODO_PAGADO' }); setCerrandoTodo(false); avisar('Marcaste todo como pagado.'); }}>Sí, marcar todo</Boton>
+            </>
+          }
+        >
+          <Aviso tono="alerta" titulo="Este movimiento no se puede revertir">Se dará por cubierto lo que falta ({mx(t.pendiente)}). Esos pagos ya no se podrán anular ni corregir.</Aviso>
+        </Dialogo>
+      )}
 
       {pagando && <PagoSheet responsable={pagando} onCerrar={() => setPagando(null)} />}
       {corrigiendo && <CorregirCobranza onCerrar={() => setCorrigiendo(false)} />}

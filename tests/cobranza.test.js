@@ -278,3 +278,49 @@ test('un vale con importe sin leer no se confunde con uno que «ya no aparece»'
   assert.equal(con.cambios.length, 0);
   assert.deepEqual(con.nuevos.map((x) => x.vale), ['B-2207']);
 });
+
+// ——— Rediseño operativo ———
+import { cobrarPrimero, pagosAValeras, registroParcial } from '../src/lib/calc.js';
+
+test('pagos a valeras (aproximado): solo cuenta a quienes pagaron completo', () => {
+  const s = avanzado();
+  const filas = pagosAValeras(s);
+  const juntado = suma(filas.map((v) => v.juntado));
+  const pagadoCompleto = suma(vistaCobranza(s).filter((x) => x.estado === 'Pagado').map((x) => x.total));
+  assert.equal(juntado, pagadoCompleto); // los abonos parciales no suman
+  assert.ok(filas.every((v) => v.juntado <= v.total));
+});
+
+test('cobrar primero va por vencimiento de la valera y solo incluye pendientes', () => {
+  const s = avanzado();
+  const lista = cobrarPrimero(s);
+  assert.ok(lista.length > 0 && lista.every((x) => x.pendiente > 0));
+  const fechas = lista.map((x) => x.vence || '9999');
+  assert.deepEqual(fechas, [...fechas].sort());
+});
+
+test('deshacer un pago lo quita por completo; un pago final no se deshace', () => {
+  let s = avanzado();
+  const antes = s.pagos.length;
+  s = reducer(s, { type: 'REGISTRAR_PAGO', reqId: 'x1', payerId: 'c-monica', importe: p(100), forma: 'Efectivo' });
+  const pg = s.pagos.at(-1);
+  assert.equal(s.pagos.length, antes + 1);
+  s = reducer(s, { type: 'DESHACER_PAGO', reqId: 'x1' }); // como lo envía el panel de cobro
+  assert.equal(s.pagos.length, antes);
+  assert.equal(pg.reqId, 'x1');
+  s = reducer(s, { type: 'MARCAR_TODO_PAGADO' });
+  assert.equal(totales(s).pendiente, 0);
+  const final = s.pagos.find((x) => x.final);
+  assert.equal(reducer(s, { type: 'DESHACER_PAGO', pagoId: final.id }), s);
+  assert.equal(reducer(s, { type: 'ANULAR_PAGO', pagoId: final.id, motivo: 'x' }).pagos.find((x) => x.id === final.id).estado, 'vigente');
+});
+
+test('al cerrar sin ningún registro, los abonos se dan por cubiertos; con registro parcial no', () => {
+  let s = reducer(avanzado(), { type: 'RESET' });
+  s = reducer({ ...avanzado(), pagos: [], reqIds: {} }, { type: 'CERRAR_QUINCENA' });
+  assert.equal(totales(s).pendiente, 0);
+  assert.ok(s.pagos.every((x) => x.final));
+  const parcial = avanzado();
+  assert.equal(registroParcial(parcial), true);
+  assert.ok(totales(reducer(parcial, { type: 'CERRAR_QUINCENA' })).pendiente > 0);
+});

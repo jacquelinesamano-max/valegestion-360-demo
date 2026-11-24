@@ -83,7 +83,7 @@ export function Detalle({ id }) {
               <div className="fila-main">
                 <strong>{mx(x.importe)} · {fechaCorta(x.fecha)}</strong>
                 <small>
-                  {x.nota || 'Sin observación'}
+                  {x.forma ? `${x.forma} · ` : ''}{x.nota || 'Sin observación'}
                   {x.estado === 'anulado' && ` · ${x.motivo}`}
                   {x.reemplazaA && ' · corrige un pago anterior'}
                 </small>
@@ -91,7 +91,7 @@ export function Detalle({ id }) {
               {x.estado === 'anulado' ? (
                 <Etiqueta tono="neutro">Anulado</Etiqueta>
               ) : (
-                confirmada && (
+                confirmada && !x.final && (
                   <span className="acciones">
                     <Boton tipo="texto" onClick={() => setPagando({ responsable: p, correccion: x })}>Corregir</Boton>
                     <Boton tipo="texto" onClick={() => setAnulando(x)}>Anular</Boton>

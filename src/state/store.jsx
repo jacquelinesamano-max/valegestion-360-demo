@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useReducer } from 'react';
 import { reducer } from './reducer.js';
 import { avanzado, conPendientes, crearInicial } from './initial.js';
 
-const CLAVE = 'valegestion360-demo-v2';
+const CLAVE = 'valegestion360-demo-v3';
 const Ctx = createContext(null);
 
 // Reiniciar y el atajo viven aquí porque reconstruyen todo el estado.
@@ -16,7 +16,7 @@ function raiz(s, a) {
 function cargar() {
   try {
     const guardado = JSON.parse(localStorage.getItem(CLAVE));
-    if (guardado && guardado.v === 2) return guardado.estado;
+    if (guardado && guardado.v === 3) return guardado.estado;
   } catch {
     /* sin almacenamiento: la demo funciona igual, solo que no recuerda nada */
   }
@@ -27,7 +27,7 @@ export function StoreProvider({ children }) {
   const [s, dispatch] = useReducer(raiz, null, cargar);
   useEffect(() => {
     try {
-      localStorage.setItem(CLAVE, JSON.stringify({ v: 2, estado: s }));
+      localStorage.setItem(CLAVE, JSON.stringify({ v: 3, estado: s }));
     } catch {
       /* ver arriba */
     }

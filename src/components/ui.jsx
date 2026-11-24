@@ -2,10 +2,10 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 
 export const Icono = ({ nombre, tam = 22 }) => {
   const rutas = {
-    inicio: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
-    clientes: 'M16 20v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1M9.5 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM21 20v-1a4 4 0 0 0-3-3.9M16 4.1a3.5 3.5 0 0 1 0 6.8',
-    cobranza: 'M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01',
-    historial: 'M12 7v5l3 2M21 12a9 9 0 1 1-3-6.7M21 4v5h-5',
+    inicio: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z',
+    clientes: 'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8',
+    cobranza: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
+    historial: 'M12 7v5l3 2M21 12a9 9 0 1 1-9-9',
     mas: 'M5 12h.01M12 12h.01M19 12h.01',
     ok: 'M5 13l4 4L19 7',
     alerta: 'M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z',
@@ -14,6 +14,9 @@ export const Icono = ({ nombre, tam = 22 }) => {
     mas_: 'M12 5v14M5 12h14',
     flecha: 'M9 6l6 6-6 6',
     archivo: 'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5',
+    ojo: 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6',
+    ojo_no: 'M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22',
+    wa: 'M21 12a9 9 0 0 1-13.4 7.9L3 21l1.1-4.5A9 9 0 1 1 21 12z',
     info: 'M12 16v-4M12 8h.01M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z',
   };
   return (
@@ -119,16 +122,33 @@ export const useAviso = () => useContext(CtxToast);
 
 export function AvisosProvider({ children }) {
   const [msg, setMsg] = useState(null);
-  const mostrar = useCallback((texto) => {
-    setMsg(texto);
-    window.clearTimeout(mostrar.t);
-    mostrar.t = window.setTimeout(() => setMsg(null), 4200);
+  const temp = useRef(null);
+  // mostrar(texto) o mostrar(texto, { accion: { texto, hacer }, segundos }): con acción, el aviso dura 7 s y muestra una cuenta regresiva.
+  const mostrar = useCallback((texto, opciones = {}) => {
+    window.clearTimeout(temp.current);
+    const ms = opciones.accion ? (opciones.segundos ?? 7) * 1000 : 4200;
+    setMsg({ texto, accion: opciones.accion, ms, k: Date.now() });
+    temp.current = window.setTimeout(() => setMsg(null), ms);
   }, []);
+  const cerrar = () => {
+    window.clearTimeout(temp.current);
+    setMsg(null);
+  };
   return (
     <CtxToast.Provider value={mostrar}>
       {children}
       <div className="toast-zona no-print" aria-live="polite">
-        {msg && <div className="toast">{msg}</div>}
+        {msg && (
+          <div className="toast" key={msg.k}>
+            <span>{msg.texto}</span>
+            {msg.accion && (
+              <button type="button" className="toast-deshacer" onClick={() => { msg.accion.hacer(); cerrar(); }}>
+                {msg.accion.texto}
+              </button>
+            )}
+            {msg.accion && <span className="toast-barra" style={{ animationDuration: `${msg.ms}ms` }} aria-hidden="true" />}
+          </div>
+        )}
       </div>
     </CtxToast.Provider>
   );

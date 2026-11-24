@@ -173,12 +173,22 @@ function registrarPago(s, a) {
   const pago = {
     id: nuevoId('pg', s.pagos.length), payerId: a.payerId, importe: a.importe, fecha: a.fecha || HOY, nota: a.nota || '',
     estado: 'vigente', reemplazaA: a.reemplazaA || null, motivo: null, reqId: a.reqId,
+    forma: a.forma || null, final: Boolean(a.final),
   };
   return { ...s, pagos: [...s.pagos, pago], reqIds: { ...s.reqIds, [a.reqId]: true } };
 }
 
+// Registra como pagado lo que falta de cada responsable. Estos pagos son definitivos (no se anulan ni se corrigen).
+function cubrirTodo(s, nota) {
+  let t = s;
+  for (const p of vistaCobranza(s)) {
+    if (p.pendiente > 0) t = registrarPago(t, { reqId: `final-${p.id}`, payerId: p.id, importe: p.pendiente, fecha: HOY, nota, final: true });
+  }
+  return t;
+}
+
 function anularPago(s, pagoId, motivo) {
-  return { ...s, pagos: s.pagos.map((p) => (p.id === pagoId && p.estado === 'vigente' ? { ...p, estado: 'anulado', motivo: motivo || 'Sin motivo' } : p)) };
+  return { ...s, pagos: s.pagos.map((p) => (p.id === pagoId && p.estado === 'vigente' && !p.final ? { ...p, estado: 'anulado', motivo: motivo || 'Sin motivo' } : p)) };
 }
 
 export function reducer(s, a) {
@@ -271,8 +281,24 @@ export function reducer(s, a) {
       const pagadores = vivos.map((p, i) => ({ ...p, folio: `AV-${s.quincena.id.slice(2).toUpperCase()}-${String(i + 1).padStart(3, '0')}`, version: 1 }));
       return { ...s, quincena: { ...s.quincena, estado: 'confirmada', confirmadaEl: HOY, snapshot: { pagadores } } };
     }
-    case 'CERRAR_QUINCENA':
-      return s.quincena.estado === 'confirmada' ? { ...s, quincena: { ...s.quincena, estado: 'cerrada', cerradaEl: HOY } } : s;
+    case 'CERRAR_QUINCENA': {
+      if (s.quincena.estado !== 'confirmada') return s;
+      // El registro es opcional: si no hubo ningún pago registrado, al cierre todo se da por cubierto.
+      const t = s.pagos.some((p) => p.estado === 'vigente') ? s : cubrirTodo(s, 'Cubierto al cierre');
+      return { ...t, quincena: { ...t.quincena, estado: 'cerrada', cerradaEl: HOY } };
+    }
+    case 'MARCAR_TODO_PAGADO':
+      return s.quincena.estado === 'confirmada' ? cubrirTodo(s, 'Marcado como pagado (no reversible)') : s;
+    case 'DESHACER_PAGO': {
+      const pg = s.pagos.find((p) => (a.pagoId ? p.id === a.pagoId : p.reqId === a.reqId));
+      if (!pg || pg.final) return s;
+      const { [pg.reqId]: _quitado, ...reqIds } = s.reqIds;
+      return { ...s, pagos: s.pagos.filter((p) => p.id !== pg.id), reqIds };
+    }
+    case 'TOGGLE_VALERA_PAGADA':
+      return { ...s, valeraPagada: { ...(s.valeraPagada || {}), [a.valeraId]: !s.valeraPagada?.[a.valeraId] } };
+    case 'SET_PRECIERRE':
+      return { ...s, preCierre: Boolean(a.valor) };
 
     case 'REGISTRAR_PAGO':
       return registrarPago(s, a);
@@ -280,7 +306,7 @@ export function reducer(s, a) {
       return anularPago(s, a.pagoId, a.motivo);
     case 'CORREGIR_PAGO': {
       const viejo = s.pagos.find((p) => p.id === a.pagoId && p.estado === 'vigente');
-      if (!viejo || s.reqIds[a.reqId]) return s;
+      if (!viejo || viejo.final || s.reqIds[a.reqId]) return s;
       const t = anularPago(s, a.pagoId, `Corregido: ${a.motivo || 'importe equivocado'}`);
       const hecho = registrarPago(t, { ...a, payerId: viejo.payerId, reemplazaA: viejo.id });
       return hecho === t ? s : hecho; // si el nuevo importe no es válido, no se anula nada

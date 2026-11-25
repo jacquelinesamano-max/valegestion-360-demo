@@ -197,7 +197,7 @@ body{font:17px/1.5 system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Ar
 .empresa .monto.al{color:var(--warn)}
 .empresa .monto.su{color:var(--muted)}
 .empresa small{color:var(--muted);font-size:14px}
-.tono-0{background:#e3f2ef;color:#0b6e63}.tono-1{background:#d1fae5;color:#047857}.tono-2{background:#ffedd5;color:#c2410c}.tono-3{background:#dbeafe;color:#1d4ed8}
+.tono-0{background:#e3f2ef;color:#0b6e63}.tono-1{background:#ede9fe;color:#5b21b6}.tono-2{background:#ffedd5;color:#c2410c}.tono-3{background:#dbeafe;color:#1d4ed8}
 .accesos{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}
 .acceso{border-radius:20px;padding:16px 12px;display:grid;gap:8px;justify-items:center;text-align:center;font-weight:700;min-height:108px;align-content:center;border:0;font-size:17px;cursor:pointer;font-family:inherit}
 .foco{display:flex;gap:14px;align-items:center;background:#fff1f2;border:1px solid #fecdd3;border-radius:20px;padding:14px 16px;text-align:left;color:inherit;font:inherit;cursor:pointer;width:100%}
@@ -347,7 +347,7 @@ button.step{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer
 .chart .xl.sel{fill:var(--brand);font-weight:800}
 .chart .ln{fill:none;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
 .chart .dt{fill:none;stroke-width:9;stroke-linecap:round}
-.c0{stroke:#0b6e63;background:#0b6e63}.c1{stroke:#0f766e;background:#0f766e}.c2{stroke:#c2410c;background:#c2410c}.c3{stroke:#1d4ed8;background:#1d4ed8}.c4{stroke:#be185d;background:#be185d}.c5{stroke:#4d7c0f;background:#4d7c0f}
+.c0{stroke:#0b6e63;background:#0b6e63}.c1{stroke:#5b21b6;background:#5b21b6}.c2{stroke:#c2410c;background:#c2410c}.c3{stroke:#1d4ed8;background:#1d4ed8}.c4{stroke:#be185d;background:#be185d}.c5{stroke:#4d7c0f;background:#4d7c0f}
 .chart .c0,.chart .c1,.chart .c2,.chart .c3,.chart .c4,.chart .c5{background:none}
 .vlist{display:grid;gap:2px}
 .vrow{display:grid;grid-template-columns:14px minmax(0,1fr) auto auto;gap:4px 10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
@@ -553,7 +553,7 @@ button.step{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer
 .vcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--acc,var(--brand));transition:width .25s var(--ease)}
 .vcard::after{content:"\2192";position:absolute;right:14px;bottom:12px;font-size:18px;font-weight:700;color:var(--acc,var(--brand));opacity:0;transform:translateX(-6px);transition:.25s var(--ease)}
 .vcard:nth-child(1){animation-delay:.05s}.vcard:nth-child(2){animation-delay:.1s}.vcard:nth-child(3){animation-delay:.15s}.vcard:nth-child(4){animation-delay:.2s}.vcard:nth-child(5){animation-delay:.25s}.vcard:nth-child(6){animation-delay:.3s}
-.vcard:has(.tono-0){--acc:#0b6e63}.vcard:has(.tono-1){--acc:#047857}.vcard:has(.tono-2){--acc:#c2410c}.vcard:has(.tono-3){--acc:#1d4ed8}
+.vcard:has(.tono-0){--acc:#0b6e63}.vcard:has(.tono-1){--acc:#5b21b6}.vcard:has(.tono-2){--acc:#c2410c}.vcard:has(.tono-3){--acc:#1d4ed8}
 .vcard:hover{transform:translateY(-4px);border-color:var(--acc,var(--brand));box-shadow:0 2px 4px rgba(14,42,39,.08),0 18px 34px -10px rgba(14,42,39,.28)}
 .vcard:hover::before{width:8px}.vcard:hover::after{opacity:1;transform:none}
 .vcard:active{transform:translateY(-1px) scale(.975);transition-duration:.08s}
@@ -955,3 +955,12 @@ svg.logo{background:none;border-radius:0;display:block;flex:none}
 .prebanner{display:grid;gap:10px;margin:0 0 14px;padding:14px 16px;border-radius:14px;background:var(--warnbg);border:1px solid #e6c36a;color:#4a3000}
 .prebanner .irrev{display:block;margin-top:4px;color:var(--risk)}
 .nb{position:relative}.nbadge{margin-left:auto;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#fff4de;color:#8a5300;border:1px solid #e6c36a;font-size:12.5px;font-weight:700;display:inline-grid;place-items:center}
+/* Cada valera conserva su color también en su barra de avance (Pagos a tus valeras) */
+.vprow:has(.tono-1) .vpbar i{background:linear-gradient(90deg,#5b21b6,#a78bfa)}
+.vprow:has(.tono-2) .vpbar i{background:linear-gradient(90deg,#c2410c,#fb923c)}
+.vprow:has(.tono-3) .vpbar i{background:linear-gradient(90deg,#1d4ed8,#60a5fa)}
+/* Quinta y sexta valera: mismo color que su línea en la gráfica (c4 rosa, c5 oliva) */
+.tono-4{background:#fce7f3;color:#be185d}.tono-5{background:#ecfccb;color:#4d7c0f}
+.vcard:has(.tono-4){--acc:#be185d}.vcard:has(.tono-5){--acc:#4d7c0f}
+.vprow:has(.tono-4) .vpbar i{background:linear-gradient(90deg,#be185d,#f472b6)}
+.vprow:has(.tono-5) .vpbar i{background:linear-gradient(90deg,#4d7c0f,#a3e635)}

@@ -1162,7 +1162,7 @@ renderVals(){
   V.vpOn=!!snap&&vps.length>0;
   V.vpay=vps.map((v,i)=>{ let owe=0,got=0; withSt.forEach(x=>{ linesOf(x.r).forEach(l=>{ if(l.v!==v.id) return; owe+=l.imp; if(x.saldo<=0.001) got+=l.imp; }); });
    const days=v.pago-HOY; const paid=!!(s.vpaid||{})[v.id]; const gain=Math.round(owe*(COM[v.id]||0)/100); if(!paid) gainT+=gain;
-   return {id:v.id,day:v.pago,paid:paid,n:v.n,sig:v.n.replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase(),t:i%4,lg:logoOf(v.n),owe:fmt(owe),got:fmt(got),pct:owe?Math.round(got/owe*100):0,gain:fmt(gain),oweN:owe,
+   return {id:v.id,day:v.pago,paid:paid,n:v.n,sig:v.n.replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase(),t:i%6,lg:logoOf(v.n),owe:fmt(owe),got:fmt(got),pct:owe?Math.round(got/owe*100):0,gain:fmt(gain),oweN:owe,
     fecha:v.pago+' nov',due:paid?'Pagada':(days<=0?'Vence hoy':(days<=5?'Vence en '+days+(days===1?' día':' días'):'Faltan '+days+' días')),dueC:paid?'ok':(days<=5?'warn':'neutral'),
     isPaid:paid,canMark:!paid&&!s.closed,mark:()=>me.upd({vpaid:{...(me.state.vpaid||{}),[v.id]:true},toast:v.n+': anotaste que ya le pagaste. Puedes deshacerlo.'}),unmark:()=>me.upd({vpaid:{...(me.state.vpaid||{}),[v.id]:false}}),
     cobrar:()=>me.go('relacion',{relV:v.id,relCol:'todas',relF:'todos',relQ:'',relS:'vence'})}; });
@@ -1295,7 +1295,7 @@ renderVals(){
   V.valCards=V.valList.map((v,i)=>{ const sig=v.n.replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase();
    const monto=v.isOk?v.tot:(v.isNada?'Sin relación':(v.isRev?'En revisión':'Por cargar'));
    const sub=v.isOk?(v.nMov+' movimientos'):(v.isNada?'Indicaste que no la recibiste':(v.isRev?'Toca para revisar lo que se leyó':'Toca para subir su relación'));
-   return {n:v.n,sig:sig,lg:logoOf(v.n),t:i%4,monto:monto,mc:v.isOk?'':(v.isPend?'al':'su'),sub:sub,open:v.open}; });
+   return {n:v.n,sig:sig,lg:logoOf(v.n),t:i%6,monto:monto,mc:v.isOk?'':(v.isPend?'al':'su'),sub:sub,open:v.open}; });
   const faltan=s.vals.filter(v=>s.vst[v.id]==='pend').map(v=>v.n);
   V.focoRel=faltan.length>0&&!snap; V.focoRelTitulo=faltan.length?(faltan.length===1?faltan[0]+' aún no tiene su relación cargada':faltan.join(', ')+' aún no tienen su relación cargada'):'';
   V.focoRev=!V.focoRel&&pd.total>0; V.focoOk=!V.focoRel&&!V.focoRev;
@@ -1394,7 +1394,7 @@ renderVals(){
    const mont=st==='ok'?v.tot:(st==='nada'?'Sin relación':(st==='rev'?'Por revisar':(vv.otra?'Otra quincena':'Por cargar')));
    const sub=!flow?(st==='nada'?'No la recibiste este corte':v.chip):(d3?'Lista para tus recibos':'Siguiente: '+short);
    const sg=j=>flow?((d3||j<N-1)?'done':(j===N-1?'cur':'')):'';
-   return {...v,sig:v.n.replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase(),lg:logoOf(v.n),t:i%4,flow:flow,steps:steps,pasoTxt:d3?'4 de 4':'Paso '+N+' de 4',pasoTit:tit,pasoDesc:desc,next:nxt,nextLbl:lbl,s1:sg(0),s2:sg(1),s3:sg(2),s4:sg(3),paso:ch2[0],pasoC:ch2[1],sub2:sub,monto:mont}; });
+   return {...v,sig:v.n.replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase(),lg:logoOf(v.n),t:i%6,flow:flow,steps:steps,pasoTxt:d3?'4 de 4':'Paso '+N+' de 4',pasoTit:tit,pasoDesc:desc,next:nxt,nextLbl:lbl,s1:sg(0),s2:sg(1),s3:sg(2),s4:sg(3),paso:ch2[0],pasoC:ch2[1],sub2:sub,monto:mont}; });
   V.vcards=V.valList.map(v=>{ const ok=v.paso==='Lista'; const nada=v.paso==='Sin relación'; const otra=v.paso==='Otra quincena'; return {n:v.n,sig:v.sig,lg:v.lg,t:v.t,est:ok?'Listo':(nada?'Sin relación':(otra?'Otra quincena':'Pendiente')),chipC:ok?'ok':(nada||otra?'neutral':'warn'),nm:v.flow?v.pasoTxt.replace('Paso ','').replace(' DE ',' de '):'',monto:v.isOk?v.tot:'—',open:v.open}; });
   V.vd=V.valList.find(x=>x.id===s.vid)||V.valList[0]||V.vd;
   V.canAdd=me.cat().concat(s.aprobada?[{id:'G'}]:[]).some(c=>!s.vals.some(x=>x.id===c.id));

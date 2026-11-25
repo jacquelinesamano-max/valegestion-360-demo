@@ -726,7 +726,7 @@
 </main>
 <aside class="rail noprint" aria-label="Resumen y siguiente paso">
 <div class="card railc"><span class="k">Total a cobrar</span><b class="railbig">{{ kTotal }}</b><div class="bar railbar"><i style="width:{{ heroW }}%"></i></div><div class="railrows"><div><span>Cobrado</span><b>{{ kPaid }}</b></div><div><span>Falta por cobrar</span><b>{{ kPend }}</b></div><div><span>Fecha límite</span><b>{{ qLim }}</b></div></div></div>
-<div class="card tint railc"><span class="k">Lo que sigue</span><h2 class="h2">{{ nx.t }}</h2><p class="mut">{{ nx.d }}</p><button class="btn pri block" onClick="{{ nx.go }}">{{ nx.b }}</button></div>
+<div class="card tint railc"><span class="k">Lo que sigue</span><h2 class="h2">{{ nx.t }}</h2><p class="mut">{{ nx.d }}</p><button class="btn pri glow block" onClick="{{ nx.go }}">{{ nx.b }}</button></div>
 </aside>
 <sc-if value="{{ dwOpen }}" hint-placeholder-val="{{ false }}">
 <div class="dwov noprint" onClick="{{ dw.close }}"></div>
@@ -746,7 +746,7 @@
 <button class="btn pri block" disabled="{{ dw.btnDis }}" onClick="{{ submitPay }}">{{ dw.btnTxt }}</button>
 <p class="mut small" style="margin-top:8px">Registrar los pagos es opcional: si prefieres llevarlo a mano con tus recibos impresos, puedes cerrar este panel.</p>
 </div></sc-if>
-<sc-if value="{{ dw.isDone }}" hint-placeholder-val="{{ false }}"><div class="okb"><b>Listo, pago registrado.</b> Registramos {{ dw.doneImp }}. Falta por cobrar: <b>{{ dw.doneSaldo }}</b> · {{ dw.doneEst }}.</div></sc-if>
+<sc-if value="{{ dw.isDone }}" hint-placeholder-val="{{ false }}"><div class="okb" style="position: relative; overflow: hidden;"><b>Listo, pago registrado.</b> Registramos {{ dw.doneImp }}. Falta por cobrar: <b>{{ dw.doneSaldo }}</b> · {{ dw.doneEst }}.<sc-if value="{{ toastUndo }}" hint-placeholder-val="{{ false }}"><div class="row" style="margin-top: 8px;"><button class="btn sm" onClick="{{ undoPay }}">Deshacer (7 s)</button></div><span class="tbar" aria-hidden="true"></span></sc-if></div></sc-if>
 <div class="dwwa">
 <sc-if value="{{ dw.canRemind }}" hint-placeholder-val="{{ false }}"><button class="btn" onClick="{{ dw.remind }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.7-5.4A8.4 8.4 0 1 1 21 11.5z"/></svg>Recordar por WhatsApp</button></sc-if>
 <sc-if value="{{ dw.hasPaid }}" hint-placeholder-val="{{ false }}"><button class="btn" onClick="{{ dw.voucher }}">Enviar comprobante</button></sc-if>
@@ -1207,7 +1207,7 @@ renderVals(){
    waGo:()=>{ try{ window.open('https://wa.me/?text='+encodeURIComponent(waMsg),'_blank'); }catch(e){} },waCopy:()=>{ try{ navigator.clipboard.writeText(waMsg); me.setState({toast:'Mensaje copiado.'}); }catch(e){ me.setState({toast:'No se pudo copiar. Selecciona el texto y cópialo.'}); } },waClose:()=>me.setState({wa:null}),
    own:w.r.own.map(l=>({vn:l.vn,ref:l.ref,imp:fmt(l.imp),lg:logoOf(l.vn)})),noOwn:w.r.own.length===0,hasRecs:w.r.recs.length>0,recs:w.r.recs.map(l=>({who:l.who,vn:l.vn,imp:fmt(l.imp)})),
    noPays:paysW.length===0,pays:paysW.map(p=>payRow(p)),recibo:()=>me.upd({drawer:false,payForm:null,wa:null,screen:'recibos',recSel:w.r.id,toast:''}),isEmb:w.r.recN>0,ficha:()=>me.upd({drawer:false,payForm:null,wa:null,screen:'ficha',fid:w.r.id,toast:''}),
-   close:()=>me.upd({drawer:false,payForm:null,wa:null,undoPid:null,toast:''})}
+   close:()=>{ const keep=!!me.state.undoPid; me.upd(keep?{drawer:false,payForm:null,wa:null}:{drawer:false,payForm:null,wa:null,undoPid:null,toast:''}); }}
    :{n:'',est:'',estC:'',ctx:'',total:'',paid:'',saldo:'',closed:false,canForm:false,imp:'',fecha:'',obs:'',hint:'',hintCls:'',halfAmt:'',btnDis:true,btnTxt:'',full:()=>{},half:()=>{},efCls:'',trCls:'',metEf:()=>{},metTr:()=>{},isDone:false,doneImp:'',doneSaldo:'',doneEst:'',canRemind:false,hasPaid:false,remind:()=>{},voucher:()=>{},waOpen:false,waMsg:'',waGo:()=>{},waCopy:()=>{},waClose:()=>{},own:[],noOwn:false,hasRecs:false,recs:[],noPays:true,pays:[],recibo:()=>{},isEmb:false,ficha:()=>{},close:()=>{}}; }
  // pagos
  const allp=s.pays.slice().reverse(); const nameOf=id=>(recs.find(r=>r.id===id)||{n:(E[id]||{}).n||id}).n;
@@ -1403,7 +1403,7 @@ renderVals(){
   V.focoRelTitulo=faltan2.length?(faltan2.length===1?faltan2[0].n:faltan2.map(v=>v.n).join(', ')):'';
   // tu cobranza
   { const nv=s.vals.length, okC=s.vals.filter(v=>s.vst[v.id]==='ok'||s.vst[v.id]==='nada').length, none=nv>0&&faltan2.length===nv, nxx=V.nx;
-   V.cobEy='Siguiente paso'; V.cobKind=''; V.cobCls='pri';
+   V.cobEy='Siguiente paso'; V.cobKind=''; V.cobCls='pri glow';
    if(snap){ V.cobEy='Cobranza confirmada'; V.cobKind='ok'; V.cobTit='Ya puedes cobrar'; V.cobTxt='Imprime tus recibos o anota los pagos.'; V.cobBtn='Ir a Cobranza'; V.cobGo=g('cobranza');
     const first=(V.vpay||[]).filter(x=>!x.paid).sort((a,b)=>a.day-b.day)[0]; if(first){ V.cobTit='Cobra primero lo de '+first.n+' antes del '+first.fecha; V.cobTxt='Debes pagarle '+first.owe+' a esta valera ('+first.due.toLowerCase()+'). Empieza por sus clientes. Registrar los pagos es opcional: puedes llevarlo con tus recibos impresos.'; V.cobBtn='Cobrar clientes de '+first.n; V.cobGo=first.cobrar; } }
    else if(nv===0){ V.cobTit='Empieza agregando tus valeras'; V.cobTxt='Elige las que distribuyes.'; V.cobBtn='Agregar valeras'; V.cobGo=g('valeras'); }

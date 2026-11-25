@@ -964,3 +964,16 @@ svg.logo{background:none;border-radius:0;display:block;flex:none}
 .vcard:has(.tono-4){--acc:#be185d}.vcard:has(.tono-5){--acc:#4d7c0f}
 .vprow:has(.tono-4) .vpbar i{background:linear-gradient(90deg,#be185d,#f472b6)}
 .vprow:has(.tono-5) .vpbar i{background:linear-gradient(90deg,#4d7c0f,#a3e635)}
+/* Al aparecer la flecha de la tarjeta, el "n de N" se oculta por completo para que no se encimen */
+.vcard .vnm{transition:opacity .2s var(--ease)}
+.vcard:hover .vnm,.vcard:focus-visible .vnm{opacity:0}
+.vcard:focus-visible::after{opacity:1;transform:none}
+
+/* Luz animada: solo en el botón del siguiente paso (transform y opacity) */
+.btn.glow{position:relative}
+.btn.glow::before{content:"";position:absolute;inset:-4px;border-radius:14px;border:2px solid #5ee0c1;opacity:0;pointer-events:none;animation:glowring 2.8s ease-in-out infinite}
+.btn.glow::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;clip-path:inset(0 round 10px);background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.38) 50%,transparent 65%);transform:translateX(-120%);animation:glowsweep 3.6s var(--ease) infinite}
+.btn.glow:hover::before,.btn.glow:hover::after,.btn.glow:focus-visible::before{animation-play-state:paused}
+@keyframes glowring{0%,100%{opacity:0;transform:scale(.985)}50%{opacity:.85;transform:scale(1)}}
+@keyframes glowsweep{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+@media (prefers-reduced-motion:reduce){.btn.glow::before,.btn.glow::after{animation:none!important}.btn.glow::before{opacity:.8;transform:none}}

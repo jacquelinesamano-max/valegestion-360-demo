@@ -923,7 +923,7 @@ svg.logo{background:none;border-radius:0;display:block;flex:none}
 .dwh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:20px 20px 14px;border-bottom:1px solid var(--line)}
 .dwx{min-width:44px;min-height:44px;border:0;background:transparent;border-radius:12px;color:var(--ink);cursor:pointer;display:grid;place-items:center}
 .dwx:hover{background:var(--neubg)}
-.dwb{padding:16px 20px 28px;overflow-y:auto;display:grid;gap:14px;align-content:start}
+.dwb{padding:16px 20px 28px;overflow-y:auto;display:grid;gap:14px;align-content:start;grid-auto-rows:max-content}
 .dwk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .dwk b{display:block;font-family:var(--display);font-size:20px;font-variant-numeric:tabular-nums}
 .dwk b.big{font-size:26px;color:var(--btext)}

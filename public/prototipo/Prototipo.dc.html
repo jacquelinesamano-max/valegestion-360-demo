@@ -46,7 +46,7 @@
 </sc-if>
 
 <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
-<div class="app">
+<div class="app {{ nwCls }}">
 <aside class="side noprint {{ sideMin }}" aria-label="Menú">
 <div class="brand"><svg class="logo " width="36" height="36" viewBox="0 0 120 120" role="img" aria-label="ValeGestión 360"><rect width="120" height="120" rx="27" fill="#0E2A27"/><g transform="translate(16.8 16.1) scale(0.72)"><path d="M84 68.6H97.42A38 38 0 1 1 66.6 24.58" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M41 61L54 74L98 22.5" fill="none" stroke="#5EE0C1" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></g></svg><span>ValeGestión <span class="b360">360</span></span></div>
 <sc-for list="{{ nav }}" as="n" hint-placeholder-count="5">
@@ -97,7 +97,7 @@
 <div class="seccion-titulo"><h2 class="h2">Mis valeras</h2></div>
 <div class="vcards">
 <sc-for list="{{ vcards }}" as="v" hint-placeholder-count="4">
-<button class="vcard" onClick="{{ v.open }}"><span class="vtop"><span class="sigla tono-{{ v.t }} {{ v.lg.cls }}"><sc-if value="{{ v.lg.has }}" hint-placeholder-val="{{ false }}"><img src="{{ v.lg.src }}" alt=""></sc-if><sc-if value="{{ v.lg.no }}" hint-placeholder-val="{{ true }}">{{ v.sig }}</sc-if></span><span class="chip {{ v.chipC }}">{{ v.est }}</span></span><b class="vn2">{{ v.n }}</b><span class="vfoot2"><b class="vmonto">{{ v.monto }}</b><span class="vnm">{{ v.nm }}</span></span></button>
+<button class="vcard" onClick="{{ v.open }}"><span class="vtop"><span class="sigla tono-{{ v.t }} {{ v.lg.cls }}"><sc-if value="{{ v.lg.has }}" hint-placeholder-val="{{ false }}"><img src="{{ v.lg.src }}" alt=""></sc-if><sc-if value="{{ v.lg.no }}" hint-placeholder-val="{{ true }}">{{ v.sig }}</sc-if></span><span class="chip {{ v.chipC }}" title="{{ v.est }}"><span class="chl">{{ v.est }}</span><span class="chs" aria-hidden="true">{{ v.estS }}</span></span></span><b class="vn2">{{ v.n }}</b><span class="vfoot2"><b class="vmonto">{{ v.monto }}</b><span class="vnm">{{ v.nm }}</span></span></button>
 </sc-for>
 <sc-if value="{{ canAdd }}" hint-placeholder-val="{{ true }}"><button class="vcard add" onClick="{{ openCat }}"><span class="plus">+</span><b>Agregar valera</b></button></sc-if>
 </div>
@@ -105,8 +105,8 @@
 <span class="row" style="margin-top:8px"><button class="btn sm pri" onClick="{{ focoSubir }}">Sí, la subo</button><button class="btn sm" onClick="{{ omitirPend }}">La omito</button></span></span></div></sc-if>
 </sc-if>
 <sc-if value="{{ isInicio }}" hint-placeholder-val="{{ false }}">
-<div class="card cobcard {{ cobKind }}">
-<div class="cobtx"><small class="cobey">{{ cobEy }}</small><h2 class="h2" style="margin:0">{{ cobTit }}</h2><span class="mut">{{ cobTxt }}</span></div>
+<div class="card cobcard {{ cobKind }} {{ cobMinCls }}">
+<div class="cobtx"><div class="cobhd"><small class="cobey">{{ cobEy }}</small> <h2 class="h2 cobh">{{ cobTit }}</h2><sc-if value="{{ cobHasTxt }}" hint-placeholder-val="{{ true }}"><button class="cobtog" onClick="{{ cobTog }}" aria-expanded="{{ cobExp }}" aria-label="{{ cobTogLbl }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></sc-if></div><sc-if value="{{ cobShowTxt }}" hint-placeholder-val="{{ true }}"><span class="mut">{{ cobTxt }}</span></sc-if></div>
 <button class="btn lg {{ cobCls }}" onClick="{{ cobGo }}">{{ cobBtn }}</button>
 </div>
 </sc-if>
@@ -177,7 +177,7 @@
 
 <sc-if value="{{ isCatalogo }}" hint-placeholder-val="{{ false }}">
 <section>
-<button class="link" onClick="{{ gValeras }}">‹ Volver a valeras</button>
+<button class="link" onClick="{{ gValeras }}">‹ Atrás</button>
 <h1 class="h1">Agregar valera</h1>
 <div class="field"><label for="cvq">Buscar valera</label><input id="cvq" class="inp" placeholder="Escribe un nombre" value="{{ catQ }}" onChange="{{ setCatQ }}"></div>
 <sc-for list="{{ catList }}" as="c" hint-placeholder-count="5">
@@ -191,7 +191,7 @@
 
 <sc-if value="{{ isSolicitar }}" hint-placeholder-val="{{ false }}">
 <section>
-<button class="link" onClick="{{ openCat }}">‹ Volver al catálogo</button>
+<button class="link" onClick="{{ openCat }}">‹ Atrás</button>
 <h1 class="h1">Solicitar una valera</h1>
 <div class="card">
 <div class="field"><label for="rqn">Nombre de la valera</label><input id="rqn" class="inp" value="{{ reqN }}" onChange="{{ setReqN }}"></div>
@@ -352,7 +352,7 @@
 <sc-if value="{{ cliMenuF }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Mostrar</span><sc-for list="{{ cliFilters }}" as="f" hint-placeholder-count="5"><button class="popb {{ f.cls }}" onClick="{{ f.go }}">{{ f.l }}</button></sc-for></div></sc-if>
 <sc-if value="{{ cliMenuS }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Ordenar por</span><sc-for list="{{ cliSorts }}" as="f" hint-placeholder-count="2"><button class="popb {{ f.cls }}" onClick="{{ f.go }}">{{ f.l }}</button></sc-for></div></sc-if>
 <sc-for list="{{ cliList }}" as="c" hint-placeholder-count="5">
-<button class="mcard" style="display:block;width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit" onClick="{{ c.go }}"><span class="row"><span class="sp"><span class="who">{{ c.n }}</span><span class="mut small" style="display:block">{{ c.meta }}</span></span><sc-if value="{{ c.nuevo }}" hint-placeholder-val="{{ false }}"><span class="chip warn">{{ c.nuevoTxt }}</span></sc-if><span class="chip {{ c.chipC }}">{{ c.chip }}</span><span aria-hidden="true" style="font-size:24px;color:var(--muted)">›</span></span>
+<button class="mcard" style="display:block;width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit" onClick="{{ c.go }}"><span class="row"><span class="sp"><span class="who">{{ c.n }}</span><span class="mut small" style="display:block">{{ c.meta }}</span></span><sc-if value="{{ c.nuevo }}" hint-placeholder-val="{{ false }}"><span class="chip warn">{{ c.nuevoTxt }}</span></sc-if><span class="chip {{ c.chipC }}" title="{{ c.chip }}"><span class="chl">{{ c.chip }}</span><span class="chs" aria-hidden="true">{{ c.chipS }}</span></span><span aria-hidden="true" style="font-size:24px;color:var(--muted)">›</span></span>
 </button>
 </sc-for>
 <div class="row" style="margin:4px 0 12px"><span class="mut">{{ cliShown }}</span><sc-if value="{{ cliMore }}" hint-placeholder-val="{{ false }}"><button class="btn sm" onClick="{{ moreCli }}">Mostrar {{ cliMoreN }} más</button></sc-if></div>
@@ -363,7 +363,7 @@
 
 <sc-if value="{{ isFicha }}" hint-placeholder-val="{{ false }}">
 <section>
-<button class="link" onClick="{{ gClientes }}">‹ Volver a clientes</button>
+<button class="link" onClick="{{ gClientes }}">‹ Atrás</button>
 <h1 class="h1">{{ fc.n }}</h1>
 <div class="row" style="margin-bottom:6px"><span class="chip info">{{ fc.roleChip }}</span></div>
 <p class="sub">{{ fc.meta }}</p>
@@ -453,10 +453,10 @@
 <sc-if value="{{ cobVig }}" hint-placeholder-val="{{ true }}">
 <sc-if value="{{ noConf }}" hint-placeholder-val="{{ true }}"><div class="warnb">Cobranza sin confirmar: cifras parciales. <button class="link" onClick="{{ nx.go }}">{{ nx.b }}</button></div></sc-if>
 <div class="kpis">
-<div class="kpi"><span class="k">Total a cobrar</span><b>{{ kTotal }}</b><span class="d">{{ kTotalNote }}</span></div>
-<div class="kpi"><span class="k">Cobrado</span><b>{{ kPaid }}</b><span class="d">{{ kPaidNote }}</span></div>
+<div class="kpi"><span class="k">Total a cobrar</span><b>{{ kTotal }}</b></div>
+<div class="kpi"><span class="k">Cobrado</span><b>{{ kPaid }}</b></div>
 <div class="kpi lead"><span class="k">Pendiente de cobrar</span><b>{{ kPend }}</b><span class="d">{{ kPendNote }}</span></div>
-<div class="kpi"><span class="k">Recibos del corte</span><b>{{ eRecN }}</b><span class="d">Uno por cliente que paga</span></div>
+<div class="kpi"><span class="k">Recibos del corte</span><b>{{ eRecN }}</b></div>
 </div>
 <sc-if value="{{ vpOn }}" hint-placeholder-val="{{ false }}"><div class="card vpay">
 <div class="card-head"><div><h2 class="h2" style="margin:0">Pagos a tus valeras</h2><p class="mut small">Cada valera tiene su propia fecha de pago.</p></div><span class="chip ok">Ganancia posible {{ vpGain }}</span></div>
@@ -517,17 +517,20 @@
 <sc-if value="{{ isConf }}" hint-placeholder-val="{{ false }}">
 <div class="kpis"><div class="kpi"><span class="k">Total a cobrar</span><b>{{ kTotal }}</b></div><div class="kpi"><span class="k">Cobrado</span><b>{{ kPaid }}</b></div><div class="kpi lead"><span class="k">Pendiente de cobrar</span><b>{{ kPend }}</b></div></div>
 
-<div class="vfilt noprint" role="group" aria-label="Filtrar por valera"><sc-for list="{{ relVs }}" as="f" hint-placeholder-count="4"><button class="vf {{ f.cls }}" aria-pressed="{{ f.on }}" aria-label="{{ f.aria }}" onClick="{{ f.go }}"><sc-if value="{{ f.lg.has }}" hint-placeholder-val="{{ false }}"><img src="{{ f.lg.src }}" alt=""></sc-if><span>{{ f.l }}</span></button></sc-for></div>
+<sc-if value="{{ relVActive }}" hint-placeholder-val="{{ false }}"><div class="vtag noprint"><span>Solo: <b>{{ relVName }}</b></span><button class="btn sm" onClick="{{ relVClear }}">Ver todas</button></div></sc-if>
 <div class="colrow noprint"><label for="rcol" class="small" style="font-weight:600">Ruta por colonia</label><select id="rcol" class="inp colsel" value="{{ relCol }}" onChange="{{ setRelCol }}"><sc-for list="{{ relCols }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.l }}</option></sc-for></select></div>
 <div class="toolbar noprint"><input id="rq2" class="inp" placeholder="Buscar cliente" aria-label="Buscar cliente" value="{{ relQ }}" onChange="{{ setRelQ }}"><button class="ibtn {{ relFHas }}" aria-label="Filtrar" aria-expanded="{{ relFExp }}" onClick="{{ toggleRelF }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg></button><button class="ibtn" aria-label="Ordenar" aria-expanded="{{ relSExp }}" onClick="{{ toggleRelS }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"/></svg></button><button class="ibtn" aria-label="Más acciones: imprimir o descargar" aria-expanded="{{ relMExp }}" onClick="{{ toggleRelM }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></div>
 <sc-if value="{{ relMenuF }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Estado</span><sc-for list="{{ relFilters }}" as="f" hint-placeholder-count="4"><button class="popb {{ f.cls }}" onClick="{{ f.go }}">{{ f.l }}</button></sc-for><span class="pgl">Tipo</span><sc-for list="{{ relTypes }}" as="f" hint-placeholder-count="3"><button class="popb {{ f.cls }}" onClick="{{ f.go }}">{{ f.l }}</button></sc-for></div></sc-if>
 <sc-if value="{{ relMenuM }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Más acciones</span><button class="popb" onClick="{{ relPrint }}">Imprimir relación</button><button class="popb" onClick="{{ relDl }}">Descargar Excel</button></div></sc-if>
 <sc-if value="{{ relMenuS }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Ordenar por</span><sc-for list="{{ relSorts }}" as="f" hint-placeholder-count="2"><button class="popb {{ f.cls }}" onClick="{{ f.go }}">{{ f.l }}</button></sc-for></div></sc-if>
-<div class="th"><span>Responsable de pago</span><span>Total a cobrar</span><span>Pagado</span><span>Falta</span><span>Estado</span><span></span></div>
 <sc-for list="{{ relList }}" as="r" hint-placeholder-count="6">
-<div class="tr st-{{ r.estC }}"><span><b class="nm">{{ r.n }}</b><span class="mut small" style="display:block">{{ r.recTxt }}</span><sc-if value="{{ r.sinPropios }}" hint-placeholder-val="{{ false }}"><span class="mut small" style="display:block">Sin vales propios: cobra lo de sus recomendados</span></sc-if></span>
-<span class="num2"><span class="lbl">Total</span>{{ r.total }}</span><span class="num2"><span class="lbl">Pagado</span>{{ r.paid }}</span><span class="num2"><span class="lbl">Falta</span>{{ r.saldo }}</span><span><span class="chip {{ r.estC }}">{{ r.est }}</span></span>
-<span class="acts"><button class="btn sm" onClick="{{ r.detail }}">Ver detalle</button><sc-if value="{{ r.canPay }}" hint-placeholder-val="{{ true }}"><button class="btn pri sm" onClick="{{ r.pay }}">Registrar pago</button></sc-if></span></div>
+<div class="rcard st-{{ r.estC }}">
+<div class="rc-top"><b class="nm">{{ r.n }}</b><sc-if value="{{ r.hasLogos }}" hint-placeholder-val="{{ true }}"><span class="rc-logos" aria-label="Valeras con vale propio"><sc-for list="{{ r.logos }}" as="lg" hint-placeholder-count="2"><span class="mini tono-{{ lg.t }}" title="{{ lg.n }}"><sc-if value="{{ lg.has }}" hint-placeholder-val="{{ true }}"><img src="{{ lg.src }}" alt="{{ lg.n }}"></sc-if><sc-if value="{{ lg.no }}" hint-placeholder-val="{{ false }}"><span aria-label="{{ lg.n }}">{{ lg.sig }}</span></sc-if></span></sc-for></span></sc-if></div>
+<div class="rc-info"><span class="mut small">{{ r.recTxt }}</span><span class="chip {{ r.estC }}">{{ r.est }}</span></div>
+<sc-if value="{{ r.sinPropios }}" hint-placeholder-val="{{ false }}"><span class="mut small" style="display:block">Sin vales propios: cobra lo de sus recomendados</span></sc-if>
+<div class="rc-nums"><span class="num2"><span class="lbl">Total</span>{{ r.total }}</span><span class="num2"><span class="lbl">Pagado</span>{{ r.paid }}</span><span class="num2"><span class="lbl">Falta</span>{{ r.saldo }}</span></div>
+<div class="rc-acts noprint"><sc-if value="{{ r.canPay }}" hint-placeholder-val="{{ true }}"><button class="btn pri sm" onClick="{{ r.pay }}">Registrar pago</button></sc-if><button class="btn sm rc-det" onClick="{{ r.detail }}">Ver detalle</button></div>
+</div>
 </sc-for>
 <sc-if value="{{ paidToggle }}" hint-placeholder-val="{{ false }}"><div class="row noprint"><button class="btn sm paidtoggle" aria-expanded="{{ paidOpenA }}" onClick="{{ togglePaid }}">{{ paidToggleTxt }}</button></div></sc-if>
 <div class="row" style="margin:8px 0 12px"><span class="mut">{{ relShown }}</span><sc-if value="{{ relMore }}" hint-placeholder-val="{{ false }}"><button class="btn sm" onClick="{{ moreRel }}">Mostrar {{ relMoreN }} más</button></sc-if></div>
@@ -540,15 +543,18 @@
 
 <sc-if value="{{ isDetalle }}" hint-placeholder-val="{{ false }}">
 <section>
-<button class="link" onClick="{{ gRelacion }}">‹ Volver a la relación</button>
+<button class="link" onClick="{{ gRelacion }}">‹ Atrás</button>
 <h1 class="h1">{{ dt.n }}</h1>
 <div class="row" style="margin-bottom:12px"><span class="chip {{ dt.estC }}">{{ dt.est }}</span><span class="mut">Recibo {{ dt.folio }}{{ dt.locTxt }}</span></div>
 <div class="kpis"><div class="kpi"><span class="k">Total a cobrar</span><b>{{ dt.total }}</b></div><div class="kpi"><span class="k">Pagado</span><b>{{ dt.paid }}</b></div><div class="kpi lead"><span class="k">Falta</span><b>{{ dt.saldo }}</b></div></div>
 <div class="row noprint" style="margin-bottom:12px"><sc-if value="{{ dt.canPay }}" hint-placeholder-val="{{ true }}"><button class="btn pri" onClick="{{ dt.pay }}">Registrar pago</button></sc-if><button class="btn" onClick="{{ dt.recibo }}">Ver recibo</button></div>
-<div class="card"><h2 class="h2">¿Por qué esta cantidad?</h2>
-<sc-if value="{{ dt.hasOwn }}" hint-placeholder-val="{{ true }}"><b>Pagos propios</b><sc-for list="{{ dt.own }}" as="o" hint-placeholder-count="2"><div class="row" style="padding:4px 0"><span class="sp">{{ o.vn }} · vale {{ o.ref }}</span><span class="num2">{{ o.imp }}</span></div></sc-for><div class="row"><b class="sp">Subtotal propios</b><b>{{ dt.ownSub }}</b></div></sc-if>
+<div class="card"><h2 class="h2">Desglose</h2>
+<sc-if value="{{ dt.hasOwn }}" hint-placeholder-val="{{ true }}"><b>Pagos propios</b>
+<sc-for list="{{ dt.ownGrps }}" as="g" hint-placeholder-count="1"><div class="dxg"><button class="dxrow" aria-expanded="{{ g.exp }}" onClick="{{ g.toggle }}"><span class="dxn"><span class="dxfull">{{ g.name }}</span><span class="dxshort">{{ g.nameS }}</span></span><b class="dxamt">{{ g.total }}</b><span class="dxch" aria-hidden="true">›</span></button><sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}"><div class="dxlines"><sc-for list="{{ g.lines }}" as="o" hint-placeholder-count="2"><div class="dxl"><span>{{ o.vn }} · vale {{ o.ref }}</span><span class="num2">{{ o.imp }}</span></div></sc-for></div></sc-if></div></sc-for></sc-if>
 <sc-if value="{{ dt.noOwn }}" hint-placeholder-val="{{ false }}"><p class="mut">No tiene vales propios esta quincena, pero se le cobra lo de sus recomendados.</p></sc-if>
-<sc-if value="{{ dt.hasRec }}" hint-placeholder-val="{{ true }}"><div style="margin-top:12px"><b>Pagos de personas a su cargo</b></div><sc-for list="{{ dt.recs }}" as="o" hint-placeholder-count="2"><div class="row" style="padding:4px 0"><span class="sp">{{ o.who }} · {{ o.vn }} · vale {{ o.ref }}</span><span class="num2">{{ o.imp }}</span></div></sc-for><div class="row"><b class="sp">Subtotal recomendados</b><b>{{ dt.recSub }}</b></div></sc-if>
+<sc-if value="{{ dt.hasRec }}" hint-placeholder-val="{{ true }}"><div style="margin-top:12px"><b>Recomendados</b></div>
+<sc-for list="{{ dt.recGrps }}" as="g" hint-placeholder-count="2"><div class="dxg"><button class="dxrow" aria-expanded="{{ g.exp }}" onClick="{{ g.toggle }}"><span class="dxn"><span class="dxfull">{{ g.name }}</span><span class="dxshort">{{ g.nameS }}</span></span><b class="dxamt">{{ g.total }}</b><span class="dxch" aria-hidden="true">›</span></button><sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}"><div class="dxlines"><sc-for list="{{ g.lines }}" as="o" hint-placeholder-count="2"><div class="dxl"><span>{{ o.vn }} · vale {{ o.ref }}</span><span class="num2">{{ o.imp }}</span></div></sc-for></div></sc-if></div></sc-for>
+<div class="row"><b class="sp">Subtotal recomendados</b><b>{{ dt.recSub }}</b></div></sc-if>
 </div>
 <div class="card"><h2 class="h2">Pagos registrados</h2>
 <sc-if value="{{ dt.noPays }}" hint-placeholder-val="{{ true }}"><p class="mut">Todavía no hay pagos registrados.</p></sc-if>
@@ -588,7 +594,7 @@
 <div class="folder">
 <sc-if value="{{ hasPayRows }}" hint-placeholder-val="{{ false }}"><div class="card flat">
 <div class="card-head"><h2 class="h2" style="margin:0">Pendientes por cobrar</h2><span class="chip info">{{ payProg }}</span></div>
-<div class="row noprint"><button class="{{ markAllCls }}" disabled="{{ markAllDis }}" onClick="{{ markAll }}">{{ markAllTxt }}</button><button class="link" disabled="{{ unmarkAllDis }}" onClick="{{ unmarkAll }}">Desmarcar todos (no pagados)</button></div>
+<div class="row noprint markrow"><button class="{{ markAllCls }}" disabled="{{ markAllDis }}" onClick="{{ markAll }}">{{ markAllTxt }}</button><button class="btn sm" disabled="{{ unmarkAllDis }}" onClick="{{ unmarkAll }}">Desmarcar (no pagados)</button></div>
 
 <div class="toolbar noprint"><input id="pyq" class="inp" placeholder="Buscar cliente" aria-label="Buscar cliente" value="{{ payQ }}" onChange="{{ setPayQ }}"><button class="ibtn {{ payFHas }}" aria-label="Filtrar" aria-expanded="{{ payFExp }}" onClick="{{ togglePayF }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg></button><button class="ibtn" aria-label="Ordenar" aria-expanded="{{ paySExp }}" onClick="{{ togglePayS }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"/></svg></button></div>
 <sc-if value="{{ payMenuF }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Mostrar</span><sc-for list="{{ payFilters }}" as="f" hint-placeholder-count="3"><button class="popb {{ f.cls }}" onClick="{{ f.go }}">{{ f.l }}</button></sc-for></div></sc-if>
@@ -605,9 +611,9 @@
 <div class="row"><button class="btn pri" onClick="{{ doCorr }}">Guardar corrección</button><button class="btn" onClick="{{ cancelCorr }}">Cancelar</button></div></div>
 </sc-if>
 <sc-if value="{{ noPays }}" hint-placeholder-val="{{ true }}"><div class="card"><h2 class="h2">Todavía no hay pagos</h2><p class="mut">Cuando registres un pago desde la relación de cobranza, aparecerá aquí.</p></div></sc-if>
-<sc-if value="{{ hasPaysList }}" hint-placeholder-val="{{ false }}"><div class="th pg"><span>Fecha</span><span>Responsable</span><span>Importe</span><span>Estado</span><span>Detalle</span></div></sc-if>
+<sc-if value="{{ hasPaysList }}" hint-placeholder-val="{{ false }}"><h2 class="h2" style="margin:14px 0 6px">Pagos registrados</h2></sc-if>
 <sc-for list="{{ paysList }}" as="p" hint-placeholder-count="3">
-<div class="tr pg"><span><span class="lbl">Fecha</span>{{ p.fecha }}</span><b class="nm">{{ p.n }}</b><span class="num2"><span class="lbl">Importe</span>{{ p.imp }}</span><span><span class="chip {{ p.chipC }}">{{ p.st }}</span></span><span class="acts"><span class="mut small">{{ p.obs }}{{ p.motivo }}</span><sc-if value="{{ p.canFix }}" hint-placeholder-val="{{ false }}"><button class="btn sm" onClick="{{ p.fix }}">Corregir o anular</button></sc-if></span></div>
+<div class="pgcard"><div class="pg1"><b class="nm">{{ p.n }}</b><b class="pgamt">{{ p.imp }}</b></div><div class="pg2"><span class="mut small">{{ p.fecha }}</span><span class="chip {{ p.chipC }}">{{ p.st }}</span><span class="mut small pgobs">{{ p.obs }}{{ p.motivo }}</span><sc-if value="{{ p.canFix }}" hint-placeholder-val="{{ false }}"><button class="link pgfix" onClick="{{ p.fix }}">Corregir o anular</button></sc-if><sc-if value="{{ p.canRedo }}" hint-placeholder-val="{{ false }}"><button class="btn sm pri pgfix" onClick="{{ p.redo }}">Registrar de nuevo</button></sc-if><sc-if value="{{ p.replaced }}" hint-placeholder-val="{{ false }}"><span class="mut small pgfix">Ya corregido con otro pago</span></sc-if></div></div>
 </sc-for>
 </div>
 <div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
@@ -622,13 +628,13 @@
 <sc-if value="{{ noConf }}" hint-placeholder-val="{{ true }}"><div class="card"><h2 class="h2">Los recibos se preparan al confirmar</h2><p class="mut" style="margin-bottom:12px">Primero termina y confirma tu cobranza.</p><button class="btn pri" onClick="{{ nx.go }}">{{ nx.b }}</button></div></sc-if>
 <sc-if value="{{ isConf }}" hint-placeholder-val="{{ false }}">
 <sc-if value="{{ recList }}" hint-placeholder-val="{{ true }}"><div class="noprint">
+<div class="row" style="margin:0 0 12px"><button class="btn pri" onClick="{{ viewAll }}">Ver todos los recibos</button></div>
 <div class="field"><label for="rcq">Buscar un recibo por nombre</label><input id="rcq" class="inp" placeholder="Escribe un nombre" value="{{ recQ }}" onChange="{{ setRecQ }}"></div>
 <div class="rlist"><sc-for list="{{ recRows }}" as="c" hint-placeholder-count="4"><button class="rrow" onClick="{{ c.go }}"><span class="rn"><b>{{ c.n }}</b><span class="mut">{{ c.t }}</span></span><span class="rt">{{ c.tot }}</span><span class="rg" aria-hidden="true">›</span></button></sc-for></div>
 <sc-if value="{{ recEmpty }}" hint-placeholder-val="{{ false }}"><p class="mut" style="margin:12px 0">No hay recibos con ese nombre.</p></sc-if>
 <sc-if value="{{ recMore }}" hint-placeholder-val="{{ false }}"><div class="row" style="margin:12px 0"><button class="btn" onClick="{{ moreRec }}">Mostrar {{ recMoreN }} más</button></div></sc-if>
-<div class="row" style="margin:16px 0"><button class="btn" onClick="{{ printAll }}">Imprimir todos los recibos</button></div>
 </div></sc-if>
-<sc-if value="{{ recPaper }}" hint-placeholder-val="{{ false }}"><div class="noprint row" style="margin-bottom:16px"><button class="btn" onClick="{{ recBack }}">‹ Volver a la lista</button><sc-if value="{{ recOne }}" hint-placeholder-val="{{ true }}"><button class="btn pri" onClick="{{ printNow }}">Imprimir este recibo</button></sc-if></div>
+<sc-if value="{{ recPaper }}" hint-placeholder-val="{{ false }}"><div class="noprint row" style="margin-bottom:16px"><button class="btn" onClick="{{ recBack }}">‹ Volver a la lista</button><sc-if value="{{ recOne }}" hint-placeholder-val="{{ true }}"><button class="btn pri" onClick="{{ printNow }}">Imprimir este recibo</button></sc-if><sc-if value="{{ recAll }}" hint-placeholder-val="{{ true }}"><button class="btn pri" onClick="{{ printNow }}">Imprimir</button></sc-if><button class="btn" onClick="{{ savePdf }}">Guardar PDF</button></div>
 <sc-if value="{{ recAll }}" hint-placeholder-val="{{ true }}"><div class="noprint" style="margin-bottom:12px"><div class="mut small" style="margin-bottom:6px">Recibos por hoja</div><div class="mut small swipehint" style="margin:-2px 0 8px">En pantallas angostas la hoja se desliza hacia un lado: se muestra a su tamaño real.</div><div class="row laypick"><sc-for list="{{ layOpts }}" as="o" hint-placeholder-count="7"><button class="lay {{ o.cls }}" aria-label="{{ o.aria }}" onClick="{{ o.go }}"><span class="{{ o.ic }}" aria-hidden="true"><sc-for list="{{ o.boxes }}" as="bx" hint-placeholder-count="2"><i></i></sc-for></span></button></sc-for></div><sc-if value="{{ recIsH }}" hint-placeholder-val="{{ false }}"><div style="margin-top:10px"><button class="fitbtn {{ fitCls }}" role="switch" aria-checked="{{ fitPress }}" onClick="{{ toggleFit }}"><span class="fitic" aria-hidden="true"></span>Ajustar</button></div></sc-if></div></sc-if>
 <sc-for list="{{ pages }}" as="pg" hint-placeholder-count="1">
 <div class="paper-wrap">
@@ -705,7 +711,7 @@
 <h2 class="h2">Colocación por corte</h2>
 <sc-for list="{{ eBars }}" as="b" hint-placeholder-count="4"><div class="hbr"><span class="hbl">{{ b.l }}</span><span class="hbt"><span class="hbf" style="width:{{ b.w }}%"></span></span><b class="hbv">{{ b.v }}</b></div></sc-for>
 <h2 class="h2" style="margin-top:6px">Comparar dos cortes</h2>
-<div class="cmprow noprint"><button class="btn" onClick="{{ cycA }}">{{ cmpAT }} ⟳</button><span class="mut">vs</span><button class="btn" onClick="{{ cycB }}">{{ cmpBT }} ⟳</button></div>
+<div class="cmprow noprint"><select class="inp cmpsel" aria-label="Primer corte a comparar" value="{{ cmpAV }}" onChange="{{ setCmpA }}"><sc-for list="{{ cmpOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.l }}</option></sc-for></select><span class="mut">vs</span><select class="inp cmpsel" aria-label="Segundo corte a comparar" value="{{ cmpBV }}" onChange="{{ setCmpB }}"><sc-for list="{{ cmpOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.l }}</option></sc-for></select></div>
 <div class="cmpt cmph"><span>Valera</span><span>{{ cmpAL }}</span><span>{{ cmpBL }}</span><span>Cambio</span></div>
 <sc-for list="{{ hCmpRows }}" as="r" hint-placeholder-count="4"><div class="cmpt"><b>{{ r.n }}</b><span>{{ r.a }}</span><span>{{ r.b }}</span><span class="dl {{ r.dc }}">{{ r.d }}</span></div></sc-for>
 </sc-if>
@@ -752,7 +758,7 @@
 <sc-if value="{{ dw.hasPaid }}" hint-placeholder-val="{{ false }}"><button class="btn" onClick="{{ dw.voucher }}">Enviar comprobante</button></sc-if>
 </div>
 <sc-if value="{{ dw.waOpen }}" hint-placeholder-val="{{ false }}"><div class="wabox"><b>Mensaje para {{ dw.n }}</b><p class="wamsg">{{ dw.waMsg }}</p><p class="mut small">Necesitas tener WhatsApp instalado. Al abrirlo eliges el contacto y el mensaje ya va escrito; tú decides si lo envías.</p><div class="row"><button class="btn pri sm" onClick="{{ dw.waGo }}">Abrir WhatsApp</button><button class="btn sm" onClick="{{ dw.waCopy }}">Copiar mensaje</button><button class="btn sm" onClick="{{ dw.waClose }}">Cerrar</button></div></div></sc-if>
-<h3 class="dwh3">¿Por qué esta cantidad?</h3>
+<h3 class="dwh3">Desglose</h3>
 <sc-for list="{{ dw.own }}" as="l" hint-placeholder-count="2"><div class="dwln"><span class="sigla tono-0 lg sm"><img src="{{ l.lg.src }}" alt=""></span><span class="dwlt">{{ l.vn }} · vale {{ l.ref }}</span><b>{{ l.imp }}</b></div></sc-for>
 <sc-if value="{{ dw.noOwn }}" hint-placeholder-val="{{ false }}"><p class="mut small">No tiene vales propios: se le cobra lo de sus recomendados.</p></sc-if>
 <sc-if value="{{ dw.hasRecs }}" hint-placeholder-val="{{ false }}"><h3 class="dwh3">De sus recomendados</h3><sc-for list="{{ dw.recs }}" as="l" hint-placeholder-count="2"><div class="dwln"><span class="dwlt">{{ l.who }} · {{ l.vn }}</span><b>{{ l.imp }}</b></div></sc-for></sc-if>
@@ -880,7 +886,7 @@ finish(s,c){ const snap={quin:'1.ª quincena de noviembre 2026',limite:'15 nov 2
  return {conf:snap,custom:custom,resp:resp2,emb:emb2}; }
 shortcut(){ const s=this.fresh(); s.welcomed=true; s.vals=this.cat().filter(c=>'ABCD'.indexOf(c.id)>=0); s.vol=!!this.state.vol; if(s.vol) s.resp={...s.resp,...this.synthResp()}; s.cortOk={A:true,B:true,C:true,D:true}; s.ncf={n1:true,n2:true}; s.vst={A:'ok',B:'ok',C:'ok',D:'nada'}; s.dec={mg:{t:'same',c:'mgl'},jp:{t:'same',c:'jpl'}}; s.resp={...s.resp,'new:n2':'teresa'}; s.emb={...s.emb,teresa:true}; s.fix={b8:290};
  const p=this.finish(s,this.compute(s)); s.conf=p.conf; s.custom=p.custom; s.resp=p.resp; s.emb=p.emb;
- s.pays=[{id:'p1',rid:'hector',imp:309,fecha:'2026-11-10',obs:'',st:'anulado',motivo:'Escribí mal el importe'},{id:'p2',rid:'hector',imp:390,fecha:'2026-11-10',obs:'Corrige el pago anterior',st:'ok',motivo:''},{id:'p3',rid:'sofia',imp:300,fecha:'2026-11-10',obs:'Primer abono',st:'ok',motivo:''},{id:'p4',rid:'patricia',imp:240,fecha:'2026-11-10',obs:'Pagó en efectivo',st:'ok',motivo:''},{id:'p5',rid:'carmen',imp:880,fecha:'2026-11-09',obs:'',st:'ok',motivo:''}];
+ s.pays=[{id:'p1',rid:'luis',imp:140,fecha:'2026-11-10',obs:'',st:'anulado',motivo:'Escribí mal el importe'},{id:'p2',rid:'luis',imp:410,fecha:'2026-11-10',obs:'Corrige el pago anterior',st:'ok',motivo:''},{id:'p3',rid:'sofia',imp:300,fecha:'2026-11-10',obs:'Primer abono',st:'ok',motivo:''},{id:'p4',rid:'roberto',imp:290,fecha:'2026-11-10',obs:'Pagó en efectivo',st:'ok',motivo:''},{id:'p5',rid:'carmen',imp:880,fecha:'2026-11-09',obs:'',st:'ok',motivo:''}];
  s.screen='cobranza'; s.toast='Cobranza de ejemplo ya confirmada, con pagos completos, un abono y una corrección.'; this.setState(s,()=>this.save()); }
 reset(){ try{localStorage.removeItem(this.key());}catch(e){} const s=this.fresh(); s.screen='acceso'; s.toast=''; this.setState(s); }
 startPay(id){ if(this.state.closed){ this.upd({toast:'La quincena está cerrada: ya no se pueden registrar pagos.'}); return; } const snap=this.state.conf; const pr=snap.recs.find(r=>r.id===id); const paid=this.state.pays.filter(p=>p.rid===id&&p.st==='ok').reduce((a,p)=>a+p.imp,0); this._saving=false;
@@ -896,7 +902,7 @@ goPasos(){ this.upd({screen:'inicio',toast:''},()=>{ [60,200,500].forEach(ms=>se
 renderVals(){
  const s=this.state; const me=this; const fmt=n=>me.fmt(n); const V={};
  V.isHide=!!s.hide; V.notHide=!s.hide; V.hideOn=s.hide?'true':'false'; V.hideLbl=s.hide?'Mostrar montos':'Ocultar montos'; V.toggleHide=()=>me.upd({hide:!me.state.hide});
- { const fs=s.fs||'m'; V.fsOpts=[['s','Pequeña',12],['m','Mediana',17],['l','Grande',24]].map(o=>({l:o[1],px:o[2],on:fs===o[0]?'true':'false',cls:fs===o[0]?'on':'',go:()=>me.upd({fs:o[0]})})); V.rootFs=(['recibos','imprimir'].indexOf(s.screen)<0)?'fs-'+fs:''; }
+ { const fs=s.fs||'m'; V.fsOpts=[['s','Pequeña',12],['m','Mediana',17],['l','Grande',24]].map(o=>({l:o[1],px:o[2],on:fs===o[0]?'true':'false',cls:fs===o[0]?'on':'',go:()=>me.upd({fs:o[0]})})); V.rootFs=(s.screen==='imprimir')?'':'fs-'+fs; }
  const E=this.ents(s), comp=this.compute(s), pd=this.pend(s), snap=s.conf, R=this.revs(), M=this.M();
  const vn={}; s.vals.forEach(v=>vn[v.id]=v.n);
  const baseList=Object.keys(E).filter(k=>!E[k].isNew).map(k=>E[k]);
@@ -1079,7 +1085,7 @@ renderVals(){
  const role=id=>s.resp[id]?'rec':(recsOf(id).length>0?'emb':'dir');
  const cl=dirList.filter(e=>(!qc||me.nz(e.n).indexOf(qc)>=0)&&(s.cliF==='todos'||(s.cliF==='conf'?pendNew(e):role(e.id)===s.cliF)));
  V.cliList=cl.slice().sort((a,b)=>(pendNew(b)-pendNew(a))||((s.cliS==='desc')?-1:1)*a.n.localeCompare(b.n,'es')).slice(0,s.cliShow).map(e=>{ const r=s.resp[e.id]; const rl=role(e.id); const n=recsOf(e.id).length;
-  return {n:e.n,meta:det(e),chip:rl==='rec'?'Recomendado de '+(E[r]||{}).n:(rl==='emb'?'Embajador · '+n+(n===1?' recomendado':' recomendados'):'Cliente directo'),chipC:rl==='dir'?'neutral':'info',nuevo:!!e.nuevo,nuevoTxt:pendNew(e)?'Por confirmar':'Nuevo',
+  return {n:e.n,meta:det(e),chip:rl==='rec'?'Recomendado de '+(E[r]||{}).n:(rl==='emb'?'Embajador · '+n+(n===1?' recomendado':' recomendados'):'Cliente directo'),chipS:rl==='rec'?'Recomendado':(rl==='emb'?'Embajador':'Cliente directo'),chipC:rl==='dir'?'neutral':'info',nuevo:!!e.nuevo,nuevoTxt:pendNew(e)?'Por confirmar':'Nuevo',
   go:g('ficha',{fid:e.id,chg:null,addQ:'',chk:{},sep:null})}; });
  V.noCli=cl.length===0; V.cliShown='Mostrando '+Math.min(s.cliShow,cl.length)+' de '+cl.length+' clientes'; V.cliMore=cl.length>s.cliShow; V.cliMoreN=Math.min(25,cl.length-s.cliShow); V.moreCli=()=>me.setState({cliShow:me.state.cliShow+25}); V.cliQ=s.cliQ; V.setCliQ=e=>me.setState({cliQ:e.target.value,cliShow:25});
  V.cliFilters=[['todos','Todos'],['emb','Embajadores'],['dir','Directos'],['rec','Recomendados'],['conf','Por confirmar']].map(f=>({l:f[1]+' ('+dirList.filter(e=>f[0]==='todos'||(f[0]==='conf'?pendNew(e):role(e.id)===f[0])).length+')',cls:s.cliF===f[0]?'on':'',go:()=>me.upd({cliF:f[0],cliShow:25})}));
@@ -1147,7 +1153,9 @@ renderVals(){
  const nPaidAll=filt.filter(x=>x.saldo<=0.001).length; const canHide=s.relF==='todos'&&!qr&&nPaidAll>0&&nPaidAll<filt.length; const listF=(canHide&&!s.relPaidOpen)?filt.filter(x=>x.saldo>0.001):filt;
  const byN=(a,b)=>a.r.n.localeCompare(b.r.n,'es'); const dueOf=x=>{ let b=null; linesOf(x.r).forEach(l=>{ const d=vday[l.v]; if(d!=null&&(b==null||d<b.d)) b={d:d,v:l.v}; }); return b; }; const dueD=x=>{ const b=dueOf(x); return b?b.d:99; }; const cmp=s.relS==='vence'?(a,b)=>((b.saldo>0.001)-(a.saldo>0.001))||dueD(a)-dueD(b)||b.saldo-a.saldo||byN(a,b):s.relS==='saldo'?(a,b)=>b.saldo-a.saldo||byN(a,b):(s.relS==='az'?byN:(a,b)=>((b.saldo>0.001)-(a.saldo>0.001))||byN(a,b));
  V.paidToggle=canHide; V.paidOpenA=s.relPaidOpen?'true':'false'; V.paidToggleTxt=s.relPaidOpen?'Ocultar los ya pagados':'Ver los ya pagados ('+nPaidAll+')'; V.togglePaid=()=>me.setState({relPaidOpen:!me.state.relPaidOpen});
- V.relList=listF.slice().sort(cmp).slice(0,s.relShow).map(x=>({n:x.r.n,total:fmt(x.r.total),paid:fmt(x.paid),saldo:fmt(x.saldo),est:x.es.t,estC:x.es.c,recTxt:(x.r.recN===0?'Cliente directo':'Embajador · '+(x.r.recN===1?'1 recomendado':x.r.recN+' recomendados'))+locTxt(x.r)+((s.relS==='vence'&&x.saldo>0.001&&dueOf(x))?' · vence primero '+vname[dueOf(x).v]+' el '+dueOf(x).d+' nov':''),sinPropios:x.r.own.length===0,
+ const ownLogos=r=>{ const seen={}; const out=[]; r.own.forEach(o=>{ if(seen[o.vn]) return; seen[o.vn]=1; const lg=logoOf(o.vn); const ix=s.vals.findIndex(v=>v.n===o.vn); out.push({n:o.vn,t:(ix<0?0:ix)%6,has:lg.has,no:lg.no,src:lg.src,sig:String(o.vn).replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase()}); }); return out; };
+ V.relVActive=relV!=='todas'&&!!vname[relV]; V.relVName=vname[relV]||''; V.relVClear=()=>me.upd({relV:'todas',relShow:25});
+ V.relList=listF.slice().sort(cmp).slice(0,s.relShow).map(x=>({n:x.r.n,total:fmt(x.r.total),paid:fmt(x.paid),saldo:fmt(x.saldo),est:x.es.t,estC:x.es.c,recTxt:(x.r.recN===0?'Cliente directo':'Embajador · '+(x.r.recN===1?'1 recomendado':x.r.recN+' recomendados'))+locTxt(x.r)+((s.relS==='vence'&&x.saldo>0.001&&dueOf(x))?' · vence primero '+vname[dueOf(x).v]+' el '+dueOf(x).d+' nov':''),sinPropios:x.r.own.length===0,logos:ownLogos(x.r),hasLogos:x.r.own.length>0,
   detail:g('detalle',{det:x.r.id}),canPay:x.saldo>0&&!s.closed,pay:()=>me.startPay(x.r.id)}));
  V.noRel=filt.length===0; V.relQ=s.relQ; V.setRelQ=e=>me.setState({relQ:e.target.value,relShow:25});
  V.relShown='Mostrando '+Math.min(s.relShow,listF.length)+' de '+listF.length+' clientes'; V.relMore=listF.length>s.relShow; V.relMoreN=Math.min(25,listF.length-s.relShow); V.moreRel=()=>me.setState({relShow:me.state.relShow+25});
@@ -1170,7 +1178,12 @@ renderVals(){
  // detalle
  const dr=withSt.find(x=>x.r.id===s.det)||withSt[0];
  const payRow=p=>({imp:fmt(p.imp),fecha:me.fd(p.fecha),obs:p.obs||'',motivo:p.st==='anulado'?'Anulado: '+p.motivo:'',st:p.st==='ok'?'Registrado':'Anulado',chipC:p.st==='ok'?'ok':'risk',canFix:!s.closed&&p.st==='ok'&&!p.final,fix:g('pagos',{corr:{pid:p.id,motivo:'',nuevo:''},corrErr:''})});
+ const shortName=n=>{ const w=String(n||'').trim().split(/\s+/); if(w.length<=2) return w.join(' '); const comp={guadalupe:1,carmen:1,isabel:1,fernanda:1,alejandra:1,eugenia:1,elena:1,lucia:1,jose:1,luis:1,antonio:1,carlos:1,manuel:1,miguel:1,angel:1,javier:1,alberto:1,maria:1,ana:1}; const nz2=x=>x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); if(w.length===3) return comp[nz2(w[1])]?w[0]+' '+w[2]:w[0]+' '+w[1]; return w[0]+' '+w[2]; };
+ const dxo=s.dx||{};
+ const mkGrp=(name,lines,key)=>{ const k=(dr?dr.r.id:'')+'|'+key; const open=!!dxo[k]; return {name:name,nameS:shortName(name),total:fmt(lines.reduce((a,o)=>a+o.imp,0)),open:open,exp:open?'true':'false',toggle:()=>me.upd({dx:{...(me.state.dx||{}),[k]:!(me.state.dx||{})[k]}}),lines:lines.map(o=>({vn:o.vn,ref:o.ref,imp:fmt(o.imp)}))}; };
  if(dr){ V.dt={n:dr.r.n,locTxt:locTxt(dr.r),est:dr.es.t,estC:dr.es.c,folio:dr.r.folio,total:fmt(dr.r.total),paid:fmt(dr.paid),saldo:fmt(dr.saldo),canPay:dr.saldo>0&&!s.closed,pay:()=>me.startPay(dr.r.id),recibo:g('recibos',{recSel:dr.r.id}),
+  ownGrps:dr.r.own.length?[mkGrp(dr.r.n,dr.r.own,'own')]:[],
+  recGrps:(()=>{ const m={},ord=[]; dr.r.recs.forEach(o=>{ if(!m[o.who]){ m[o.who]=[]; ord.push(o.who); } m[o.who].push(o); }); return ord.map(w=>mkGrp(w,m[w],'r:'+w)); })(),
   hasOwn:dr.r.own.length>0,noOwn:dr.r.own.length===0,own:dr.r.own.map(o=>({vn:o.vn,ref:o.ref,imp:fmt(o.imp)})),ownSub:fmt(dr.r.ownSub),
   hasRec:dr.r.recs.length>0,recs:dr.r.recs.map(o=>({who:o.who,vn:o.vn,ref:o.ref,imp:fmt(o.imp)})),recSub:fmt(dr.r.recSub),
   pays:s.pays.filter(p=>p.rid===dr.r.id).map(payRow),noPays:s.pays.filter(p=>p.rid===dr.r.id).length===0}; }
@@ -1211,7 +1224,7 @@ renderVals(){
    :{n:'',est:'',estC:'',ctx:'',total:'',paid:'',saldo:'',closed:false,canForm:false,imp:'',fecha:'',obs:'',hint:'',hintCls:'',halfAmt:'',btnDis:true,btnTxt:'',full:()=>{},half:()=>{},efCls:'',trCls:'',metEf:()=>{},metTr:()=>{},isDone:false,doneImp:'',doneSaldo:'',doneEst:'',canRemind:false,hasPaid:false,remind:()=>{},voucher:()=>{},waOpen:false,waMsg:'',waGo:()=>{},waCopy:()=>{},waClose:()=>{},own:[],noOwn:false,hasRecs:false,recs:[],noPays:true,pays:[],recibo:()=>{},isEmb:false,ficha:()=>{},close:()=>{}}; }
  // pagos
  const allp=s.pays.slice().reverse(); const nameOf=id=>(recs.find(r=>r.id===id)||{n:(E[id]||{}).n||id}).n;
- V.paysList=allp.map(p=>({...payRow(p),n:nameOf(p.rid)})); V.noPays=s.pays.length===0; V.hasPaysList=s.pays.length>0;
+ { const seenA={}; V.paysList=allp.map(p=>{ const w2=withSt.find(x=>x.r.id===p.rid); const anul=p.st==='anulado'; const sal=w2?w2.saldo:0; const first=anul&&!seenA[p.rid]; if(anul) seenA[p.rid]=1; return {...payRow(p),n:nameOf(p.rid),canRedo:first&&sal>0.001&&!s.closed,redo:()=>me.startPay(p.rid),replaced:anul&&sal<=0.001}; }); } V.noPays=s.pays.length===0; V.hasPaysList=s.pays.length>0;
  const cp=s.corr?s.pays.find(p=>p.id===s.corr.pid):null; V.corrOpen=!!cp; V.corr=s.corr||{motivo:'',nuevo:''}; V.corrErr=s.corrErr||'';
  V.corrTxt=cp?'Pago de '+fmt(cp.imp)+' de '+nameOf(cp.rid)+' del '+me.fd(cp.fecha)+'.':'';
  V.setCorrMotivo=e=>me.setState({corr:{...me.state.corr,motivo:e.target.value}}); V.setCorrNuevo=e=>me.setState({corr:{...me.state.corr,nuevo:e.target.value}}); V.cancelCorr=()=>me.upd({corr:null,corrErr:''});
@@ -1239,7 +1252,7 @@ renderVals(){
  V.recIsH=lay[2]==='h'; V.fitCls=s.recFit?'on':''; V.fitPress=s.recFit?'true':'false'; V.toggleFit=()=>me.upd({recFit:!s.recFit});
  V.pages=pgs.map((o,i)=>{ const gr=o.g; return {adj:o.adj,adjCls:o.adj?'adj':'',fit:(o.lay==='h'&&s.recFit)?'fit':'',lay:o.lay,per:o.per,n:i+1,total:pgs.length,recs:gr,perTxt:gr.length===1?'1 recibo en esta hoja':gr.length+' recibos en esta hoja'}; });
  V.recList=s.recSel==='list'; V.recPaper=s.recSel!=='list'; V.recOne=s.recSel!=='list'&&s.recSel!=='all';
- V.printNow=()=>{ try{window.print();}catch(e){} }; V.printAll=()=>me.upd({recSel:'all',recShow:99999},()=>{ try{window.print();}catch(e){} }); V.recBack=()=>me.upd({recSel:'list',recShow:12});
+ V.printNow=()=>{ try{window.print();}catch(e){} }; V.viewAll=()=>me.upd({recSel:'all',recShow:99999}); V.savePdf=()=>me.upd({toast:'Descarga lista: '+(s.recSel==='all'?'Recibos_cobranza.pdf':'Recibo_cobranza.pdf')+' · '+lay[1]+' recibos por hoja'}); V.recBack=()=>me.upd({recSel:'list',recShow:12});
  const rflt=recs.filter(r=>!rcq||me.nz(r.n).indexOf(rcq)>=0); const rshow=rflt.slice(0,s.recShow);
  V.recRows=rshow.map(p=>({n:p.n,t:(p.recN>0?'Embajador · '+p.recN+(p.recN===1?' recomendado':' recomendados'):'Cliente directo')+' · '+p.folio,tot:fmt(p.total),go:()=>me.upd({recSel:p.id})}));
  V.recEmpty=rflt.length===0; V.recMore=rflt.length>rshow.length; V.recMoreN=Math.min(12,rflt.length-rshow.length); V.moreRec=()=>me.setState({recShow:me.state.recShow+12});
@@ -1278,7 +1291,7 @@ renderVals(){
   const payAll=withSt.filter(x=>(!pq||me.nz(x.r.n+' '+colOf(x.r)+' '+((E0[x.r.id]||{}).tel||'')).indexOf(pq)>=0)&&(pf==='todos'||(pf==='pend'?x.saldo>0.001:x.saldo<=0.001))).sort((a,b)=>{ const dd=(s.payS==='desc')?-1:1; if(pf==='todos'){ const pa=a.saldo>0.001?0:1, pb=b.saldo>0.001?0:1; if(pa!==pb) return pa-pb; } return dd*a.r.n.localeCompare(b.r.n,'es'); });
   V.hasPayRows=!!snap; V.payProg=nPag+' de '+withSt.length+' pagados';
   V.markAllDis=!snap||withSt.every(x=>x.saldo<=0.001); V.unmarkAllDis=!s.pays.some(p=>p.st==='ok'&&!p.final);
-  V.markAll=()=>{ if(!me.state.confMark){ me.setState({confMark:true}); return; } me.setState({confMark:false}); me.markAllPaid(); }; V.unmarkAll=()=>{ me.setState({confMark:false}); me.unmarkAllPaid(); }; V.markAllCls=s.confMark?'btn sm pri':'btn sm'; V.markAllTxt=s.confMark?'¿Seguro? Toca otra vez para confirmar':'Marcar todos como pagados';
+  V.markAll=()=>{ if(!me.state.confMark){ me.setState({confMark:true}); return; } me.setState({confMark:false}); me.markAllPaid(); }; V.unmarkAll=()=>{ me.setState({confMark:false}); me.unmarkAllPaid(); }; V.markAllCls=s.confMark?'btn sm pri':'btn sm'; V.markAllTxt=s.confMark?'¿Seguro? Toca otra vez':'Marcar como pagados';
   V.payFilters=[['todos','Todos ('+withSt.length+')'],['pend','Pendientes ('+(withSt.length-nPag)+')'],['pag','Pagados ('+nPag+')']].map(f=>({l:f[1],cls:pf===f[0]?'on':'',go:()=>me.upd({payF:f[0],payShow:10})}));
   V.payRows=payAll.slice(0,s.payShow).map(x=>({n:x.r.n,rowCls:x.saldo<=0.001?'is-paid':'is-pend',locTxt:locTxt(x.r),tipo:x.r.recN>0?'Embajador':'Cliente directo',estTxt:x.saldo<=0.001?'Pagado':(x.paid>0?'Abono · falta\u00a0'+fmt(x.saldo):'Falta\u00a0'+fmt(x.saldo)),
    chkCls:x.saldo<=0.001?'on':'',chkAria:x.saldo<=0.001?'true':'false',lbl:(x.saldo<=0.001?'Desmarcar como pagado: ':'Marcar como pagado: ')+x.r.n,toggle:()=>me.togglePaid(x.r.id),canPay:x.saldo>0.001,pay:()=>me.startPay(x.r.id)}));
@@ -1305,6 +1318,9 @@ renderVals(){
  { const W=1000; const wide=()=>window.innerWidth>=W&&window.innerWidth>=window.innerHeight; const auto=(s.sideMin===undefined);
   const min=auto?!wide():!!s.sideMin;
   if(!me._sideRs){ me._sideRs=true; let was=wide(); window.addEventListener('resize',()=>{ const n=wide(); if(n!==was){ was=n; me.upd({}); } }); }
+  { const calcNw=st=>{ const mi=(st.sideMin===undefined)?!wide():!!st.sideMin; const sw=window.innerWidth<760?0:(mi?72:220); const fz=st.fs==='l'?1.25:(st.fs==='s'?.86:1); return (window.innerWidth-sw)/fz<640; };
+   V.nwCls=calcNw(s)?'nw':'';
+   if(!me._nwRs){ me._nwRs=true; let wasNw=calcNw(me.state); window.addEventListener('resize',()=>{ const n=calcNw(me.state); if(n!==wasNw){ wasNw=n; me.upd({}); } }); } }
   V.sideMin=auto?'auto':(min?'min':''); V.sideExp=min?'false':'true'; V.sideLbl=min?'Expandir el menú':'Contraer el menú'; V.sideTxt=min?'Expandir menú':'Contraer menú';
   V.toggleSide=()=>me.upd({sideMin:!(s.sideMin===undefined?!wide():!!s.sideMin)}); }
  
@@ -1395,7 +1411,7 @@ renderVals(){
    const sub=!flow?(st==='nada'?'No la recibiste este corte':v.chip):(d3?'Lista para tus recibos':'Siguiente: '+short);
    const sg=j=>flow?((d3||j<N-1)?'done':(j===N-1?'cur':'')):'';
    return {...v,sig:v.n.replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase(),lg:logoOf(v.n),t:i%6,flow:flow,steps:steps,pasoTxt:d3?'4 de 4':'Paso '+N+' de 4',pasoTit:tit,pasoDesc:desc,next:nxt,nextLbl:lbl,s1:sg(0),s2:sg(1),s3:sg(2),s4:sg(3),paso:ch2[0],pasoC:ch2[1],sub2:sub,monto:mont}; });
-  V.vcards=V.valList.map(v=>{ const ok=v.paso==='Lista'; const nada=v.paso==='Sin relación'; const otra=v.paso==='Otra quincena'; return {n:v.n,sig:v.sig,lg:v.lg,t:v.t,est:ok?'Listo':(nada?'Sin relación':(otra?'Otra quincena':'Pendiente')),chipC:ok?'ok':(nada||otra?'neutral':'warn'),nm:v.flow?v.pasoTxt.replace('Paso ','').replace(' DE ',' de '):'',monto:v.isOk?v.tot:'—',open:v.open}; });
+  V.vcards=V.valList.map(v=>{ const ok=v.paso==='Lista'; const nada=v.paso==='Sin relación'; const otra=v.paso==='Otra quincena'; const estL=ok?'Listo':(nada?'Sin relación':(otra?'Otra quincena':'Pendiente')); const estS=nada?'S/R':(otra?'Otra':estL); return {estS:estS,n:v.n,sig:v.sig,lg:v.lg,t:v.t,est:ok?'Listo':(nada?'Sin relación':(otra?'Otra quincena':'Pendiente')),chipC:ok?'ok':(nada||otra?'neutral':'warn'),nm:v.flow?v.pasoTxt.replace('Paso ','').replace(' DE ',' de '):'',monto:v.isOk?v.tot:'—',open:v.open}; });
   V.vd=V.valList.find(x=>x.id===s.vid)||V.valList[0]||V.vd;
   V.canAdd=me.cat().concat(s.aprobada?[{id:'G'}]:[]).some(c=>!s.vals.some(x=>x.id===c.id));
   const faltan2=s.vals.filter(v=>s.vst[v.id]==='pend');
@@ -1409,6 +1425,7 @@ renderVals(){
    else if(nv===0){ V.cobTit='Empieza agregando tus valeras'; V.cobTxt='Elige las que distribuyes.'; V.cobBtn='Agregar valeras'; V.cobGo=g('valeras'); }
    else if(none){ V.cobTit='Inicia la captura de tus relaciones'; V.cobTxt='Sube la relación de cada valera.'; V.cobBtn='Iniciar captura de relaciones'; V.cobGo=V.focoSubir; }
    else { V.cobEy='Siguiente paso · '+okC+' de '+nv+' valeras listas'; V.cobTit=nxx.t; V.cobTxt=''; V.cobBtn='Continuar con el proceso'; V.cobGo=nxx.go; } }
+  V.cobHasTxt=!!V.cobTxt; V.cobMin=!!s.cobMin&&V.cobHasTxt; V.cobShowTxt=V.cobHasTxt&&!V.cobMin; V.cobExp=V.cobMin?'false':'true'; V.cobTogLbl=V.cobMin?'Mostrar el detalle':'Ocultar el detalle'; V.cobTog=()=>me.upd({cobMin:!me.state.cobMin}); V.cobMinCls=V.cobMin?'min':'';
   // volver
   { const idv=scr==='subir'?s.upl:(scr==='revision'?s.rv:null); const vn2=idv?s.vals.find(x=>x.id===idv):null;
    V.volverTxt=vn2?'← Volver a '+vn2.n:'← Volver a Inicio';
@@ -1459,6 +1476,7 @@ renderVals(){
   const A=(s.cmpA==null)?2:s.cmpA; let B=(s.cmpB==null)?1:s.cmpB; if(B===A) B=(A+1)%4;
   V.cmpAT=CT[A].t.replace('Corte del','Corte'); V.cmpBT=CT[B].t.replace('Corte del','Corte'); V.cmpAL=CT[A].l; V.cmpBL=CT[B].l;
   V.cycA=()=>{ let n=(A+1)%4; if(n===B) n=(n+1)%4; me.upd({cmpA:n,cmpB:B}); }; V.cycB=()=>{ let n=(B+1)%4; if(n===A) n=(n+1)%4; me.upd({cmpB:n,cmpA:A}); };
+  V.cmpOpts=CT.map((c,i)=>({v:String(i),l:c.t.replace('Corte del','Corte')})); V.cmpAV=String(A); V.cmpBV=String(B); V.setCmpA=e=>{ const n=+e.target.value; me.upd(n===B?{cmpA:n,cmpB:A}:{cmpA:n,cmpB:B}); }; V.setCmpB=e=>{ const n=+e.target.value; me.upd(n===A?{cmpB:n,cmpA:B}:{cmpB:n,cmpA:A}); };
   const dtx=d=>Math.abs(d)<0.5?{d:'=',dc:'eq'}:{d:(d>0?'▲ ':'▼ ')+fmt(Math.abs(d)),dc:d>0?'up':'dn'};
   V.hCmpRows=s.vals.map(v=>{ const a=valAt(v,A),b=valAt(v,B); const d=(a!=null&&b!=null)?dtx(a-b):{d:'—',dc:'eq'}; return {n:v.n,a:a!=null?fmt(a):'—',b:b!=null?fmt(b):'—',d:d.d,dc:d.dc}; }).concat([(()=>{ const a=A===3?totalAll:totAt(A),b=B===3?totalAll:totAt(B); const d=dtx(a-b); return {n:'Total',a:fmt(a),b:fmt(b),d:d.d,dc:d.dc}; })()]);
  }

@@ -1137,3 +1137,90 @@ svg.logo{background:none;border-radius:0;display:block;flex:none}
 .kpis:has(>.kpi.lead):has(>.kpi:nth-child(4)),.nw .kpis:has(>.kpi.lead):has(>.kpi:nth-child(4)){grid-template-columns:repeat(3,minmax(0,1fr))!important}
 .kpis:has(>.kpi.lead):has(>.kpi:nth-child(4))>.kpi.lead,.nw .kpis:has(>.kpi.lead):has(>.kpi:nth-child(4))>.kpi.lead{grid-column:1/-1!important}
 .kpis:has(>.kpi.lead):has(>.kpi:nth-child(4))>.kpi:nth-child(4),.nw .kpis:has(>.kpi.lead):has(>.kpi:nth-child(4))>.kpi:nth-child(4){grid-column:auto!important}
+
+/* Valeras: en pantalla angosta el estado baja bajo el nombre */
+@media (max-width:520px){
+.vrw{display:grid!important;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;align-items:center}
+.vrw .chip{grid-column:1 / -1;justify-self:start;white-space:normal}
+.vrq{flex-wrap:wrap}.vrq .chip{flex-basis:auto}
+}
+.nw .vrw{display:grid!important;grid-template-columns:auto minmax(0,1fr);gap:6px 12px;align-items:center}
+.nw .vrw .chip{grid-column:1 / -1;justify-self:start;white-space:normal}
+.nw .vrq{flex-wrap:wrap}
+
+/* Clientes: fila de cliente */
+.cchips{display:flex;gap:6px;align-items:center;flex:none}
+@media (max-width:520px){
+.crw{display:grid!important;grid-template-columns:minmax(0,1fr) auto;gap:6px 8px;align-items:center}
+.crw .cchips{grid-column:1;grid-row:2;flex-wrap:wrap;justify-self:start}
+.crw .carr{grid-column:2;grid-row:1 / span 2}
+}
+.nw .crw{display:grid!important;grid-template-columns:minmax(0,1fr) auto;gap:6px 8px;align-items:center}
+.nw .crw .cchips{grid-column:1;grid-row:2;flex-wrap:wrap;justify-self:start}
+.nw .crw .carr{grid-column:2;grid-row:1 / span 2}
+/* Historial > Estadísticas: cifras que no se salen en pantallas muy angostas */
+.kpis3 .kpi b{font-size:clamp(15px,5.4vw,21px);white-space:nowrap}
+.kpis3 .kpi{padding:10px 8px 10px 12px;min-width:0}
+.kpis3 .kpi .k{overflow-wrap:anywhere}
+.nw .kpis3 .kpi b{font-size:clamp(15px,3.2vw,21px)}
+@media (max-width:360px){.kpis3{gap:6px}.kpis3 .kpi .k{font-size:11.5px}}
+
+/* Estadísticas: etiqueta corta cuando el cuadro es angosto */
+.kpis3 .kpi{container-type:inline-size}
+.kpis3 .kpi .ks{display:none}
+@container (max-width:150px){.kpis3 .kpi .kl{display:none}.kpis3 .kpi .ks{display:inline}}
+.colprint{flex:none;margin-left:auto}
+
+/* Más sobre esta valera: en pantalla angosta cada dato va en su renglón */
+@media (max-width:520px){.cols{grid-template-columns:1fr;gap:0}.cols>div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid var(--line)}.cols>div:first-child{border-top:0}.cols>div b{text-align:right}}
+.nw .cols{grid-template-columns:1fr;gap:0}.nw .cols>div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid var(--line)}.nw .cols>div:first-child{border-top:0}.nw .cols>div b{text-align:right}
+
+/* Relación: al imprimir desde los tres puntos sale solo la tabla */
+.relprint{display:none}
+@media print{.relsec>*:not(.relprint){display:none!important}.relsec>.relprint{display:block!important}}
+/* Inicio en teléfono muy angosto */
+@media (max-width:340px){.cobey{font-size:11px;letter-spacing:.02em}.cobcard .btn.lg{font-size:15px;padding-left:10px;padding-right:10px}.vcards{gap:10px!important}}
+
+/* Embajadores: cada candidato en su fila, botón a la derecha */
+.erow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;margin-top:8px;padding:8px 0;border-top:1px solid var(--line)}
+.erow .sp{min-width:0}
+/* Movimientos leídos: estado a la derecha, a la altura del importe */
+@media (max-width:559px){.tr.rv .acts{grid-column:2!important;justify-content:flex-end;align-self:end}}
+.nw .tr.rv .acts{grid-column:2!important;justify-content:flex-end;align-self:end}
+/* Resumen: filas de pasos con descripción */
+.taskrow{display:grid!important;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 10px;align-items:center}
+.taskrow .tk{display:grid;gap:2px;min-width:0}
+.taskrow .tk .mut{display:block;line-height:1.35}
+@media (max-width:559px){.taskrow{grid-template-columns:minmax(0,1fr) auto}.taskrow .tk{grid-column:1 / -1}.taskrow .chip{justify-self:start}.taskrow .btn{justify-self:end}}
+.nw .taskrow{grid-template-columns:minmax(0,1fr) auto}.nw .taskrow .tk{grid-column:1 / -1}.nw .taskrow .chip{justify-self:start}.nw .taskrow .btn{justify-self:end}
+@media (max-width:559px){.taskrow .chip{width:auto}.taskrow .btn{width:auto;padding:0 18px}}
+.nw .taskrow .chip{width:auto}.nw .taskrow .btn{width:auto;padding:0 18px}
+
+/* Botones para ir arriba / abajo */
+.scrollfab{position:fixed;right:14px;bottom:20px;display:grid;gap:8px;z-index:30}
+.scrollfab button{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--bs);background:#fff;color:var(--brand);display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 14px rgba(14,42,39,.2)}
+.scrollfab button:hover{background:var(--tint)}
+.scrollfab button:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+@media (max-width:759px){.scrollfab{bottom:84px;right:10px}}
+
+.confbox{display:grid;gap:6px;padding:10px 12px;border:1.5px solid #b42318;border-radius:12px;background:#fff}
+.confbox .irrev{color:#b42318}
+
+/* Pagos: franja de avance, grupos de pagos registrados */
+.payband{display:grid;gap:4px;padding:2px 0 4px}
+.pb-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.pb-k{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.pb-n{font-family:var(--display);font-size:28px;font-weight:800;font-variant-numeric:tabular-nums}
+.pb-chip{margin-left:auto}
+.pb-bot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.hintchk{margin:2px 0 8px}
+.pggroup{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:8px}
+.pggroup .pg1{margin-bottom:2px}
+.pgline{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}
+.pgline .pgamt{font-variant-numeric:tabular-nums;font-size:17px}
+.pgline .pgamt.strike{text-decoration:line-through;color:var(--muted);font-weight:500}
+.pgm{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;min-width:0}
+.pgm .chip{padding:1px 8px;min-height:0;font-size:13px}
+.pgline .pgobs{grid-column:1 / -1}.pgline .pgobs:empty{display:none}
+.pgline .pgfix{font-size:15px;min-height:32px;margin:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

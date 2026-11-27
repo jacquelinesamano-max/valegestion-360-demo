@@ -1385,3 +1385,11 @@ svg.logo{background:none;border-radius:0;display:block;flex:none}
 @media (max-width:559px){.card.entreg .dlrow{flex-wrap:wrap;row-gap:8px}.card.entreg .dlt{flex:1 1 100%;order:1}.card.entreg .dlic{order:0;flex:none}.card.entreg .dlrow>.btn,.card.entreg .dlrow>.ibtn{order:2}.card.entreg .dlrow .dlic+.dlt{flex:1 1 calc(100% - 60px)}}
 .nw .card.entreg .dlrow{flex-wrap:wrap;row-gap:8px}.nw .card.entreg .dlrow .dlic+.dlt{flex:1 1 calc(100% - 60px)}
 @media (max-width:559px){.nw .tr.rv,.tr.rv{grid-template-columns:minmax(0,1fr) auto auto}.tr.rv .acts .chip,.nw .tr.rv .acts .chip{max-width:112px;white-space:normal;overflow:visible;text-overflow:clip}}
+/* QA CP-35: zonas táctiles de al menos 44 px */
+.chk{width:44px;height:44px;border:0;background:transparent;border-radius:12px;position:relative;color:#fff}
+.chk::before{content:"";position:absolute;left:50%;top:50%;width:28px;height:28px;border:2px solid var(--brand);border-radius:8px;background:#fff;transform:translate(-50%,-50%);z-index:0}
+.chk.on::before{background:var(--brand)}
+.chk svg{position:relative;z-index:1}
+.chk::after{display:none}
+.pg2 .pgfix,.pgline .pgfix,.dwln .link{min-height:44px}
+.mcard .row.macts{flex-wrap:wrap}

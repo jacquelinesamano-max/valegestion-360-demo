@@ -253,7 +253,7 @@
 
 </div>
 </sc-if>
-<sc-if value="{{ vd.isPend }}" hint-placeholder-val="{{ true }}"><div style="margin-top:24px"><button class="btn dang sm" onClick="{{ vd.quit }}">Quitar de mi lista</button></div></sc-if>
+<sc-if value="{{ vd.isPend }}" hint-placeholder-val="{{ true }}"><div style="margin-top:24px"><sc-if value="{{ vd.askQuit }}" hint-placeholder-val="{{ false }}"><div class="confbox"><b>¿Quitar {{ vd.n }} de tu lista?</b><span class="small">Dejas de verla en tus valeras. Podrás volver a agregarla desde el catálogo.</span><div class="row"><button class="btn dang sm" onClick="{{ vd.quit }}">Sí, quitarla</button><button class="btn sm" onClick="{{ vd.noQ }}">Cancelar</button></div></div></sc-if><sc-if value="{{ vd.notAskQuit }}" hint-placeholder-val="{{ true }}"><button class="btn dang sm" onClick="{{ vd.askQ }}">Quitar de mi lista</button></sc-if></div></sc-if>
 </section>
 </sc-if>
 
@@ -296,8 +296,10 @@
 <div class="tr rv"><span><b class="nm">{{ r.nom }}</b><span class="mut small" style="display:block">{{ r.salTxt }}</span></span><span class="rvfv"><span><span class="lbl">Folio</span>{{ r.folio }}</span><span><span class="lbl">Vale</span>{{ r.ref }}</span><span class="rvsal">{{ r.salTxt }}</span></span><span class="num2"><span class="lbl">Importe</span>{{ r.impTxt }}</span>
 <span class="acts"><span class="chip {{ r.c }}">{{ r.st }}</span></span>
 <sc-if value="{{ r.missing }}" hint-placeholder-val="{{ false }}">
-<div style="grid-column:1 / -1" class="cand"><b>No pudimos leer este importe.</b> Escríbelo tal como aparece en tu documento para evitar errores.<div class="row" style="margin-top:8px"><input class="inp" style="max-width:200px" inputmode="decimal" aria-label="Importe de la fila" placeholder="Ej. 290" value="{{ r.fixVal }}" onChange="{{ r.onFix }}"><button class="btn pri sm" onClick="{{ r.saveFix }}">Guardar importe</button></div></div>
+<div style="grid-column:1 / -1" class="cand"><b>No pudimos leer este importe.</b> Escríbelo tal como aparece en tu documento para evitar errores.<div class="row" style="margin-top:8px"><input class="inp" style="max-width:200px" inputmode="decimal" aria-label="Importe de la fila" placeholder="Ej. 290" value="{{ r.fixVal }}" onChange="{{ r.onFix }}"><button class="btn pri sm" onClick="{{ r.saveFix }}">Guardar importe</button></div>
+<sc-if value="{{ r.askOn }}" hint-placeholder-val="{{ false }}"><div class="confbox" style="margin-top:8px"><b>{{ r.askTxt }}</b><span class="small">Revisa que no sobre un cero o una coma. Si es correcto, confírmalo.</span><div class="row"><button class="btn pri sm" onClick="{{ r.askYes }}">Sí, es correcto</button><button class="btn sm" onClick="{{ r.askNo }}">Corregir</button></div></div></sc-if></div>
 </sc-if>
+<sc-if value="{{ r.canEdit }}" hint-placeholder-val="{{ false }}"><div style="grid-column:1 / -1"><button class="link" onClick="{{ r.edit }}">Corregir el importe capturado</button></div></sc-if>
 <sc-if value="{{ r.showCl }}" hint-placeholder-val="{{ false }}">
 <div style="grid-column:1 / -1" class="cand">
 <sc-if value="{{ r.cl.pending }}" hint-placeholder-val="{{ true }}">
@@ -399,7 +401,7 @@
 <h2 class="h2">Tipo de cliente</h2>
 <p style="font-size:18px;margin-bottom:8px">{{ fc.payerTxt }}</p>
 <sc-if value="{{ fc.showAlta }}" hint-placeholder-val="{{ true }}"><button class="btn pri" onClick="{{ fc.alta }}">Dar de alta como embajador</button></sc-if><sc-if value="{{ fc.showQuitaEmb }}" hint-placeholder-val="{{ false }}"><button class="btn dang" onClick="{{ fc.quitaEmb }}">Quitar como embajador</button></sc-if>
-<sc-if value="{{ fc.isRec }}" hint-placeholder-val="{{ false }}"><button class="btn" onClick="{{ fc.payDirect }}">Quitar de su embajador (que sea cliente directo)</button></sc-if>
+<sc-if value="{{ fc.isRec }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ fc.askRec }}" hint-placeholder-val="{{ false }}"><div class="confbox"><b>{{ fc.askRecTxt }}</b><span class="small">Su importe sale del recibo de su embajador y tendrá su propio recibo.</span><div class="row"><button class="btn pri sm" onClick="{{ fc.payDirect }}">Sí, quitarlo</button><button class="btn sm" onClick="{{ fc.noRec }}">Cancelar</button></div></div></sc-if><sc-if value="{{ fc.notAskRec }}" hint-placeholder-val="{{ true }}"><button class="btn" onClick="{{ fc.askRecGo }}">Quitar de su embajador (que sea cliente directo)</button></sc-if></sc-if>
 
 </div>
 <sc-if value="{{ fc.showRecs }}" hint-placeholder-val="{{ true }}"><div class="card">
@@ -605,7 +607,7 @@
 <div class="card">
 <div class="seg" role="group" aria-label="Tipo de pago"><button class="segb {{ pf.fullCls }}" onClick="{{ pf.full }}">Pago completo ({{ pf.saldo }})</button><button class="segb {{ pf.partCls }}" onClick="{{ pf.part }}">Abono (otro importe)</button></div>
 <div class="field"><label for="pi">Importe recibido</label><input id="pi" class="inp" inputmode="decimal" value="{{ pf.imp }}" onChange="{{ setPayImp }}"></div>
-<div class="field"><label for="pfe">Fecha en que te pagaron</label><input id="pfe" class="inp" type="date" value="{{ pf.fecha }}" onChange="{{ setPayFecha }}"></div>
+<div class="field"><label for="pfe">Fecha en que te pagaron</label><input id="pfe" class="inp" type="date" max="2026-11-10" min="2026-10-22" value="{{ pf.fecha }}" onChange="{{ setPayFecha }}"></div>
 <div class="field"><label for="po">Observación (opcional)</label><input id="po" class="inp" placeholder="Ej. Pagó en efectivo" value="{{ pf.obs }}" onChange="{{ setPayObs }}"></div>
 <sc-if value="{{ pf.hasErr }}" hint-placeholder-val="{{ false }}"><div class="riskb">{{ pf.err }}</div></sc-if>
 <div class="row"><button class="btn pri" onClick="{{ submitPay }}">{{ pf.btnTxt }}</button><button class="btn" onClick="{{ gRelacion }}">Cancelar</button></div>
@@ -634,7 +636,8 @@
 <div class="toolbar noprint"><input id="pyq" class="inp" placeholder="Buscar cliente" aria-label="Buscar cliente" value="{{ payQ }}" onChange="{{ setPayQ }}"><button class="ibtn {{ payFHas }}" aria-label="Filtrar" aria-expanded="{{ payFExp }}" onClick="{{ togglePayF }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg></button><button class="ibtn" aria-label="Ordenar" aria-expanded="{{ paySExp }}" onClick="{{ togglePayS }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"/></svg></button><button class="ibtn" aria-label="Más acciones: marcar o quitar marcas" aria-expanded="{{ payMExp }}" onClick="{{ togglePayM }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></div>
 <sc-if value="{{ payMenuF }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Mostrar</span><sc-for list="{{ payFilters }}" as="f" hint-placeholder-count="3"><button class="popb {{ f.cls }}" onClick="{{ f.go }}">{{ f.l }}</button></sc-for></div></sc-if>
 <sc-if value="{{ payMenuS }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Ordenar por</span><sc-for list="{{ paySorts }}" as="f" hint-placeholder-count="2"><button class="popb {{ f.cls }}" onClick="{{ f.go }}">{{ f.l }}</button></sc-for></div></sc-if>
-<sc-if value="{{ payMenuM }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Más acciones</span><button class="popb" disabled="{{ markAllDis }}" onClick="{{ payMarkAsk }}">Marcar a todos como pagados</button><button class="popb" disabled="{{ unmarkAllDis }}" onClick="{{ unmarkAll }}">Quitar las marcas de pagado</button></div></sc-if>
+<sc-if value="{{ payMenuM }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Más acciones</span><button class="popb" disabled="{{ markAllDis }}" onClick="{{ payMarkAsk }}">Marcar a todos como pagados</button><button class="popb" disabled="{{ unmarkAllDis }}" onClick="{{ payUnmarkAsk }}">Quitar las marcas de pagado</button></div></sc-if>
+<sc-if value="{{ payConfUnmark }}" hint-placeholder-val="{{ false }}"><div class="confbox noprint"><b>{{ unmarkAsk }}</b><span class="small">Los pagos quedan anulados en el historial. Podrás volver a registrarlos.</span><div class="row"><button class="btn dang sm" onClick="{{ unmarkYes }}">Sí, quitar marcas</button><button class="btn sm" onClick="{{ unmarkNo }}">Cancelar</button></div></div></sc-if>
 <sc-if value="{{ payConfMark }}" hint-placeholder-val="{{ false }}"><div class="confbox noprint"><b>¿Marcar a todos los pendientes como pagados?</b><span class="small">Se registra el saldo completo de cada uno. Puedes quitar las marcas después desde «⋯».</span><div class="row"><button class="btn pri sm" onClick="{{ markAllYes }}">Confirmar</button><button class="btn sm" onClick="{{ markAllNo }}">Cancelar</button></div></div></sc-if>
 <p class="mut small hintchk noprint">✓ significa que pagó completo. Para un abono, usa «Registrar pago».</p>
 <sc-for list="{{ payRows }}" as="p" hint-placeholder-count="3"><div class="step payrow {{ p.rowCls }}"><button class="chk {{ p.chkCls }}" disabled="{{ closed }}" role="checkbox" aria-checked="{{ p.chkAria }}" aria-label="{{ p.lbl }}" onClick="{{ p.toggle }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg></button><span class="stx"><b>{{ p.n }}</b><span class="mut small">{{ p.tipo }}{{ p.locTxt }} · {{ p.estTxt }}</span></span><sc-if value="{{ p.canPay }}" hint-placeholder-val="{{ false }}"><button class="btn sm" onClick="{{ p.pay }}">Registrar pago</button></sc-if></div></sc-for>
@@ -784,7 +787,7 @@
 <div class="amtrow"><span class="amtc">$</span><input id="dwimp" class="inp" inputmode="decimal" placeholder="0" value="{{ dw.imp }}" onChange="{{ setPayImp }}"></div>
 <div class="row" style="margin:8px 0"><button class="btn sm" onClick="{{ dw.full }}">Liquidar {{ dw.saldo }}</button><button class="btn sm" onClick="{{ dw.half }}">Mitad {{ dw.halfAmt }}</button></div>
 <p class="small dwhint {{ dw.hintCls }}">{{ dw.hint }}</p>
-<div class="dwgrid"><div class="field"><label for="dwfe" class="dwl">Fecha del pago</label><input id="dwfe" class="inp" type="date" value="{{ dw.fecha }}" onChange="{{ setPayFecha }}"></div>
+<div class="dwgrid"><div class="field"><label for="dwfe" class="dwl">Fecha del pago</label><input id="dwfe" class="inp" type="date" max="2026-11-10" min="2026-10-22" value="{{ dw.fecha }}" onChange="{{ setPayFecha }}"></div>
 <div class="field"><span class="dwl">Forma de pago</span><div class="seg" role="group" aria-label="Forma de pago"><button class="segb {{ dw.efCls }}" onClick="{{ dw.metEf }}">Efectivo</button><button class="segb {{ dw.trCls }}" onClick="{{ dw.metTr }}">Transferencia</button></div></div></div>
 <div class="field"><label for="dwob" class="dwl">Observación (opcional)</label><input id="dwob" class="inp" placeholder="Ej. Pagó en la tienda" value="{{ dw.obs }}" onChange="{{ setPayObs }}"></div>
 <button class="btn pri block" disabled="{{ dw.btnDis }}" onClick="{{ submitPay }}">{{ dw.btnTxt }}</button>
@@ -851,12 +854,12 @@ fresh(){ return { screen:'acceso', welcomed:false, vals:[], catOpen:false, vid:n
  addVal:false, avN:'', avC:'6', avP:'15', addCli:false, acN:'', toast:'' }; }
 save(){ try{ const s={...this.state}; delete s.toast; delete s.reading; localStorage.setItem(this.key(),JSON.stringify(s)); }catch(e){} }
 upd(p,cb){ if(p&&p.screen&&p.screen!==this.state.screen) p={...p,prev:this.state.screen}; this.setState(p,()=>{ this.save(); if(cb)cb(); }); }
-go(scr,x){ this.upd({screen:scr,toast:'',payM:null,relM:null,cliM:null,...(['inicio','resumen','cobranza','hist','historial','relacion','recibos','pagos'].indexOf(scr)>=0?{bk:null}:{}),...(x||{})},()=>{ try{window.scrollTo(0,0);}catch(e){} }); }
+go(scr,x){ this.upd({screen:scr,toast:'',payM:null,relM:null,cliM:null,ask:null,fixAsk:null,...(['inicio','resumen','cobranza','hist','historial','relacion','recibos','pagos'].indexOf(scr)>=0?{bk:null}:{}),...(x||{})},()=>{ try{window.scrollTo(0,0);}catch(e){} }); }
 nz(t){ return (t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase(); }
 fmt(n){ if(this.state.hide&&['recibos','imprimir'].indexOf(this.state.screen)<0) return '$\u00a0•••'; return this.fmtR(n); }
 fmtR(n){ n=Number(n)||0; const neg=n<0; n=Math.abs(n); const t=Number.isInteger(n)?String(n):n.toFixed(2); const p=t.split('.'); return (neg?'−':'')+'$'+p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',')+(p[1]?'.'+p[1]:''); }
 fd(d){ if(!d)return ''; const p=d.split('-'); const m=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic']; return parseInt(p[2],10)+' '+m[parseInt(p[1],10)-1]+' '+p[0]; }
-num(t){ const v=parseFloat(String(t).replace(/[$,\s]/g,'')); return isFinite(v)?v:NaN; }
+num(t){ let x=String(t).replace(/[$\s]/g,''); if(/^\d+,\d{1,2}$/.test(x)) x=x.replace(',','.'); else x=x.replace(/,/g,''); const v=parseFloat(x); return isFinite(v)?v:NaN; }
 base(){ return [
  {id:'rosa',n:'Rosa Martínez',tel:'…3350',col:'Col. Jardines'},{id:'ana',n:'Ana López',tel:'…7712',col:'Col. Jardines'},{id:'pedro',n:'Pedro Ruiz',tel:'…2208',col:'Col. Obrera'},
  {id:'mgl',n:'María Guadalupe López',tel:'…5090',col:'Col. Reforma'},{id:'jpc',n:'Juan Pérez Soto',tel:'…4821',col:'Col. Centro'},{id:'jpl',n:'Juan Pérez Soto',tel:'…1937',col:'Col. Lomas'},
@@ -1026,7 +1029,8 @@ renderVals(){
   reupOpen:s.reup===v.id,
   up:()=>{ if(!fl){ me.upd({toast:'En la demostración solo hay archivos de ejemplo para ConCrédito, Maxivale, Vale Todo y Salevale.'}); return; } me.go('subir',{upl:v.id}); },
   review:g('revision',{rv:v.id}),
-  quit:()=>{ const vs={...me.state.vst}; delete vs[v.id]; me.upd({vals:me.state.vals.filter(x=>x.id!==v.id),vst:vs,screen:'valeras',toast:v.n+' salió de tu lista.'}); },
+  askQuit:me.state.ask==='qv:'+v.id, notAskQuit:me.state.ask!=='qv:'+v.id, askQ:()=>me.upd({ask:'qv:'+v.id}), noQ:()=>me.upd({ask:null}),
+  quit:()=>{ const vs={...me.state.vst}; delete vs[v.id]; me.upd({ask:null,vals:me.state.vals.filter(x=>x.id!==v.id),vst:vs,screen:'valeras',toast:v.n+' salió de tu lista.'}); },
   nada:()=>me.upd({vst:{...me.state.vst,[v.id]:'nada'}}), undo:()=>me.upd({vst:{...me.state.vst,[v.id]:'pend'}}),
   openReup:()=>me.upd({reup:v.id}), closeReup:()=>me.upd({reup:null}),
   replace:()=>{ if(me.state.conf) return; me.upd({vst:{...me.state.vst,[v.id]:'pend'},reup:null,dup:v.id==='C'?'replace':me.state.dup,toast:'Quitamos '+ms.length+' movimientos de '+v.n+'. Sube el archivo nuevo cuando lo tengas.'}); },
@@ -1070,7 +1074,10 @@ renderVals(){
   else if(m.rev){ if(isNewRev){ const cf=!!s.ncf[m.rev]; st=cf?'Cliente nuevo · confirmado':'Cliente nuevo · por confirmar'; c=cf?'ok':'warn'; } else { const d=s.dec[m.rev]; const dn=d&&d.t!=='later'; st=dn?'Parecido resuelto':'Revisar cliente'; c=dn?'ok':'warn'; } } else {st='Listo';c='ok';}
   return {showCl:isNewRev,cl:isNewRev?mkCl(m.rev):EC,fila:m.fila,nom:m.nom,salTxt:imp==null?'':'Saldo del crédito: '+fmt(Math.round(imp*7.5/10)*10)+' (no se cobra ahora)',folio:m.folio,ref:m.ref,impTxt:imp==null?'—':fmt(imp),missing:miss,st:st,c:c,fixVal:s.fixIn[m.id]||'',
    onFix:e=>me.setState({fixIn:{...me.state.fixIn,[m.id]:e.target.value}}),
-   saveFix:()=>{ const v=me.num(me.state.fixIn[m.id]); if(!(v>0)){ me.upd({toast:'Escribe un importe válido, por ejemplo 290.'}); return; } me.upd({fix:{...me.state.fix,[m.id]:v},toast:'Importe guardado.'}); }}; });
+   saveFix:()=>{ const v=me.num(me.state.fixIn[m.id]); if(!(v>0)){ me.upd({toast:'Escribe un importe válido, por ejemplo 290.'}); return; } const oth=rvMovs.filter(x=>x.id!==m.id).map(x=>me.impOf(me.state,x)).filter(x=>x!=null); const avg=oth.length?oth.reduce((a,b)=>a+b,0)/oth.length:0; if((avg>0&&v>avg*5)||v>5000){ me.upd({fixAsk:{id:m.id,v:v,avg:avg}}); return; } me.upd({fix:{...me.state.fix,[m.id]:v},fixAsk:null,toast:'Importe guardado: '+fmt(v)+'.'}); },
+   askOn:!!(s.fixAsk&&s.fixAsk.id===m.id), askTxt:(s.fixAsk&&s.fixAsk.id===m.id)?(fmt(s.fixAsk.v)+' es mucho más alto que el resto de esta relación'+(s.fixAsk.avg>0?' (en promedio '+fmt(Math.round(s.fixAsk.avg))+')':'')+'. ¿Está bien escrito?'):'',
+   askYes:()=>{ const a=me.state.fixAsk; if(!a) return; me.upd({fix:{...me.state.fix,[m.id]:a.v},fixAsk:null,toast:'Importe guardado: '+fmt(a.v)+'.'}); }, askNo:()=>me.upd({fixAsk:null}),
+   canEdit:!miss&&m.imp==null&&typeof fx==='number', edit:()=>{ const f={...me.state.fix}; const old=f[m.id]; delete f[m.id]; me.upd({fix:f,fixIn:{...me.state.fixIn,[m.id]:String(old)},fixAsk:null}); }}; });
  const missRows=rows.filter(r=>r.missing);
  const isRev=r=>r.missing||r.st==='Revisar cliente'||r.st==='Cliente nuevo · por confirmar';
  const rowsF=s.rvOnly?rows.filter(isRev):rows; V.rvRows=rowsF.slice(0,s.rvShow);
@@ -1153,7 +1160,8 @@ renderVals(){
   isRec:!!fr,hasRecs:isEmb,isEmb:isEmb,showAlta:false,showQuitaEmb:false,
   alta:()=>me.upd({emb:{...me.state.emb,[fe.id]:true},toast:fe.n+' es ahora cliente embajador. Ya puedes agregarle recomendados.'}),
   quitaEmb:()=>{ if(frecs.length){ me.upd({toast:'Primero quita a sus recomendados para dejar de ser embajador.'}); return; } const x={...me.state.emb}; delete x[fe.id]; me.upd({emb:x,toast:fe.n+' volvió a ser cliente directo.'}); },
-  payDirect:()=>{ const x={...me.state.resp}; delete x[fe.id]; me.upd({resp:x,toast:fe.n+' volvió a ser cliente directo.'}); },
+  askRec:me.state.ask==='qr:'+fe.id, notAskRec:me.state.ask!=='qr:'+fe.id, askRecTxt:'¿Quitar a '+fe.n+' de su embajador?', askRecGo:()=>me.upd({ask:'qr:'+fe.id}), noRec:()=>me.upd({ask:null}),
+  payDirect:()=>{ const x={...me.state.resp}; delete x[fe.id]; me.upd({ask:null,resp:x,toast:fe.n+' volvió a ser cliente directo.'}); },
   recN:frecs.length,noRecs:frecs.length===0,canAddRec:!fr,noRecsTxt:fr?'Esta persona es recomendada: no puede tener recomendados.':'No tiene recomendados. Para hacerlo embajador, elige al menos uno.',
   recs:frecs.map(id=>({n:(E[id]||{}).n,go:g('ficha',{fid:id,chg:null,addQ:''}),remove:()=>{ const x={...me.state.resp}; delete x[id]; me.upd({resp:x,toast:(E[id]||{}).n+' ya no está a cargo de '+fe.n+'.'+(frecs.length===1?' Como ya no tiene recomendados, '+fe.n+' vuelve a ser cliente directo.':'')}); }})),
   aliases:aliases,noAlias:aliases.length===0};
@@ -1245,7 +1253,7 @@ renderVals(){
  else V.dt={n:'',locTxt:'',metaTxt:'',pct:0,hasGrps:false,allTxt:'',toggleAll:()=>{},ficha:()=>{},est:'',estC:'',folio:'',total:'',paid:'',saldo:'',canPay:false,pay:()=>{},recibo:()=>{},hasOwn:false,noOwn:false,own:[],ownSub:'',hasRec:false,recs:[],recSub:'',pays:[],noPays:true};
  // pago
  const pfm=s.payForm; const pw=pfm?withSt.find(x=>x.r.id===pfm.rid):null;
- V.pf=pfm&&pw?{n:pw.r.n,locTxt:locTxt(pw.r),ctx:'Recibo '+pw.r.folio+locTxt(pw.r),btnTxt:(()=>{ const v=parseFloat(String(pfm.imp).replace(/[^0-9.]/g,'')); return v>0?'Guardar pago de '+fmt(v):'Guardar pago'; })(),saldo:fmt(pw.saldo),imp:pfm.imp,fecha:pfm.fecha,obs:pfm.obs,err:pfm.err,hasErr:!!pfm.err,notDone:!pfm.done,isDone:!!pfm.done,
+ V.pf=pfm&&pw?{n:pw.r.n,locTxt:locTxt(pw.r),ctx:'Recibo '+pw.r.folio+locTxt(pw.r),btnTxt:(()=>{ const v=me.num(pfm.imp); return v>0?'Guardar pago de '+fmt(v):'Guardar pago'; })(),saldo:fmt(pw.saldo),imp:pfm.imp,fecha:pfm.fecha,obs:pfm.obs,err:pfm.err,hasErr:!!pfm.err,notDone:!pfm.done,isDone:!!pfm.done,
   fullCls:pfm.mode==='completo'?'on':'',partCls:pfm.mode==='abono'?'on':'',
   full:()=>me.setState({payForm:{...me.state.payForm,mode:'completo',imp:String(pw.saldo),err:''}}),part:()=>me.setState({payForm:{...me.state.payForm,mode:'abono',imp:'',err:''}}),
   doneImp:pfm.done?fmt(pfm.done.imp):'',doneSaldo:pfm.done?fmt(pfm.done.saldo):'',doneEst:pfm.done?pfm.done.est:''}
@@ -1255,12 +1263,12 @@ renderVals(){
   const v=me.num(f.imp); const er=t=>me.setState({payForm:{...f,err:t}});
   if(!(v>0)){ er('Escribe un importe mayor a $0, por ejemplo '+Math.round(saldo)+'.'); return; }
   if(v>saldo+0.001){ er('El importe es mayor a lo que falta ('+fmt(saldo)+'). Por ahora no se aceptan pagos de más. Si te dieron más dinero, anótalo en la observación y registra solo '+fmt(saldo)+'.'); return; }
-  if(!f.fecha){ er('Elige la fecha en que te pagaron.'); return; }
+  if(!f.fecha){ er('Elige la fecha en que te pagaron.'); return; } if(f.fecha>'2026-11-10'){ er('Esa fecha es posterior a hoy (10 nov 2026). Elige hoy o un día anterior.'); return; } if(f.fecha<'2026-10-22'){ er('Esa fecha es anterior a esta quincena (empezó el 22 oct). Revisa el día.'); return; }
   me._saving=true; const nuevo=saldo-v;
   const pid='p'+Date.now(); me.upd({pays:[...st.pays,{id:pid,rid:f.rid,imp:v,fecha:f.fecha,obs:[f.met||'Efectivo',f.obs].filter(Boolean).join(' · '),st:'ok',motivo:''}],payForm:{...f,err:'',done:{imp:v,saldo:nuevo,est:nuevo<=0.001?'Pagado':'Abono'}},undoPid:pid,toast:'Pago de '+fmt(v)+' registrado.'},()=>{ me._saving=false; clearTimeout(me._ut); me._ut=setTimeout(()=>{ if(me.state.undoPid===pid) me.setState({undoPid:null,toast:''}); },7000); }); };
  V.undoPay=()=>{ const st=me.state; const pid=st.undoPid; if(!pid) return; clearTimeout(me._ut); if(pid==='mark'){ const ids=st.undoMarkIds||[]; me.upd({pays:st.pays.filter(p=>ids.indexOf(p.id)<0),undoPid:null,undoMarkIds:null,toast:'Se quitaron las marcas de pagado.'}); return; } const f=st.payForm; const pays=st.pays.filter(p=>p.id!==pid); const pr=st.conf.recs.find(r=>r.id===(f&&f.rid)); const paid=pays.filter(p=>p.rid===(f&&f.rid)&&p.st==='ok').reduce((a,p)=>a+p.imp,0); me.upd({pays:pays,undoPid:null,toast:'Pago deshecho.',payForm:f&&pr?{...f,done:null,mode:'completo',imp:String(pr.total-paid),err:''}:f}); };
 
- { const w=pw; const f=s.payForm; const done=f&&f.done; const vv=f?parseFloat(String(f.imp).replace(/[^0-9.]/g,'')):0; const saldoN=w?w.saldo:0; const paysW=w?s.pays.filter(p=>p.rid===w.r.id):[]; const okPays=paysW.filter(p=>p.st==='ok');
+ { const w=pw; const f=s.payForm; const done=f&&f.done; const vv=f?(me.num(f.imp)||0):0; const saldoN=w?w.saldo:0; const paysW=w?s.pays.filter(p=>p.rid===w.r.id):[]; const okPays=paysW.filter(p=>p.st==='ok');
   const first=w?w.r.n.split(' ')[0]:''; const lastPay=okPays[okPays.length-1];
   const waMsg=w?(s.wa==='cmp'&&lastPay?'Hola '+first+', recibí tu pago de '+me.fmtR(lastPay.imp)+' el '+me.fd(lastPay.fecha)+'. '+(saldoN>0.001?'Tu saldo pendiente es '+me.fmtR(saldoN)+'.':'Con esto quedas al corriente.')+' ¡Gracias!':'Hola '+first+', te recuerdo con cariño tu pago de '+me.fmtR(saldoN)+' (recibo '+w.r.folio+'). Fecha de pago: '+(snap?snap.limite:'')+'. ¡Gracias!'):'';
   let hint='Escribe el monto o usa un atajo.',hintCls='';
@@ -1359,7 +1367,7 @@ renderVals(){
   V.markAll=()=>{ if(!me.state.confMark){ me.setState({confMark:true}); return; } me.setState({confMark:false}); me.markAllPaid(); }; V.unmarkAll=()=>{ me.setState({confMark:false}); me.unmarkAllPaid(); }; V.markAllCls=s.confMark?'btn sm pri':'btn sm'; V.markAllTxt=s.confMark?'¿Seguro? Toca otra vez':'Marcar como pagados';
   { const totT=withSt.reduce((a,x)=>a+x.r.total,0), paidT=withSt.reduce((a,x)=>a+Math.min(x.paid,x.r.total),0); V.payTotTxt=fmt(totT); V.payPaidTxt=fmt(paidT); V.payPendTxt=fmt(Math.max(0,totT-paidT)); V.payPct=totT>0?Math.round(paidT/totT*100):0;
    const nxp=s.closed?null:withSt.filter(x=>x.saldo>0.001).sort((a,b)=>a.r.n.localeCompare(b.r.n,'es'))[0]; V.payNext=!!nxp; V.payNextName=nxp?nxp.r.n:''; V.payNextLbl=nxp?'Registrar pago de '+nxp.r.n:''; V.payNextGo=()=>{ if(nxp) me.startPay(nxp.r.id); };
-   V.payMarkAsk=()=>me.setState({payM:null,confMark:true}); V.markAllYes=()=>{ me.setState({confMark:false}); me.markAllPaid(); }; V.markAllNo=()=>me.setState({confMark:false}); V.payConfMark=!!s.confMark&&!s.closed; }
+   V.payMarkAsk=()=>me.setState({payM:null,confMark:true,ask:null}); V.payUnmarkAsk=()=>me.setState({payM:null,confMark:false,ask:'um'}); V.payConfUnmark=s.ask==='um'&&!s.closed; V.unmarkAsk='¿Quitar las marcas de '+s.pays.filter(p=>p.st==='ok'&&!p.final).length+' pagos registrados?'; V.unmarkYes=()=>{ me.setState({ask:null}); me.unmarkAllPaid(); }; V.unmarkNo=()=>me.setState({ask:null}); V.markAllYes=()=>{ me.setState({confMark:false}); me.markAllPaid(); }; V.markAllNo=()=>me.setState({confMark:false}); V.payConfMark=!!s.confMark&&!s.closed; }
   V.payFilters=[['todos','Todos ('+withSt.length+')'],['pend','Pendientes ('+(withSt.length-nPag)+')'],['pag','Pagados ('+nPag+')']].map(f=>({l:f[1],cls:pf===f[0]?'on':'',go:()=>me.upd({payF:f[0],payShow:10})}));
   V.payRows=payAll.slice(0,s.payShow).map(x=>({n:x.r.n,rowCls:x.saldo<=0.001?'is-paid':'is-pend',locTxt:locTxt(x.r),tipo:x.r.recN>0?'Embajador':'Cliente directo',estTxt:x.saldo<=0.001?'Pagado':(x.paid>0?'Abono · falta\u00a0'+fmt(x.saldo):'Pendiente · falta\u00a0'+fmt(x.saldo)),
    chkCls:x.saldo<=0.001?'on':'',chkAria:x.saldo<=0.001?'true':'false',lbl:(x.saldo<=0.001?'Desmarcar como pagado: ':'Marcar como pagado: ')+x.r.n,toggle:()=>me.togglePaid(x.r.id),canPay:x.saldo>0.001&&!s.closed,pay:()=>me.startPay(x.r.id)}));

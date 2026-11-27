@@ -1366,3 +1366,22 @@ svg.logo{background:none;border-radius:0;display:block;flex:none}
 .inchint{margin:8px 0 6px;color:#8a5300;font-weight:600}
 
 .macts .btn.sm{white-space:nowrap}
+
+/* Flujo inicial: aviso arriba en el catalogo y marca de obligatorio */
+.toast.top{top:104px!important;bottom:auto!important}
+.reqmark{font-weight:600;color:#8a5300;font-size:.9em}
+
+.readytop{margin:0 0 12px}
+.readytop .rtt{font-size:18px}
+
+/* Cierre de quincena */
+.neutb{background:var(--neubg,#eef0ef);color:var(--ink);border-radius:12px;padding:10px 14px;margin:0 0 12px}
+.prebanner.pbmini{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px}
+.prebanner.pbmini .btn{flex:none}
+.pendstrip{margin:0 0 12px}
+
+/* prueba integral: celular/angosto */
+.wrapbtn{display:block;white-space:normal;line-height:1.25;text-align:center;height:auto;min-height:48px;padding-top:10px;padding-bottom:10px;overflow-wrap:anywhere}
+@media (max-width:559px){.card.entreg .dlrow{flex-wrap:wrap;row-gap:8px}.card.entreg .dlt{flex:1 1 100%;order:1}.card.entreg .dlic{order:0;flex:none}.card.entreg .dlrow>.btn,.card.entreg .dlrow>.ibtn{order:2}.card.entreg .dlrow .dlic+.dlt{flex:1 1 calc(100% - 60px)}}
+.nw .card.entreg .dlrow{flex-wrap:wrap;row-gap:8px}.nw .card.entreg .dlrow .dlic+.dlt{flex:1 1 calc(100% - 60px)}
+@media (max-width:559px){.nw .tr.rv,.tr.rv{grid-template-columns:minmax(0,1fr) auto auto}.tr.rv .acts .chip,.nw .tr.rv .acts .chip{max-width:112px;white-space:normal;overflow:visible;text-overflow:clip}}

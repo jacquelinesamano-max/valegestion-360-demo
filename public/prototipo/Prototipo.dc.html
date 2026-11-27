@@ -57,11 +57,13 @@
 <main class="main">
 <div class="prefs noprint" role="group" aria-label="Preferencias de lectura"><sc-if value="{{ topBackShow }}" hint-placeholder-val="{{ false }}"><button class="pref wide" onClick="{{ topBackGo }}">{{ topBackTxt }}</button></sc-if><sc-if value="{{ showHide }}" hint-placeholder-val="{{ true }}"><button class="pref" aria-pressed="{{ hideOn }}" aria-label="{{ hideLbl }}" data-tip="{{ hideLbl }}" onClick="{{ toggleHide }}"><sc-if value="{{ isHide }}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/></svg></sc-if><sc-if value="{{ notHide }}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></sc-if></button></sc-if><span class="fsz" role="group" aria-label="Tamaño de letra"><sc-for list="{{ fsOpts }}" as="o" hint-placeholder-count="3"><button class="fsb {{ o.cls }}" aria-pressed="{{ o.on }}" aria-label="Letra {{ o.l }}" data-tip="{{ o.l }}" onClick="{{ o.go }}"><span style="font-size: {{ o.px }}px; line-height: 1; font-weight: 800; letter-spacing: -.02em">Aa</span></button></sc-for></span></div>
 
-<sc-if value="{{ preBan }}" hint-placeholder-val="{{ false }}"><div class="prebanner noprint" role="alert"><div><b>Faltan abonos por registrar.</b> Mañana es el cierre de la quincena. ¿Qué quieres hacer con lo que falta?<span class="small" style="display:block;margin-top:2px">{{ preDet }}</span><span class="small" style="display:block;margin-top:4px">Si eliges «Ahora no» o no eliges nada, los pagos quedan como los capturaste (vacíos o parciales). Lo pendiente no pasa al siguiente corte y lo consultas en Historial.</span></div>
+<sc-if value="{{ preBanMini }}" hint-placeholder-val="{{ false }}"><div class="prebanner pbmini noprint" role="alert"><span><b>Mañana cierra la quincena.</b> {{ preDet }}</span><button class="btn sm" onClick="{{ preGoPagos }}">Ver opciones</button></div></sc-if>
+<sc-if value="{{ preBanFull }}" hint-placeholder-val="{{ false }}"><div class="prebanner noprint" role="alert"><div><b>Faltan abonos por registrar.</b> Mañana es el cierre de la quincena. ¿Qué quieres hacer con lo que falta?<span class="small" style="display:block;margin-top:2px">{{ preDet }}</span><span class="small" style="display:block;margin-top:4px">Si eliges «Ahora no» o no eliges nada, los pagos quedan como los capturaste (vacíos o parciales). Lo pendiente no pasa al siguiente corte y lo consultas en Historial.</span></div>
 <sc-if value="{{ preNotAsk }}" hint-placeholder-val="{{ true }}"><div class="row"><button class="btn pri sm" onClick="{{ preMark }}">Todos pagaron</button><button class="btn sm" onClick="{{ preLater }}">Ahora no</button><button class="btn sm" onClick="{{ prePendAsk }}">Cerrar con pendiente</button></div></sc-if>
 <sc-if value="{{ preAsk }}" hint-placeholder-val="{{ false }}"><div class="confbox"><b class="irrev">Esta acción no se podrá revertir.</b><span class="small">Todos los recibos con saldo se marcarán como pagados en el historial del corte.</span><div class="row"><button class="btn pri sm" onClick="{{ preYes }}">Confirmar</button><button class="btn sm" onClick="{{ preNo }}">Cancelar</button></div></div></sc-if>
-<sc-if value="{{ preAskP }}" hint-placeholder-val="{{ false }}"><div class="confbox"><b class="irrev">Esta acción no se podrá revertir el día de mañana.</b><span class="small">El corte se cierra tal como está: lo pendiente queda registrado en el historial como lo que debió cobrarse y lo que se pagó. No pasa al siguiente corte.</span><div class="row"><button class="btn pri sm" onClick="{{ prePendYes }}">Confirmar</button><button class="btn sm" onClick="{{ prePendNo }}">Cancelar</button></div></div></sc-if></div></sc-if>
-<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}"><div class="toast noprint" role="status"><span>{{ toast }}</span><sc-if value="{{ toastUndo }}" hint-placeholder-val="{{ false }}"><button class="tundo" onClick="{{ undoPay }}">Deshacer</button><span class="tbar" aria-hidden="true"></span></sc-if><button onClick="{{ closeToast }}">Cerrar</button></div></sc-if>
+<sc-if value="{{ preAskP }}" hint-placeholder-val="{{ false }}"><div class="confbox"><b class="irrev">Esta acción no se podrá revertir el día de mañana.</b><b class="small" style="display:block;margin-top:2px">Quedarán {{ preDet }}</b><span class="small">El corte se cierra tal como está: lo pendiente queda registrado en el historial como lo que debió cobrarse y lo que se pagó. No pasa al siguiente corte.</span><div class="row"><button class="btn pri sm" onClick="{{ prePendYes }}">Confirmar</button><button class="btn sm" onClick="{{ prePendNo }}">Cancelar</button></div></div></sc-if></div></sc-if>
+<sc-if value="{{ pendStrip }}" hint-placeholder-val="{{ false }}"><div class="okb noprint pendstrip"><b>Cierre mañana con {{ kPend }} pendientes (confirmado).</b> Lo pendiente queda en Historial y no pasa al siguiente corte.</div></sc-if>
+<sc-if value="{{ hasToastShow }}" hint-placeholder-val="{{ false }}"><div class="toast noprint {{ toastCls }}" role="status"><span>{{ toast }}</span><sc-if value="{{ toastUndo }}" hint-placeholder-val="{{ false }}"><button class="tundo" onClick="{{ undoPay }}">Deshacer</button><span class="tbar" aria-hidden="true"></span></sc-if><button onClick="{{ closeToast }}">Cerrar</button></div></sc-if>
 <sc-if value="{{ showQ }}" hint-placeholder-val="{{ false }}">
 <div class="qbar noprint">
 <div><span class="k">Quincena</span><b>1.ª nov</b></div>
@@ -73,9 +75,9 @@
 <sc-if value="{{ isBienvenida }}" hint-placeholder-val="{{ false }}">
 <section>
 <h1 class="h1">Hola, Elena</h1>
-<div class="card"><h2 class="h2">1. Tus clientes y quién paga por quién</h2><p class="mut">Tus clientes salen de las relaciones que subes. Tú eliges quién paga por quién. Ejemplo: Rosa Martínez paga por Ana López y Pedro Ruiz.</p><div style="margin-top:12px"><button class="btn" onClick="{{ gClientes }}">Ver mis clientes y recomendados</button></div></div>
-<div class="card"><h2 class="h2">2. Tus valeras</h2><p class="mut">Agrega las valeras que distribuyes. Si falta una, la solicitas.</p><div style="margin-top:12px"><button class="btn" onClick="{{ gValeras }}">Ver mis valeras</button></div></div>
-<div class="card tint"><h2 class="h2">3. Tu primera quincena</h2><p class="mut">Sube las relaciones de cobro y nosotros armamos los recibos.</p><div style="margin-top:12px"><button class="btn pri" onClick="{{ gInicio }}">Empezar la quincena</button></div></div>
+<div class="card tint"><h2 class="h2">1. Tus valeras</h2><p class="mut">Agrega las valeras que distribuyes. Si falta una, la solicitas.</p><div style="margin-top:12px"><button class="btn pri" onClick="{{ gValeras }}">Ver mis valeras</button></div></div>
+<div class="card"><h2 class="h2">2. Tu primera quincena</h2><p class="mut">Sube las relaciones de cobro y nosotros armamos los recibos.</p><div style="margin-top:12px"><button class="btn" onClick="{{ gInicio }}">Empezar la quincena</button></div></div>
+<div class="card"><h2 class="h2">3. Tus clientes y quién paga por quién</h2><p class="mut">Tus clientes salen de las relaciones que subes. Tú eliges quién paga por quién. Ejemplo: Rosa Martínez paga por Ana López y Pedro Ruiz.</p><div style="margin-top:12px"><button class="btn" onClick="{{ gClientes }}">Ver mis clientes y recomendados</button></div></div>
 </section>
 </sc-if>
 
@@ -85,7 +87,7 @@
 <div class="saludo"><svg class="logo " width="44" height="44" viewBox="0 0 120 120" role="img" aria-label="ValeGestión 360"><rect width="120" height="120" rx="27" fill="#0E2A27"/><g transform="translate(16.8 16.1) scale(0.72)"><path d="M84 68.6H97.42A38 38 0 1 1 66.6 24.58" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M41 61L54 74L98 22.5" fill="none" stroke="#5EE0C1" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></g></svg><div><small>Tu cobranza</small><h1 class="h1 hola">Hola, Elena Ruiz</h1></div></div>
 <sc-if value="{{ bannerVal }}" hint-placeholder-val="{{ false }}"><div class="okb noprint"><b>{{ bannerValTxt }}</b><div class="row" style="margin-top:8px"><button class="btn sm pri" onClick="{{ bannerGo }}">Ver catálogo</button><button class="btn sm" onClick="{{ closeBanner }}">Cerrar</button></div></div></sc-if>
 </sc-if>
-<section class="hero" aria-label="Total del corte">
+<sc-if value="{{ valsSome }}" hint-placeholder-val="{{ true }}"><section class="hero" aria-label="Total del corte">
 <span class="hero-eyebrow">{{ hEy }}</span>
 <span class="hcorte">{{ hCorte }}</span>
 <div class="hero-cifra">{{ hBig }}</div>
@@ -93,14 +95,14 @@
 <div class="hero-mint">{{ hLine }}</div>
 <div class="hbar w{{ hW }}" role="img" aria-label="Avance de lo cobrado"><span></span></div>
 <div class="hero-pie"><span><b>{{ hPaid }}</b> {{ hPaidTxt }}</span><span>{{ hLim }}</span></div>
-</section>
+</section></sc-if>
 <sc-if value="{{ isInicio }}" hint-placeholder-val="{{ false }}">
 <div class="card cobcard {{ cobKind }} {{ cobMinCls }}">
 <div class="cobtx"><div class="cobhd"><small class="cobey">{{ cobEy }}</small> <h2 class="h2 cobh">{{ cobTit }}</h2><sc-if value="{{ cobHasTxt }}" hint-placeholder-val="{{ true }}"><button class="cobtog" onClick="{{ cobTog }}" aria-expanded="{{ cobExp }}" aria-label="{{ cobTogLbl }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></sc-if></div><sc-if value="{{ cobShowTxt }}" hint-placeholder-val="{{ true }}"><span class="mut">{{ cobTxt }}</span></sc-if></div>
 <button class="btn lg {{ cobCls }}" onClick="{{ cobGo }}">{{ cobBtn }}</button>
 </div>
 </sc-if>
-<sc-if value="{{ isInicio }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ isInicio }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ valsSome }}" hint-placeholder-val="{{ true }}">
 <div class="seccion-titulo"><h2 class="h2">Mis valeras</h2><sc-if value="{{ canAdd }}" hint-placeholder-val="{{ true }}"><button class="btn sm" onClick="{{ openCat }}">+ Agregar</button></sc-if></div>
 <div class="vcards">
 <sc-for list="{{ vcards }}" as="v" hint-placeholder-count="4">
@@ -109,8 +111,8 @@
 </div>
 <sc-if value="{{ focoRel }}" hint-placeholder-val="{{ false }}"><div class="foco"><span class="icono"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span><span class="focotxt"><small>Falta su relación</small><b>{{ focoRelTitulo }}</b>
 <span class="row" style="margin-top:8px"><button class="btn sm pri" onClick="{{ focoSubir }}">Sí, la subo</button><button class="btn sm" onClick="{{ omitirPend }}">La omito</button></span></span></div></sc-if>
-</sc-if>
-<div class="dash">
+</sc-if></sc-if>
+<sc-if value="{{ valsSome }}" hint-placeholder-val="{{ true }}"><div class="dash">
 <div class="card wide">
 <h2 class="h2">Colocación por corte</h2>
 <sc-if value="{{ hasVals }}" hint-placeholder-val="{{ true }}">
@@ -154,7 +156,8 @@
 <sc-if value="{{ noEmb }}" hint-placeholder-val="{{ false }}"><p class="mut">Sin embajadores todavía.</p></sc-if>
 </div>
 </sc-if>
-</div>
+</div></sc-if>
+<sc-if value="{{ valsNone }}" hint-placeholder-val="{{ false }}"><div class="card"><p class="mut">Aquí verás tus cifras cuando cargues tu primera relación.</p></div></sc-if>
 </section>
 </sc-if>
 
@@ -162,13 +165,13 @@
 <section>
 <sc-if value="{{ bannerVal }}" hint-placeholder-val="{{ false }}"><div class="okb noprint"><b>{{ bannerValTxt }}</b><div class="row" style="margin-top:8px"><button class="btn sm pri" onClick="{{ bannerGo }}">Ver catálogo</button><button class="btn sm" onClick="{{ closeBanner }}">Cerrar</button></div></div></sc-if>
 <div class="seccion-titulo ttlv"><h1 class="h1" style="margin:0">Valeras</h1><button class="btn sm" onClick="{{ openCat }}">+ Agregar valera</button></div>
-<sc-if value="{{ noVals }}" hint-placeholder-val="{{ false }}"><div class="card"><h2 class="h2">Todavía no agregas valeras</h2><p class="mut">Pulsa «Agregar valera» y elige del catálogo las que distribuyes.</p></div></sc-if>
+<sc-if value="{{ noVals }}" hint-placeholder-val="{{ false }}"><div class="card"><h2 class="h2">Todavía no agregas valeras</h2><p class="mut" style="margin-bottom:12px">Elige del catálogo las que distribuyes.</p><button class="btn pri" onClick="{{ openCat }}">Agregar mi primera valera</button></div></sc-if>
 <sc-for list="{{ valList }}" as="v" hint-placeholder-count="4">
 <button class="mcard" style="display:block;width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit" onClick="{{ v.open }}"><span class="row vrw"><span class="sigla tono-{{ v.t }} vsig {{ v.lg.cls }}"><sc-if value="{{ v.lg.has }}" hint-placeholder-val="{{ false }}"><img src="{{ v.lg.src }}" alt=""></sc-if><sc-if value="{{ v.lg.no }}" hint-placeholder-val="{{ true }}">{{ v.sig }}</sc-if></span><span class="sp"><span class="who">{{ v.n }}</span><span class="mut small" style="display:block">{{ v.sub }}</span></span><span class="chip {{ v.chipC }}">{{ v.chip }}</span></span><sc-if value="{{ v.cta }}" hint-placeholder-val="{{ false }}"><span class="vcta">{{ v.ctaTxt }} ›</span></sc-if></button>
 </sc-for>
 <sc-if value="{{ hasReqs }}" hint-placeholder-val="{{ false }}">
 <h2 class="h2" style="margin-top:24px">Solicitudes de valeras nuevas</h2>
-<sc-for list="{{ reqList }}" as="q" hint-placeholder-count="1"><div class="mcard"><div class="row vrq"><span class="sp"><span class="who">{{ q.n }}</span><div class="mut small">{{ q.sub }}</div></span><span class="chip warn">{{ q.est }}</span></div></div></sc-for>
+<sc-for list="{{ reqList }}" as="q" hint-placeholder-count="1"><button class="mcard" style="display:block;width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit" onClick="{{ q.open }}"><span class="row vrq"><span class="sp"><span class="who">{{ q.n }}</span><span class="mut small" style="display:block">{{ q.sub }}</span></span><span class="chip warn">{{ q.est }}</span><span class="carr" aria-hidden="true" style="font-size:24px;color:var(--muted)">›</span></span></button></sc-for>
 </sc-if>
 </section>
 </sc-if>
@@ -182,7 +185,8 @@
 </sc-for>
 <sc-if value="{{ catEmpty }}" hint-placeholder-val="{{ false }}"><div class="card"><p class="mut">No hay valeras con ese nombre en el catálogo. Puedes solicitarla abajo.</p></div></sc-if>
 <div class="card tint" style="margin-top:16px"><h2 class="h2">¿No encuentras tu valera?</h2><p class="mut" style="margin-bottom:12px">Pide que la agreguemos: anexas un ejemplo de su relación de cobro y el equipo de ValeGestión 360 ajusta la lectura.</p><button class="btn" onClick="{{ openReq }}">Solicitar una valera nueva</button></div>
-<div class="row"><button class="btn pri" onClick="{{ gValeras }}">Listo, ver mis valeras</button></div>
+<div class="row"><button class="btn pri" disabled="{{ listoDis }}" onClick="{{ gValeras }}">{{ listoTxt }}</button></div>
+<sc-if value="{{ listoDis }}" hint-placeholder-val="{{ false }}"><p class="mut small" style="margin-top:8px">Agrega al menos una valera para continuar.</p></sc-if>
 </section>
 </sc-if>
 
@@ -193,14 +197,27 @@
 <div class="card">
 <div class="field"><label for="rqn">Nombre de la valera</label><input id="rqn" class="inp" value="{{ reqN }}" onChange="{{ setReqN }}"></div>
 
-<div class="field"><label>Relación de cobro de ejemplo</label><div class="row"><button class="btn" onClick="{{ attachReq }}">Anexar archivo (ejemplo)</button><span class="mut">{{ reqFileTxt }}</span></div></div>
+<div class="field"><label>Relación de cobro de ejemplo <span class="reqmark">(obligatoria)</span></label><div class="row"><button class="btn" onClick="{{ attachReq }}">Anexar archivo (ejemplo)</button><span class="mut">{{ reqFileTxt }}</span></div></div>
 <div class="field"><label for="rqc">Comentario (opcional)</label><input id="rqc" class="inp" placeholder="Ej. Es el PDF que descargo de su app cada corte" value="{{ reqCom }}" onChange="{{ setReqCom }}"></div>
 <sc-if value="{{ reqDupOn }}" hint-placeholder-val="{{ false }}"><div class="warnb"><b>{{ reqDupName }} ya está en revisión.</b> No necesitas enviar otra.
 <button class="opt {{ reqMailCls }}" style="margin-top:8px" onClick="{{ toggleReqMail }}"><b>Avisarme por correo cuando se acepte o se descarte</b><span class="mut">{{ reqMailTxt }}</span></button>
 <div class="row"><button class="btn sm" onClick="{{ ackReqDup }}">Entendido</button></div></div></sc-if>
 <div class="row"><button class="btn pri" disabled="{{ reqNoName }}" onClick="{{ sendReq }}">Enviar solicitud</button></div>
-<sc-if value="{{ reqNoName }}" hint-placeholder-val="{{ false }}"><p class="mut small" style="margin-top:8px">Escribe el nombre de la valera para poder enviarla.</p></sc-if>
+<sc-if value="{{ reqNoName }}" hint-placeholder-val="{{ false }}"><p class="mut small" style="margin-top:8px">{{ reqHint }}</p></sc-if>
 </div>
+</section>
+</sc-if>
+
+<sc-if value="{{ isSolicitud }}" hint-placeholder-val="{{ false }}">
+<section>
+<h1 class="h1">{{ rq.n }}</h1>
+<div class="row" style="margin-bottom:12px"><span class="chip warn">{{ rq.est }}</span><span class="mut">Solicitada el {{ rq.fecha }}</span></div>
+<div class="card"><h2 class="h2">Lo que enviaste</h2>
+<p style="margin:0 0 8px"><span class="mut small" style="display:block">Archivo de ejemplo</span><b>{{ rq.archivo }}</b></p>
+<sc-if value="{{ rq.hasNota }}" hint-placeholder-val="{{ false }}"><p style="margin:0 0 8px"><span class="mut small" style="display:block">Comentario</span><b>{{ rq.nota }}</b></p></sc-if>
+<sc-if value="{{ rq.hasCortes }}" hint-placeholder-val="{{ false }}"><p style="margin:0"><span class="mut small" style="display:block">Cortes</span><b>{{ rq.cortes }}</b></p></sc-if></div>
+<div class="card tint"><h2 class="h2">¿Qué sigue?</h2><p class="mut">{{ rq.sigue }}</p></div>
+<sc-if value="{{ rq.canCancel }}" hint-placeholder-val="{{ false }}"><div class="row noprint"><button class="btn dang" onClick="{{ rq.cancel }}">Cancelar solicitud</button></div></sc-if>
 </section>
 </sc-if>
 
@@ -247,7 +264,7 @@
 <sc-if value="{{ notReading }}" hint-placeholder-val="{{ true }}">
 <div class="card">
 <h2 class="h2">Elige el archivo</h2>
-<button class="btn pri lg block" onClick="{{ pickFile }}">Usar {{ upFile }} (ejemplo)</button>
+<button class="btn pri lg block wrapbtn" onClick="{{ pickFile }}">Usar {{ upFile }} (ejemplo)</button>
 <p class="mut small" style="margin:6px 0 12px">{{ upTipo }} de ejemplo: así se vería la relación que descargas de la app.</p>
 <button class="opt dimopt" disabled="{{ true }}"><b>Elegir un archivo de mi equipo</b><span class="mut">No disponible</span></button>
 </div>
@@ -299,8 +316,8 @@
 </div>
 </sc-for>
 <div class="row" style="margin:8px 0 12px"><span class="mut">{{ rvShown }}</span><sc-if value="{{ rvMore }}" hint-placeholder-val="{{ false }}"><button class="btn sm" onClick="{{ moreRv }}">Mostrar {{ rvMoreN }} más</button></sc-if></div>
-<sc-if value="{{ rvBlocked }}" hint-placeholder-val="{{ false }}"><div class="riskb">Falta escribir {{ rvMissTxt }}.</div></sc-if>
 <sc-if value="{{ incHint }}" hint-placeholder-val="{{ false }}"><p class="mut small inchint">{{ incHint }}</p></sc-if>
+<sc-if value="{{ incNote }}" hint-placeholder-val="{{ false }}"><p class="mut small" style="margin:8px 0 6px">{{ incNote }}</p></sc-if>
 <div class="row noprint">
 <sc-if value="{{ incShow }}" hint-placeholder-val="{{ true }}"><button id="btn-incorporar" class="btn pri" disabled="{{ incDisabled }}" onClick="{{ incorporate }}">{{ incLabel }}</button></sc-if>
 <button class="btn" onClick="{{ rvCancel }}">Quitar este archivo y volver a subir</button>
@@ -337,7 +354,7 @@
 <sc-if value="{{ m.isLater }}" hint-placeholder-val="{{ false }}"><div class="warnb" style="margin-top:8px"><b>{{ m.dtxt }}</b>. Sigue pendiente. <button class="link" onClick="{{ m.undo }}">Quitar</button></div></sc-if>
 </div>
 </sc-for>
-<div class="row"><button class="btn pri" onClick="{{ gClientes }}">{{ clasifTxt }}</button></div>
+<div class="row"><button class="btn pri" onClick="{{ clasifGo }}">{{ clasifTxt }}</button></div>
 </section>
 </sc-if>
 
@@ -422,6 +439,8 @@
 </div>
 </sc-if>
 <sc-if value="{{ dupWarn }}" hint-placeholder-val="{{ false }}"><div class="riskb">Vale Todo está duplicada: $1,130 se cobraría doble.</div></sc-if>
+<sc-if value="{{ readyTop }}" hint-placeholder-val="{{ false }}"><div class="card tint readytop noprint"><b class="rtt">Todo listo: {{ sumCount }} recibos · {{ sumTotal }}</b><div class="row" style="margin-top:8px"><button class="btn pri" onClick="{{ confirmNow }}">Confirmar cobranza</button></div></div>
+<sc-if value="{{ confCobOn }}" hint-placeholder-val="{{ false }}"><div class="confbox noprint"><b class="irrev">Al confirmar se generan {{ sumCount }} recibos por {{ sumTotal }}.</b><span class="small">Revisa antes: después de confirmar ya no se editan las relaciones de las valeras. Los pagos sí puedes registrarlos.</span><div class="row"><button class="btn pri sm" onClick="{{ confirmDo }}">Confirmar</button><button class="btn sm" onClick="{{ confirmNo }}">Cancelar</button></div></div></sc-if></sc-if>
 <h2 class="h2" style="margin-top:20px">Lo que se cobrará</h2>
 <div class="kpis">
 <div class="kpi"><span class="k">Total del corte</span><b>{{ sumTotal }}</b></div>
@@ -437,7 +456,8 @@
 <div class="row" style="margin:8px 0 12px"><span class="mut">{{ sumShown }}</span><sc-if value="{{ sumMore }}" hint-placeholder-val="{{ false }}"><button class="btn sm" onClick="{{ showMoreRes }}">Mostrar {{ sumMoreN }} más</button></sc-if></div>
 <div class="tr sm tot"><span><b>Total de todos los clientes</b></span><span class="num2"><span class="lbl">Propios</span>{{ sumOwn }}</span><span class="num2"><span class="lbl">Recomendados</span>{{ sumRec }}</span><span class="num2"><b><span class="lbl">Total</span>{{ sumTotal }}</b></span></div>
 <sc-if value="{{ resBlocked }}" hint-placeholder-val="{{ true }}"><div class="warnb">Atiende los pendientes para confirmar.</div></sc-if>
-<div class="row noprint"><button class="btn pri" disabled="{{ resDisabled }}" onClick="{{ confirmNow }}">Confirmar cobranza</button><button class="btn" onClick="{{ gInicio }}">Guardar y volver a Tu quincena paso a paso</button></div>
+<sc-if value="{{ notReadyTop }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ confCobOn2 }}" hint-placeholder-val="{{ false }}"><div class="confbox noprint"><b class="irrev">Al confirmar se generan {{ sumCount }} recibos por {{ sumTotal }}.</b><span class="small">Revisa antes: después de confirmar ya no se editan las relaciones de las valeras. Los pagos sí puedes registrarlos.</span><div class="row"><button class="btn pri sm" onClick="{{ confirmDo }}">Confirmar</button><button class="btn sm" onClick="{{ confirmNo }}">Cancelar</button></div></div></sc-if></sc-if>
+<div class="row noprint"><button class="btn {{ botConfCls }}" disabled="{{ resDisabled }}" onClick="{{ confirmNow }}">Confirmar cobranza</button><button class="btn" onClick="{{ gInicio }}">Guardar y seguir después</button></div>
 <sc-if value="{{ tasksAllOk }}" hint-placeholder-val="{{ false }}"><div style="margin-top:20px"><div class="card">
 <div class="row"><h2 class="h2" style="margin:0">Pasos para confirmar</h2><span class="sp"></span><span class="chip info">{{ tasksProg }}</span></div>
 <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="4"><div class="step taskrow"><span class="tk"><b class="nm">{{ t.t }}</b><span class="mut small">{{ t.inst }}</span></span><span class="chip {{ t.chipC }}">{{ t.chip }}</span><button class="btn sm {{ t.btnC }}" onClick="{{ t.go }}">{{ t.btn }}</button></div></sc-for>
@@ -449,16 +469,17 @@
 <sc-if value="{{ isCobranza }}" hint-placeholder-val="{{ false }}">
 <section>
 <h1 class="h1">Cobranza</h1>
-<sc-if value="{{ closed }}" hint-placeholder-val="{{ false }}"><div class="riskb"><b>Quincena cerrada.</b> Solo consulta. Lo pendiente de este corte se ve en Historial y no pasa al siguiente.</div></sc-if>
+<sc-if value="{{ closedCob }}" hint-placeholder-val="{{ false }}"><div class="neutb"><b>Quincena cerrada.</b> Solo consulta. Lo pendiente de este corte se ve en Historial y no pasa al siguiente.</div></sc-if>
 <div class="tabs noprint" role="tablist" aria-label="Cobranza"><button class="tab on" role="tab" aria-selected="true">Resumen</button><button class="tab" role="tab" aria-selected="false" onClick="{{ gRelacion }}">Relación</button><button class="tab" role="tab" aria-selected="false" onClick="{{ gRecibos }}">Recibos</button><button class="tab" role="tab" aria-selected="false" onClick="{{ gPagos }}">Pagos</button></div>
 <div class="folder">
 <div class="seg noprint" role="group" aria-label="Elegir corte"><button class="segb {{ cobVigCls }}" onClick="{{ setVig }}">Corte actual</button><button class="segb {{ cobAntCls }}" onClick="{{ setAnt }}">Corte anterior</button></div>
 
 <sc-if value="{{ cobVig }}" hint-placeholder-val="{{ true }}">
 <sc-if value="{{ noConf }}" hint-placeholder-val="{{ true }}"><div class="warnb">Cobranza sin confirmar: cifras parciales. <button class="link" onClick="{{ nx.go }}">{{ nx.b }}</button></div></sc-if>
+<sc-if value="{{ nextAfterConf }}" hint-placeholder-val="{{ false }}"><div class="card tint noprint"><small class="k">Siguiente paso</small><h2 class="h2">Entrega tus recibos</h2><p class="mut">Imprime o comparte los recibos con tus clientes. Registrar pagos es opcional: puedes llevarlo con tus recibos impresos.</p><div class="row"><button class="btn pri" onClick="{{ gRecibos }}">Ver recibos</button><button class="btn" onClick="{{ gPagos }}">Registrar pagos (opcional)</button></div></div></sc-if>
 <div class="payband" aria-label="Avance de cobro"><div class="pb-top"><span class="pb-k">Cobrado</span><b class="pb-n">{{ kPaid }}</b><span class="mut">de {{ kTotal }}</span><sc-if value="{{ hasPayRows }}" hint-placeholder-val="{{ true }}"><span class="chip info pb-chip">{{ payProg }}</span></sc-if></div>
 <div class="vpbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ cobPct }}" aria-label="Avance de cobro"><i style="width: {{ cobPct }}%"></i></div>
-<div class="pb-bot"><span>Falta cobrar <b>{{ kPend }}</b></span><span class="mut">Recibos del corte: <b>{{ eRecN }}</b></span></div></div>
+<div class="pb-bot"><span>{{ lblFalta }} <b>{{ kPend }}</b></span><span class="mut">Recibos del corte: <b>{{ eRecN }}</b></span></div></div>
 <div class="card entreg">
 <h2 class="h2">Entregables del corte</h2>
 <div class="dlrow"><span class="dlic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 11l5 5 5-5M4 20h16"/></svg></span><span class="dlt"><b>Recibos de cobro</b><small>PDF</small></span><button class="btn sm" disabled="{{ noConf }}" onClick="{{ dlRecibos }}">Descargar</button><button class="ibtn dlpr" aria-label="Imprimir los recibos de cobro" title="Imprimir" disabled="{{ noConf }}" onClick="{{ prRecibos }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><path d="M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg></button></div>
@@ -471,7 +492,7 @@
 <button class="vpmain vplink" onClick="{{ v.cobrar }}" aria-label="Cobrar a los clientes de {{ v.n }}"><div class="vptop"><b>{{ v.n }}</b><span class="chip {{ v.dueC }}">{{ v.due }}</span></div>
 <div class="vpbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ v.pct }}" aria-label="Juntado de {{ v.n }}"><i style="width: {{ v.pct }}%"></i></div>
 <div class="vpmeta"><span>Juntado <b>{{ v.got }}</b> de {{ v.owe }} · paga antes del {{ v.fecha }}</span><span class="vpgain">Ganancia {{ v.gain }}</span></div><span class="vpchev" aria-hidden="true">›</span></button>
-<div class="vpacts noprint"><sc-if value="{{ v.canMark }}" hint-placeholder-val="{{ true }}"><button class="btn sm" onClick="{{ v.mark }}">Ya le pagué</button></sc-if><sc-if value="{{ v.isPaid }}" hint-placeholder-val="{{ false }}"><button class="link" onClick="{{ v.unmark }}">Deshacer</button></sc-if></div></div></sc-for>
+<div class="vpacts noprint"><sc-if value="{{ v.canMark }}" hint-placeholder-val="{{ true }}"><button class="btn sm" onClick="{{ v.mark }}">Ya le pagué</button></sc-if><sc-if value="{{ v.canUnmark }}" hint-placeholder-val="{{ false }}"><button class="link" onClick="{{ v.unmark }}">Deshacer</button></sc-if></div></div></sc-for>
 <p class="mut small vpnote"><b>Cálculo aproximado.</b> Solo cuenta a quienes ya pagaron completo su cobro, sumando el importe de cada vale a su valera. Los pagos parciales no se cuentan hasta que liquiden. Las ganancias usan porcentajes de ejemplo.</p>
 </div></sc-if>
 <button class="plegar noprint" aria-expanded="{{ cmpExp }}" onClick="{{ toggleCmp }}"><span>Comparativo con el corte anterior</span><svg class="chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
@@ -495,14 +516,14 @@
 
 <sc-if value="{{ cobAnt }}" hint-placeholder-val="{{ false }}">
 <div class="kpis">
-<div class="kpi"><span class="k">Total del corte</span><b>{{ pvTotal }}</b></div>
-<div class="kpi"><span class="k">Cobrado</span><b>{{ pvPaid }}</b></div>
-<div class="kpi lead"><span class="k">Quedó pendiente</span><b>{{ pvPend }}</b><span class="d">Identificado en ese corte</span></div>
+<div class="kpi"><span class="k">Total del corte</span><b>{{ cpTotal }}</b></div>
+<div class="kpi"><span class="k">Cobrado</span><b>{{ cpPaid }}</b></div>
+<div class="kpi lead"><span class="k">Quedó pendiente</span><b>{{ cpPend }}</b><span class="d">Identificado en ese corte</span></div>
 <div class="kpi"><span class="k">Clientes nuevos</span><b>2</b><span class="d">6 recibos en total</span></div>
 </div>
 <div class="card"><h2 class="h2">Por valera</h2>
 <div class="th sm"><span>Valera</span><span>Total</span><span>Movimientos</span><span>Parte del corte</span></div>
-<sc-for list="{{ pvValRows }}" as="r" hint-placeholder-count="4"><div class="tr sm"><b class="nm">{{ r.n }}</b><span class="num2"><span class="lbl">Total</span>{{ r.t }}</span><span><span class="lbl">Movimientos</span>{{ r.m }}</span><span><span class="lbl">Parte del corte</span>{{ r.p }}</span></div></sc-for>
+<sc-for list="{{ cpRows }}" as="r" hint-placeholder-count="4"><div class="tr sm"><b class="nm">{{ r.n }}</b><span class="num2"><span class="lbl">Total</span>{{ r.t }}</span><span><span class="lbl">Movimientos</span>{{ r.m }}</span><span><span class="lbl">Parte del corte</span>{{ r.p }}</span></div></sc-for>
 </div>
 <div class="row"><button class="btn" onClick="{{ gHistPrev }}">Ver el detalle por responsable</button></div>
 </sc-if>
@@ -513,14 +534,14 @@
 <sc-if value="{{ isRelacion }}" hint-placeholder-val="{{ false }}">
 <section class="relsec">
 <h1 class="h1">Cobranza · Relación unificada</h1>
-<sc-if value="{{ closed }}" hint-placeholder-val="{{ false }}"><div class="riskb"><b>Quincena cerrada.</b> Solo consulta. Lo pendiente de este corte se ve en Historial y no pasa al siguiente.</div></sc-if>
+<sc-if value="{{ closed }}" hint-placeholder-val="{{ false }}"><div class="neutb"><b>Quincena cerrada.</b> Solo consulta. Lo pendiente de este corte se ve en Historial y no pasa al siguiente.</div></sc-if>
 <div class="tabs noprint" role="tablist" aria-label="Cobranza"><button class="tab" role="tab" aria-selected="false" onClick="{{ gCobranza }}">Resumen</button><button class="tab on" role="tab" aria-selected="true">Relación</button><button class="tab" role="tab" aria-selected="false" onClick="{{ gRecibos }}">Recibos</button><button class="tab" role="tab" aria-selected="false" onClick="{{ gPagos }}">Pagos</button></div>
 <div class="folder">
 <sc-if value="{{ noConf }}" hint-placeholder-val="{{ true }}"><div class="card"><h2 class="h2">Todavía no confirmas la cobranza</h2><p class="mut" style="margin-bottom:12px">Cuando termines de revisar, aquí verás a quién cobrarle y cuánto.</p><button class="btn pri" onClick="{{ nx.go }}">{{ nx.b }}</button></div></sc-if>
 <sc-if value="{{ isConf }}" hint-placeholder-val="{{ false }}">
 <div class="payband" aria-label="Avance de cobro"><div class="pb-top"><span class="pb-k">Cobrado</span><b class="pb-n">{{ payPaidTxt }}</b><span class="mut">de {{ payTotTxt }}</span><span class="chip info pb-chip">{{ payProg }}</span></div>
 <div class="vpbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ payPct }}" aria-label="Avance de cobro"><i style="width: {{ payPct }}%"></i></div>
-<div class="pb-bot"><span>Falta cobrar <b>{{ payPendTxt }}</b></span></div></div>
+<div class="pb-bot"><span>{{ lblFalta }} <b>{{ payPendTxt }}</b></span></div></div>
 
 <sc-if value="{{ relVActive }}" hint-placeholder-val="{{ false }}"><div class="vtag noprint"><span>Solo: <b>{{ relVName }}</b></span><button class="btn sm" onClick="{{ relVClear }}">Ver todas</button></div></sc-if>
 <div class="colrow noprint"><label for="rcol" class="small" style="font-weight:600">Ruta por colonia</label><select id="rcol" class="inp colsel" value="{{ relCol }}" onChange="{{ setRelCol }}"><sc-for list="{{ relCols }}" as="o" hint-placeholder-count="5"><option value="{{ o.v }}">{{ o.l }}</option></sc-for></select><button class="btn sm colprint" onClick="{{ gImprimir }}">Ver relación</button></div>
@@ -559,7 +580,7 @@
 <div class="row" style="margin-bottom:12px"><span class="chip {{ dt.estC }}">{{ dt.est }}</span><span class="mut">{{ dt.metaTxt }}</span></div>
 <div class="payband" aria-label="Avance de cobro"><div class="pb-top"><span class="pb-k">Cobrado</span><b class="pb-n">{{ dt.paid }}</b><span class="mut">de {{ dt.total }}</span></div>
 <div class="vpbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ dt.pct }}" aria-label="Avance de cobro"><i style="width: {{ dt.pct }}%"></i></div>
-<div class="pb-bot"><span>Falta cobrar <b>{{ dt.saldo }}</b></span></div></div>
+<div class="pb-bot"><span>{{ lblFalta }} <b>{{ dt.saldo }}</b></span></div></div>
 <div class="row noprint" style="margin-bottom:12px"><sc-if value="{{ dt.canPay }}" hint-placeholder-val="{{ true }}"><button class="btn pri" onClick="{{ dt.pay }}">Registrar pago</button></sc-if><button class="btn" onClick="{{ dt.recibo }}">Ver recibo</button><button class="btn" onClick="{{ dt.ficha }}">Ver ficha</button></div>
 <div class="card"><h2 class="h2">Pagos registrados</h2>
 <sc-if value="{{ dt.noPays }}" hint-placeholder-val="{{ true }}"><p class="mut">Todavía no hay pagos registrados.</p></sc-if>
@@ -601,14 +622,15 @@
 <sc-if value="{{ isPagos }}" hint-placeholder-val="{{ false }}">
 <section>
 <h1 class="h1">Cobranza · Pagos</h1>
-<sc-if value="{{ closed }}" hint-placeholder-val="{{ false }}"><div class="riskb"><b>Quincena cerrada.</b> Solo consulta. Lo pendiente de este corte se ve en Historial y no pasa al siguiente.</div></sc-if>
+<sc-if value="{{ closed }}" hint-placeholder-val="{{ false }}"><div class="neutb"><b>Quincena cerrada.</b> Solo consulta. Lo pendiente de este corte se ve en Historial y no pasa al siguiente.</div></sc-if>
 <div class="tabs noprint" role="tablist" aria-label="Cobranza"><button class="tab" role="tab" aria-selected="false" onClick="{{ gCobranza }}">Resumen</button><button class="tab" role="tab" aria-selected="false" onClick="{{ gRelacion }}">Relación</button><button class="tab" role="tab" aria-selected="false" onClick="{{ gRecibos }}">Recibos</button><button class="tab on" role="tab" aria-selected="true">Pagos</button></div>
 <div class="folder">
 <sc-if value="{{ hasPayRows }}" hint-placeholder-val="{{ false }}"><div class="card flat">
 <div class="payband" aria-label="Avance de cobro"><div class="pb-top"><span class="pb-k">Cobrado</span><b class="pb-n">{{ payPaidTxt }}</b><span class="mut">de {{ payTotTxt }}</span><span class="chip info pb-chip">{{ payProg }}</span></div>
 <div class="vpbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ payPct }}" aria-label="Avance de cobro"><i style="width: {{ payPct }}%"></i></div>
-<div class="pb-bot"><span>Falta cobrar <b>{{ payPendTxt }}</b></span><sc-if value="{{ payNext }}" hint-placeholder-val="{{ false }}"><button class="btn pri sm noprint" onClick="{{ payNextGo }}">Registrar pago de {{ payNextName }}</button></sc-if></div></div>
-<h2 class="h2" style="margin:14px 0 8px">Pendientes por cobrar</h2>
+<div class="pb-bot"><span>{{ lblFalta }} <b>{{ payPendTxt }}</b></span><sc-if value="{{ payNext }}" hint-placeholder-val="{{ false }}"><button class="btn pri sm noprint" onClick="{{ payNextGo }}">Registrar pago de {{ payNextName }}</button></sc-if></div></div>
+<sc-if value="{{ allPaid }}" hint-placeholder-val="{{ false }}"><div class="okb noprint"><b>¡Todos pagaron!</b> Cobraste {{ payTotTxt }}.<div class="row" style="margin-top:8px"><button class="btn sm pri" onClick="{{ gCobranza }}">Ver resumen</button></div></div></sc-if>
+<h2 class="h2" style="margin:14px 0 8px">{{ payListTitle }}</h2>
 <div class="toolbar noprint"><input id="pyq" class="inp" placeholder="Buscar cliente" aria-label="Buscar cliente" value="{{ payQ }}" onChange="{{ setPayQ }}"><button class="ibtn {{ payFHas }}" aria-label="Filtrar" aria-expanded="{{ payFExp }}" onClick="{{ togglePayF }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg></button><button class="ibtn" aria-label="Ordenar" aria-expanded="{{ paySExp }}" onClick="{{ togglePayS }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"/></svg></button><button class="ibtn" aria-label="Más acciones: marcar o quitar marcas" aria-expanded="{{ payMExp }}" onClick="{{ togglePayM }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></button></div>
 <sc-if value="{{ payMenuF }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Mostrar</span><sc-for list="{{ payFilters }}" as="f" hint-placeholder-count="3"><button class="popb {{ f.cls }}" onClick="{{ f.go }}">{{ f.l }}</button></sc-for></div></sc-if>
 <sc-if value="{{ payMenuS }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Ordenar por</span><sc-for list="{{ paySorts }}" as="f" hint-placeholder-count="2"><button class="popb {{ f.cls }}" onClick="{{ f.go }}">{{ f.l }}</button></sc-for></div></sc-if>
@@ -747,7 +769,7 @@
 <sc-if value="{{ showFab }}" hint-placeholder-val="{{ true }}"><div class="scrollfab noprint" role="group" aria-label="Ir al inicio o al final de la pantalla"><button onClick="{{ scrollTop }}" aria-label="Ir arriba" title="Ir arriba"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button><button onClick="{{ scrollBot }}" aria-label="Ir abajo" title="Ir abajo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button></div></sc-if>
 </main>
 <aside class="rail noprint" aria-label="Resumen y siguiente paso">
-<div class="card railc"><span class="k">Total a cobrar</span><b class="railbig">{{ kTotal }}</b><div class="bar railbar"><i style="width:{{ heroW }}%"></i></div><div class="railrows"><div><span>Cobrado</span><b>{{ kPaid }}</b></div><div><span>Falta por cobrar</span><b>{{ kPend }}</b></div><div><span>Fecha límite</span><b>{{ qLim }}</b></div></div></div>
+<div class="card railc"><span class="k">Total a cobrar</span><b class="railbig">{{ kTotal }}</b><div class="bar railbar"><i style="width:{{ heroW }}%"></i></div><div class="railrows"><div><span>Cobrado</span><b>{{ kPaid }}</b></div><div><span>{{ lblFalta }}</span><b>{{ kPend }}</b></div><div><span>Fecha límite</span><b>{{ qLim }}</b></div></div></div>
 <div class="card tint railc"><span class="k">Lo que sigue</span><h2 class="h2">{{ nx.t }}</h2><p class="mut">{{ nx.d }}</p><button class="btn pri glow block" onClick="{{ nx.go }}">{{ nx.b }}</button></div>
 </aside>
 <sc-if value="{{ dwOpen }}" hint-placeholder-val="{{ false }}">
@@ -756,7 +778,7 @@
 <div class="dwh"><div style="min-width:0"><h2 class="h2" style="margin:0">{{ dw.n }}</h2><div class="row" style="gap:8px;margin-top:6px"><span class="chip {{ dw.estC }}">{{ dw.est }}</span><span class="mut small">{{ dw.ctx }}</span></div></div><button class="dwx" aria-label="Cerrar el panel" onClick="{{ dw.close }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
 <div class="dwb">
 <div class="dwk"><div><span class="lbl">Total</span><b>{{ dw.total }}</b></div><div><span class="lbl">Pagado</span><b>{{ dw.paid }}</b></div><div><span class="lbl">Falta</span><b class="big">{{ dw.saldo }}</b></div></div>
-<sc-if value="{{ dw.closed }}" hint-placeholder-val="{{ false }}"><div class="riskb">Quincena cerrada: solo consulta.</div></sc-if>
+<sc-if value="{{ dw.closed }}" hint-placeholder-val="{{ false }}"><div class="neutb">Quincena cerrada: solo consulta.</div></sc-if>
 <sc-if value="{{ dw.canForm }}" hint-placeholder-val="{{ true }}"><div class="dwform">
 <label for="dwimp" class="dwl">Monto recibido</label>
 <div class="amtrow"><span class="amtc">$</span><input id="dwimp" class="inp" inputmode="decimal" placeholder="0" value="{{ dw.imp }}" onChange="{{ setPayImp }}"></div>
@@ -829,7 +851,7 @@ fresh(){ return { screen:'acceso', welcomed:false, vals:[], catOpen:false, vid:n
  addVal:false, avN:'', avC:'6', avP:'15', addCli:false, acN:'', toast:'' }; }
 save(){ try{ const s={...this.state}; delete s.toast; delete s.reading; localStorage.setItem(this.key(),JSON.stringify(s)); }catch(e){} }
 upd(p,cb){ if(p&&p.screen&&p.screen!==this.state.screen) p={...p,prev:this.state.screen}; this.setState(p,()=>{ this.save(); if(cb)cb(); }); }
-go(scr,x){ this.upd({screen:scr,toast:'',...(['inicio','resumen','cobranza','hist','historial','relacion','recibos','pagos'].indexOf(scr)>=0?{bk:null}:{}),...(x||{})},()=>{ try{window.scrollTo(0,0);}catch(e){} }); }
+go(scr,x){ this.upd({screen:scr,toast:'',payM:null,relM:null,cliM:null,...(['inicio','resumen','cobranza','hist','historial','relacion','recibos','pagos'].indexOf(scr)>=0?{bk:null}:{}),...(x||{})},()=>{ try{window.scrollTo(0,0);}catch(e){} }); }
 nz(t){ return (t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase(); }
 fmt(n){ if(this.state.hide&&['recibos','imprimir'].indexOf(this.state.screen)<0) return '$\u00a0•••'; return this.fmtR(n); }
 fmtR(n){ n=Number(n)||0; const neg=n<0; n=Math.abs(n); const t=Number.isInteger(n)?String(n):n.toFixed(2); const p=t.split('.'); return (neg?'−':'')+'$'+p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',')+(p[1]?'.'+p[1]:''); }
@@ -920,7 +942,7 @@ reset(){ try{localStorage.removeItem(this.key());}catch(e){} const s=this.fresh(
 startPay(id){ if(this.state.closed){ this.upd({toast:'La quincena está cerrada: ya no se pueden registrar pagos.'}); return; } const snap=this.state.conf; const pr=snap.recs.find(r=>r.id===id); const paid=this.state.pays.filter(p=>p.rid===id&&p.st==='ok').reduce((a,p)=>a+p.imp,0); this._saving=false;
  this.upd({drawer:true,toast:'',wa:null,undoPid:null,payForm:{rid:id,mode:'completo',imp:String(pr.total-paid),fecha:'2026-11-10',met:'Efectivo',obs:'',err:'',done:null}}); }
 markAllPaid(){ const st=this.state; const snap=st.conf; if(!snap) return; if(st.closed){ this.upd({toast:'La quincena está cerrada: ya no se pueden cambiar pagos.'}); return; } const paid=id=>st.pays.filter(p=>p.rid===id&&p.st==='ok').reduce((a,p)=>a+p.imp,0); const add=[]; let tot=0; snap.recs.forEach(r=>{ const f=r.total-paid(r.id); if(f>0.001){ add.push({id:'p'+Date.now()+'_'+r.id,rid:r.id,imp:f,fecha:'2026-11-10',obs:'Marcado como pagado',st:'ok',motivo:''}); tot+=f; } });
- if(!add.length){ this.upd({toast:'Todos los clientes ya figuran como pagados.'}); return; } this.upd({pays:[...st.pays,...add],toast:'Marcaste '+add.length+(add.length===1?' cliente':' clientes')+' como pagados ('+this.fmt(tot)+').'}); }
+ if(!add.length){ this.upd({toast:'Todos los clientes ya figuran como pagados.'}); return; } this.upd({pays:[...st.pays,...add],undoPid:'mark',undoMarkIds:add.map(a=>a.id),toast:'Marcaste '+add.length+(add.length===1?' cliente':' clientes')+' como pagados ('+this.fmt(tot)+').'},()=>{ clearTimeout(this._ut); this._ut=setTimeout(()=>{ if(this.state.undoPid==='mark') this.setState({undoPid:null,undoMarkIds:null,toast:''}); },7000); }); }
 markAllFinal(motivo,toast){ const st=this.state; const snap=st.conf; if(!snap) return; const paid=id=>st.pays.filter(p=>p.rid===id&&p.st==='ok').reduce((a,p)=>a+p.imp,0); const add=[]; let tot=0; snap.recs.forEach(r=>{ const f=r.total-paid(r.id); if(f>0.001){ add.push({id:'p'+Date.now()+'_'+r.id,rid:r.id,imp:f,fecha:'2026-11-10',obs:motivo,st:'ok',motivo:'',final:true}); tot+=f; } }); return {add:add,tot:tot}; }
 unmarkAllPaid(){ const st=this.state; if(st.closed){ this.upd({toast:'La quincena está cerrada: ya no se pueden cambiar pagos.'}); return; } const n=st.pays.filter(p=>p.st==='ok'&&!p.final).length; if(!n){ this.upd({toast:'No hay pagos que desmarcar. Los marcados al cierre no se pueden revertir.'}); return; } this.upd({pays:st.pays.map(p=>p.st==='ok'&&!p.final?{...p,st:'anulado',motivo:'Desmarcado como pagado'}:p),toast:'Desmarcaste '+n+(n===1?' pago':' pagos')+'. Los pagos anulados quedan en el historial.'}); }
 togglePaid(id){ const st=this.state; const snap=st.conf; if(!snap) return; if(st.closed){ this.upd({toast:'La quincena está cerrada: ya no se pueden cambiar pagos.'}); return; } const r=snap.recs.find(x=>x.id===id); if(!r) return; const paid=st.pays.filter(p=>p.rid===id&&p.st==='ok').reduce((a,p)=>a+p.imp,0);
@@ -959,21 +981,21 @@ renderVals(){
  const estOf=(t,p)=>p<=0?{t:'Pendiente',c:'warn'}:(p>=t?{t:'Pagado',c:'ok'}:{t:'Abono',c:'info'});
  const g=(scr,x)=>()=>me.go(scr,x);
  const scr=s.screen;
- ['acceso','bienvenida','inicio','valeras','catalogo','solicitar','valera','subir','revision','coincidencias','nuevos','clientes','ficha','resumen','cobranza','relacion','detalle','pago','pagos','recibos','imprimir','hist','histdet'].forEach(k=>{ V['is'+({coincidencias:'Coinc',histdet:'HistDet'}[k]||k.charAt(0).toUpperCase()+k.slice(1))]=scr===k; });
+ ['acceso','bienvenida','inicio','valeras','catalogo','solicitar','solicitud','valera','subir','revision','coincidencias','nuevos','clientes','ficha','resumen','cobranza','relacion','detalle','pago','pagos','recibos','imprimir','hist','histdet'].forEach(k=>{ V['is'+({coincidencias:'Coinc',histdet:'HistDet'}[k]||k.charAt(0).toUpperCase()+k.slice(1))]=scr===k; });
  V.showChrome=scr!=='acceso'; V.showQ=['valeras','subir','coincidencias','nuevos','resumen'].indexOf(scr)>=0;
- if(s.toast&&!s.undoPid){ if(me._toastFor!==s.toast){ me._toastFor=s.toast; clearTimeout(me._toastT); me._toastT=setTimeout(()=>{ if(me.state.toast===me._toastFor&&!me.state.undoPid){ me._toastFor=null; me.setState({toast:''}); } },6000); } } else if(!s.toast){ me._toastFor=null; } V.hasToast=!!s.toast; V.toast=s.toast; V.closeToast=()=>me.setState({toast:'',undoPid:null}); V.toastUndo=!!s.undoPid; V.toastNoUndo=!s.undoPid;
+ if(s.toast&&!s.undoPid){ if(me._toastFor!==s.toast){ me._toastFor=s.toast; clearTimeout(me._toastT); me._toastT=setTimeout(()=>{ if(me.state.toast===me._toastFor&&!me.state.undoPid){ me._toastFor=null; me.setState({toast:''}); } },6000); } } else if(!s.toast){ me._toastFor=null; } V.toastCls='top'; V.hasToastShow=!!s.toast&&!(s.drawer&&s.undoPid); V.hasToast=!!s.toast; V.toast=s.toast; V.closeToast=()=>me.setState({toast:'',undoPid:null}); V.toastUndo=!!s.undoPid; V.toastNoUndo=!s.undoPid;
  V.reset=()=>me.reset(); V.shortcut=()=>me.shortcut(); V.toggleVol=()=>me.toggleVol(); V.volLbl=s.vol?'Quitar simulación de 600 clientes':'Simular 600 clientes'; V.enter=()=>me.go(s.welcomed?'inicio':'bienvenida',{welcomed:true});
  ['inicio','valeras','clientes','resumen','cobranza','relacion','recibos','imprimir','pagos','hist','nuevos'].forEach(k=>{ V['g'+k.charAt(0).toUpperCase()+k.slice(1)]=g(k); }); V.gRecibos=g('recibos',{recSel:'list',recShow:12,recQ:''});
  V.gCoinc=g('coincidencias'); V.gHistPrev=g('histdet'); V.gNuevos=g('clientes'); V.isNuevos=false;
  V.isConf=!!snap; V.noConf=!snap; V.hasPays=s.pays.length>0;
- const navMap={inicio:['inicio','resumen','coincidencias','nuevos','bienvenida'],valeras:['valeras','catalogo','solicitar','valera','subir','revision'],clientes:['clientes','ficha'],cobranza:['cobranza','relacion','detalle','pago','pagos','recibos','imprimir'],hist:['hist','histdet']};
+ const navMap={inicio:['inicio','resumen','coincidencias','nuevos','bienvenida'],valeras:['valeras','catalogo','solicitar','solicitud','valera','subir','revision'],clientes:['clientes','ficha'],cobranza:['cobranza','relacion','detalle','pago','pagos','recibos','imprimir'],hist:['hist','histdet']};
  const ic={inicio:'M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',valeras:'M6 3h9l5 5v13H6z M15 3v5h5 M9 13h8 M9 17h8',clientes:'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M22 21v-2a4 4 0 0 0-3-3.9 M16 3.1a4 4 0 0 1 0 7.8',cobranza:'M9 6h12 M9 12h12 M9 18h12 M3 6l1.5 1.5L7 5 M3 12l1.5 1.5L7 11 M3 18l1.5 1.5L7 17',hist:'M12 8v4l3 2 M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18'};
  const nl=[['inicio','Inicio','inicio'],['valeras','Valeras','valeras'],['clientes','Clientes','clientes'],['cobranza','Cobranza','cobranza'],['hist','Historial','hist']];
  const pcBadge=s.conf&&!s.closed?s.conf.recs.filter(r=>r.total-s.pays.filter(p=>p.rid===r.id&&p.st==='ok').reduce((a,p)=>a+p.imp,0)>0.001).length:0;
  V.nav=nl.map(n=>({l:n[1],icon:ic[n[0]],cls:navMap[n[0]].indexOf(scr)>=0?'on':'',go:g(n[2]),hasBadge:n[0]==='cobranza'&&pcBadge>0,badge:String(pcBadge)}));
  // totales
  const totalAll=snap?snap.total:comp.total; const paidAll=snap?snap.recs.reduce((a,r)=>a+paidOf(r.id),0):0;
- V.cmpOpen=!!s.cmpOpen; V.cmpExp=s.cmpOpen?'true':'false'; V.toggleCmp=()=>me.setState({cmpOpen:!me.state.cmpOpen}); V.cobPct=totalAll>0?Math.round(paidAll/totalAll*100):0; V.kTotal=fmt(totalAll); V.kTotalNote=snap?'Confirmado':(pd.pendVal+pd.total>0?'Parcial: faltan cosas por cargar o revisar':'Listo para confirmar');
+ V.cmpOpen=!!s.cmpOpen; V.cmpExp=s.cmpOpen?'true':'false'; V.toggleCmp=()=>me.setState({cmpOpen:!me.state.cmpOpen}); V.nextAfterConf=!!snap&&s.pays.length===0&&!s.closed; V.cobPct=totalAll>0?Math.round(paidAll/totalAll*100):0; V.kTotal=fmt(totalAll); V.kTotalNote=snap?'Confirmado':(pd.pendVal+pd.total>0?'Parcial: faltan cosas por cargar o revisar':'Listo para confirmar');
  V.kPaid=fmt(paidAll); V.kPaidNote=snap?'Pagos registrados':'Aún no hay cobranza confirmada';
  V.kPend=fmt(totalAll-paidAll); V.kPendNote=snap?'Falta por cobrar':'Se calcula al confirmar';
  const unsent=pd.total+(snap?0:0); V.kRev=String(pd.total); V.kRevNote=pd.total===0?'Nada por revisar':(pd.revi+' relación, '+pd.match+' parecidos, '+pd.nuevos+' nuevos');
@@ -1012,14 +1034,15 @@ renderVals(){
  V.vd=V.valList.find(x=>x.id===s.vid)||V.valList[0]||{n:'',chip:'',chipC:'',clave:'',corteTxt:'',limTxt:'',hasNota:false,nota:'',isOk:false,isRev:false,isPend:false,isNada:false,file:'',nMov:0,tot:'',reupOpen:false,up:()=>{},review:()=>{},nada:()=>{},undo:()=>{},openReup:()=>{},closeReup:()=>{},replace:()=>{},addMore:()=>{},quit:()=>{}};
  V.noVals=s.vals.length===0; V.catOpen=s.catOpen; V.catClosed=!s.catOpen;
  const cq=me.nz(s.catQ);
- V.catList=me.cat().filter(c=>!cq||me.nz(c.n).indexOf(cq)>=0).map(c=>({n:c.n,sub:'Cortes: día '+c.corte+' y día '+c.corte2,can:!s.vals.some(x=>x.id===c.id),notCan:s.vals.some(x=>x.id===c.id),est:'Ya la agregaste',add:()=>me.upd({vals:[...me.state.vals,c],vst:{...me.state.vst,[c.id]:'pend'},toast:c.n+' agregada a tu lista.'})}))
+ V.catList=me.cat().filter(c=>!cq||me.nz(c.n).indexOf(cq)>=0).map(c=>({cid:c.id,n:c.n,sub:'Cortes: día '+c.corte+' y día '+c.corte2,can:!s.vals.some(x=>x.id===c.id),notCan:s.vals.some(x=>x.id===c.id),est:'Ya la agregaste',add:()=>me.upd({vals:[...me.state.vals,c],vst:{...me.state.vst,[c.id]:'pend'},toast:c.n+' agregada a tu lista.'})}))
   .concat(s.reqs.filter(q=>q.est==='En preparación'&&(!cq||me.nz(q.n).indexOf(cq)>=0)).map(q=>({n:q.n,sub:'Estamos preparando su lectura.',can:false,notCan:true,est:'En preparación',add:()=>{}})));
  V.catEmpty=V.catList.length===0; V.hasReqs=s.reqs.length>0; V.catQ=s.catQ; V.setCatQ=e=>me.setState({catQ:e.target.value});
  V.addAll=()=>{ const st=me.state; const falt=me.cat().filter(c=>!st.vals.some(x=>x.id===c.id)); const vs={...st.vst}; falt.forEach(c=>{vs[c.id]='pend';}); me.upd({vals:st.vals.concat(falt),vst:vs,toast:falt.length?'Agregamos '+falt.length+' valeras del catálogo.':'Ya tienes todas las del catálogo.'}); };
- V.openCat=()=>me.go('catalogo',{catQ:''}); V.closeCat=()=>me.go('valeras');
+ V.openCat=()=>me.go('catalogo',{catQ:'',catIn:me.state.vals.map(v=>v.id)}); V.closeCat=()=>me.go('valeras');
  V.addValOpen=s.reqOpen; V.addValClosed=!s.reqOpen;
- V.reqList=s.reqs.map(q=>({n:q.n,sub:'Solicitada el '+q.fecha,est:q.est}));
- V.reqNoName=!(s.reqN||'').trim(); V.reqN=s.reqN; V.reqCom=s.reqCom; V.reqFileTxt=s.reqFile||'Todavía no anexas ningún archivo'; V.reqHasFile=!!s.reqFile;
+ V.reqList=s.reqs.map(q=>({n:q.n,sub:'Solicitada el '+q.fecha+(q.id==='r1'?' · ejemplo de la demostración':'')+(q.est==='Recibida'?' · te avisaremos por correo cuando se acepte o se descarte':''),est:q.est,open:g('solicitud',{reqSel:q.id})}));
+ V.rq=(()=>{ const q=s.reqs.find(x=>x.id===s.reqSel)||s.reqs[0]||{}; return {n:q.n||'',est:q.est||'',fecha:q.fecha||'',archivo:q.archivo||'',hasNota:!!q.nota,nota:q.nota||'',hasCortes:!!q.cortes,cortes:q.cortes||'',sigue:q.est==='Recibida'?'El equipo de soporte revisará tu ejemplo y te avisaremos por correo si se acepta o se descarta.':(q.est==='En preparación'?'Ya estamos preparando su lectura. Cuando esté lista aparecerá en el catálogo para que la agregues.':''),canCancel:q.est==='Recibida',cancel:()=>me.upd({reqs:me.state.reqs.filter(x=>x.id!==q.id),screen:'valeras',toast:'Solicitud cancelada: '+q.n+'.'})}; })();
+ V.reqNoName=!((s.reqN||'').trim()&&s.reqFile); V.reqHint=!(s.reqN||'').trim()?'Escribe el nombre de la valera para poder enviarla.':'Anexa el archivo de ejemplo para poder enviarla.'; V.reqN=s.reqN; V.reqCom=s.reqCom; V.reqFileTxt=s.reqFile||'Todavía no anexas ningún archivo'; V.reqHasFile=!!s.reqFile;
  V.setReqN=e=>me.setState({reqN:e.target.value}); V.setReqCom=e=>me.setState({reqCom:e.target.value});
  V.reqC1=s.reqC1; V.reqP1=s.reqP1; V.reqC2=s.reqC2; V.reqP2=s.reqP2;
  V.setC1=e=>me.setState({reqC1:e.target.value}); V.setP1=e=>me.setState({reqP1:e.target.value}); V.setC2=e=>me.setState({reqC2:e.target.value}); V.setP2=e=>me.setState({reqP2:e.target.value});
@@ -1045,7 +1068,7 @@ renderVals(){
  const rows=rvMovs.map(m=>{ const fx=s.fix[m.id]; const isNewRev=!!m.rev&&(R[m.rev].tipo==='new'||(!!s.dec[m.rev]&&s.dec[m.rev].t==='diff')); const miss=m.imp==null&&typeof fx!=='number'; const imp=me.impOf(s,m); let st,c;
   if(miss){st='Falta el importe';c='risk';} else if(m.imp==null){st='Importe capturado por ti';c='ok';}
   else if(m.rev){ if(isNewRev){ const cf=!!s.ncf[m.rev]; st=cf?'Cliente nuevo · confirmado':'Cliente nuevo · por confirmar'; c=cf?'ok':'warn'; } else { const d=s.dec[m.rev]; const dn=d&&d.t!=='later'; st=dn?'Parecido resuelto':'Revisar cliente'; c=dn?'ok':'warn'; } } else {st='Listo';c='ok';}
-  return {showCl:isNewRev,cl:isNewRev?mkCl(m.rev):EC,fila:m.fila,nom:m.nom,salTxt:m.imp==null?'':'Saldo del crédito: '+fmt(Math.round(m.imp*7.5/10)*10)+' (no se cobra ahora)',folio:m.folio,ref:m.ref,impTxt:imp==null?'—':fmt(imp),missing:miss,st:st,c:c,fixVal:s.fixIn[m.id]||'',
+  return {showCl:isNewRev,cl:isNewRev?mkCl(m.rev):EC,fila:m.fila,nom:m.nom,salTxt:imp==null?'':'Saldo del crédito: '+fmt(Math.round(imp*7.5/10)*10)+' (no se cobra ahora)',folio:m.folio,ref:m.ref,impTxt:imp==null?'—':fmt(imp),missing:miss,st:st,c:c,fixVal:s.fixIn[m.id]||'',
    onFix:e=>me.setState({fixIn:{...me.state.fixIn,[m.id]:e.target.value}}),
    saveFix:()=>{ const v=me.num(me.state.fixIn[m.id]); if(!(v>0)){ me.upd({toast:'Escribe un importe válido, por ejemplo 290.'}); return; } me.upd({fix:{...me.state.fix,[m.id]:v},toast:'Importe guardado.'}); }}; });
  const missRows=rows.filter(r=>r.missing);
@@ -1059,13 +1082,13 @@ renderVals(){
  V.rvClave=rvv.clave||'—'; V.rvCol=rvf.col||''; V.rvLim=rvv.pago+' nov'; V.rvCmp='Comparado con el corte anterior: '+kn.size+' cliente'+(kn.size===1?'':'s')+' ya estaban y '+un.size+' requiere'+(un.size===1?'':'n')+' que decidas (nuevos o nombres parecidos).';
  V.qLim=(()=>{ const a=s.vals.filter(v=>!v.otra).map(v=>v.pago); return a.length?Math.min.apply(null,a)+' al '+Math.max.apply(null,a)+' nov (según la valera)':'según tus valeras'; })();
  V.qCorte=(()=>{ const a=s.vals.filter(v=>!v.otra).map(v=>v.corte); return a.length?Math.min.apply(null,a)+' al '+Math.max.apply(null,a)+' nov':'según tus valeras'; })();
- V.rvMissTxt=missRows.length?'importe de la fila '+missRows.map(r=>r.fila).join(', '):'ninguno'; V.rvBlocked=missRows.length>0;
+ V.rvMissTxt=missRows.length?'importe de '+missRows.map(r=>r.nom).join(', '):'ninguno'; V.rvBlocked=missRows.length>0;
  const csel=s.cortSel[rvId]||'esperado'; const mism=csel==='otro'; const cok=!!s.cortOk[rvId];
  V.mism=mism; V.cortOkOn=cok&&!mism; V.cortOkOff=!cok&&!mism; V.rvDia=rvv.corte;
  V.detTxt='Valera '+rvv.n+' · clave '+(rvv.clave||'—')+' · corte día '+rvv.corte+'.';
  V.detSel='';
  V.confirmCorte=()=>me.upd({cortOk:{...me.state.cortOk,[rvId]:true}},()=>{ [80,260,600].forEach(ms=>setTimeout(()=>{ try{ const b=document.getElementById('btn-incorporar'); if(b) b.scrollIntoView({block:'center'}); }catch(e){} },ms)); }); V.useFileCorte=()=>me.upd({cortSel:{...me.state.cortSel,[rvId]:'esperado'}});
- const ignoraDup=rvId==='C'&&s.dup==='ignore'; const needInc=[]; if(mism) needInc.push('resolver que el corte no coincide'); else if(!cok) needInc.push('confirmar el corte'); if(missRows.length) needInc.push('escribir el '+V.rvMissTxt); V.incShow=s.vst[rvId]!=='ok'; V.incDisabled=(missRows.length>0||mism||!cok)&&!ignoraDup; V.incHint=(V.incDisabled&&needInc.length&&s.vst[rvId]!=='ok')?'Para incorporar falta: '+needInc.join(' · ')+'.':''; V.incLabel=ignoraDup?'Ignorar archivo y volver':'Incorporar movimientos'; V.rvCorte=rvv.corte+' nov';
+ const ignoraDup=rvId==='C'&&s.dup==='ignore'; const needInc=[]; if(mism) needInc.push('resolver que el corte no coincide'); else if(!cok) needInc.push('confirmar el corte'); if(missRows.length) needInc.push('escribir el '+V.rvMissTxt); V.incShow=s.vst[rvId]!=='ok'; V.incDisabled=(missRows.length>0||mism||!cok)&&!ignoraDup; const nRevCli=rows.filter(r=>r.st==='Revisar cliente'||r.st==='Cliente nuevo · por confirmar').length; V.incNote=(!V.incDisabled&&nRevCli>0&&s.vst[rvId]!=='ok')?'Los '+nRevCli+(nRevCli===1?' nombre por revisar se resuelve':' nombres por revisar se resuelven')+' en el siguiente paso.':''; V.incHint=(V.incDisabled&&needInc.length&&s.vst[rvId]!=='ok')?'Para incorporar falta: '+needInc.join(' · ')+'.':''; V.incLabel=ignoraDup?'Ignorar archivo y volver':'Incorporar movimientos'; V.rvCorte=rvv.corte+' nov';
  V.dupShow=rvId==='C'; V.dupRepCls=s.dup!=='ignore'?'on':''; V.dupAddCls=s.dup==='ignore'?'on':'';
  V.dupReplace=()=>me.upd({dup:'replace'}); V.dupAdd=()=>me.upd({dup:'ignore'});
  V.incorporate=()=>{ const st=me.state; if(rvId==='C'&&st.dup==='ignore'){ me.upd({vst:{...st.vst,[rvId]:'ok'},screen:'valera',vid:rvId,toast:'Ignoraste el archivo: se conserva la relación que ya estaba cargada.'},()=>{try{window.scrollTo(0,0);}catch(e){}}); return; } if(missRows.length||st.cortSel[rvId]==='otro'||!st.cortOk[rvId]) return; me.upd({vst:{...st.vst,[rvId]:'ok'},screen:'valera',vid:rvId,toast:rvv.n+' incorporada: '+rows.length*mult+' movimientos.'},()=>{try{window.scrollTo(0,0);}catch(e){}}); };
@@ -1081,7 +1104,7 @@ renderVals(){
    diff:()=>setDec(k,{t:'diff'}), doLater:()=>setDec(k,{t:'later'}), find:()=>me.upd({findFor:k,findQ:''}), finding:s.findFor===k,
    findList:baseList.filter(e=>!q||me.nz(e.n).indexOf(q)>=0).slice(0,6).map(e=>({n:e.n,det:det(e),pick:()=>setDec(k,{t:'same',c:e.id})}))}; }).filter(Boolean);
  V.noMatch=V.matchCards.length===0; V.noMatchHint=okN===0?'Sube primero la relación de Maxivale.':'No hay nombres pendientes de decidir.';
- V.matchLeftTxt=pd.match===0?'Todo resuelto':pd.match+' por resolver'; V.matchLeftC=pd.match===0?'ok':'warn'; V.clasifTxt='Ir a clasificar clientes'+(pd.nuevos>0?' ('+pd.nuevos+')':''); V.findQ=s.findQ; V.setFindQ=e=>me.setState({findQ:e.target.value}); V.pdMatch=pd.match; V.pdNew=pd.nuevos;
+ V.matchLeftTxt=pd.match===0?'Todo resuelto':pd.match+' por resolver'; V.matchLeftC=pd.match===0?'ok':'warn'; { const cv=s.vals.find(x=>x.id===s.vid); V.clasifGo=pd.nuevos>0?g('clientes',{cliF:'conf'}):(cv?g('valera',{vid:cv.id,reup:null}):V.gValeras); V.clasifTxt=pd.nuevos>0?'Ir a clasificar clientes ('+pd.nuevos+')':(cv?'Seguir con '+cv.n:'Volver a Valeras'); } V.findQ=s.findQ; V.setFindQ=e=>me.setState({findQ:e.target.value}); V.pdMatch=pd.match; V.pdNew=pd.nuevos;
  const autoN=me.movsAll(s).filter(m=>m.cli&&s.vst[m.v]==='ok').length; V.autoN=autoN;
  // nuevos
  const q2=me.nz(s.ndQ);
@@ -1163,7 +1186,10 @@ renderVals(){
  const recT=comp.payers.reduce((a,p)=>a+p.total,0); V.cMov=fmt(comp.total); V.cRec=fmt(recT); V.cRel=fmt(recT);
  V.cuadraTxt=recT===comp.total?'Todo cuadra. Cada movimiento se cuenta una sola vez.':'Hay una diferencia entre movimientos y recibos; revisa los pendientes.';
  const blocked=pd.total>0||pd.pendVal>0||comp.sin>0||comp.count===0; V.resBlocked=blocked&&!snap; V.resDisabled=blocked||!!snap;
- V.confirmNow=()=>{ const st=me.state; const p=me.pend(st); const c=me.compute(st); if(p.total>0||p.pendVal>0||c.sin>0||c.count===0) return; const f=me.finish(st,c); me.upd({...f,screen:'cobranza',toast:'Cobranza confirmada. Ya puedes preparar recibos o registrar pagos.'},()=>{try{window.scrollTo(0,0);}catch(e){}}); };
+ { const p0=me.pend(s), c0=me.compute(s); const okC=!(p0.total>0||p0.pendVal>0||c0.sin>0||c0.count===0); V.readyTop=okC&&!snap; V.notReadyTop=!V.readyTop; V.botConfCls=V.readyTop?'':'pri'; V.confCobOn=!!s.confCob&&V.readyTop; V.confCobOn2=!!s.confCob&&!V.readyTop; }
+ V.startNext=()=>{ const st=me.state; const f=me.fresh(); const vst={}; st.vals.forEach(v=>{ vst[v.id]='pend'; }); const keep={}; ['dec','ncf','nd','fix','fixIn','cortOk','cortSel','dup','recSel','relF','relQ','payQ','histSel','confMark','confFinal','confPend','confCob'].forEach(k=>{ if(k in f) keep[k]=f[k]; }); me.upd({...keep,conf:null,pays:[],closed:false,vpaid:{},undoPid:null,preCierre:false,preDismiss:false,pendLock:false,payM:null,relM:null,cliM:null,vst:vst,bk:'resumen',screen:'inicio',toast:'Empezó la siguiente quincena. Parte de cero; lo pendiente del corte anterior queda en Historial.'},()=>{try{window.scrollTo(0,0);}catch(e){}}); };
+ V.confirmNow=()=>{ const st=me.state; const p=me.pend(st); const c=me.compute(st); if(p.total>0||p.pendVal>0||c.sin>0||c.count===0) return; me.setState({confCob:true}); }; V.confirmNo=()=>me.setState({confCob:false});
+ V.confirmDo=()=>{ const st=me.state; const p=me.pend(st); const c=me.compute(st); if(p.total>0||p.pendVal>0||c.sin>0||c.count===0) return; const f=me.finish(st,c); me.upd({...f,confCob:false,screen:'cobranza',toast:'Cobranza confirmada. Ya puedes preparar recibos o registrar pagos.'},()=>{try{window.scrollTo(0,0);}catch(e){}}); };
  // relación
  const recs=snap?snap.recs:[];
  const withSt=recs.map(r=>{ const paid=paidOf(r.id); const es=estOf(r.total,paid); return {r:r,paid:paid,saldo:r.total-paid,es:es}; });
@@ -1200,7 +1226,7 @@ renderVals(){
    const days=v.pago-HOY; const paid=!!(s.vpaid||{})[v.id]; const gain=Math.round(owe*(COM[v.id]||0)/100); if(!paid) gainT+=gain;
    return {id:v.id,day:v.pago,paid:paid,n:v.n,sig:v.n.replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase(),t:i%6,lg:logoOf(v.n),owe:fmt(owe),got:fmt(got),pct:owe?Math.round(got/owe*100):0,gain:fmt(gain),oweN:owe,
     fecha:v.pago+' nov',due:paid?'Pagada':(days<=0?'Vence hoy':(days<=5?'Vence en '+days+(days===1?' día':' días'):'Faltan '+days+' días')),dueC:paid?'ok':(days<=5?'warn':'neutral'),
-    isPaid:paid,canMark:!paid&&!s.closed,mark:()=>me.upd({vpaid:{...(me.state.vpaid||{}),[v.id]:true},toast:v.n+': anotaste que ya le pagaste. Puedes deshacerlo.'}),unmark:()=>me.upd({vpaid:{...(me.state.vpaid||{}),[v.id]:false}}),
+    isPaid:paid,canUnmark:paid&&!s.closed,canMark:!paid&&!s.closed,mark:()=>me.upd({vpaid:{...(me.state.vpaid||{}),[v.id]:true},toast:v.n+': anotaste que ya le pagaste. Puedes deshacerlo.'}),unmark:()=>me.upd({vpaid:{...(me.state.vpaid||{}),[v.id]:false}}),
     cobrar:()=>me.go('relacion',{relV:v.id,relCol:'todas',relF:'todos',relQ:'',relS:'vence'})}; });
   V.vpGain=fmt(gainT); }
  // detalle
@@ -1232,7 +1258,7 @@ renderVals(){
   if(!f.fecha){ er('Elige la fecha en que te pagaron.'); return; }
   me._saving=true; const nuevo=saldo-v;
   const pid='p'+Date.now(); me.upd({pays:[...st.pays,{id:pid,rid:f.rid,imp:v,fecha:f.fecha,obs:[f.met||'Efectivo',f.obs].filter(Boolean).join(' · '),st:'ok',motivo:''}],payForm:{...f,err:'',done:{imp:v,saldo:nuevo,est:nuevo<=0.001?'Pagado':'Abono'}},undoPid:pid,toast:'Pago de '+fmt(v)+' registrado.'},()=>{ me._saving=false; clearTimeout(me._ut); me._ut=setTimeout(()=>{ if(me.state.undoPid===pid) me.setState({undoPid:null,toast:''}); },7000); }); };
- V.undoPay=()=>{ const st=me.state; const pid=st.undoPid; if(!pid) return; clearTimeout(me._ut); const f=st.payForm; const pays=st.pays.filter(p=>p.id!==pid); const pr=st.conf.recs.find(r=>r.id===(f&&f.rid)); const paid=pays.filter(p=>p.rid===(f&&f.rid)&&p.st==='ok').reduce((a,p)=>a+p.imp,0); me.upd({pays:pays,undoPid:null,toast:'Pago deshecho.',payForm:f&&pr?{...f,done:null,mode:'completo',imp:String(pr.total-paid),err:''}:f}); };
+ V.undoPay=()=>{ const st=me.state; const pid=st.undoPid; if(!pid) return; clearTimeout(me._ut); if(pid==='mark'){ const ids=st.undoMarkIds||[]; me.upd({pays:st.pays.filter(p=>ids.indexOf(p.id)<0),undoPid:null,undoMarkIds:null,toast:'Se quitaron las marcas de pagado.'}); return; } const f=st.payForm; const pays=st.pays.filter(p=>p.id!==pid); const pr=st.conf.recs.find(r=>r.id===(f&&f.rid)); const paid=pays.filter(p=>p.rid===(f&&f.rid)&&p.st==='ok').reduce((a,p)=>a+p.imp,0); me.upd({pays:pays,undoPid:null,toast:'Pago deshecho.',payForm:f&&pr?{...f,done:null,mode:'completo',imp:String(pr.total-paid),err:''}:f}); };
 
  { const w=pw; const f=s.payForm; const done=f&&f.done; const vv=f?parseFloat(String(f.imp).replace(/[^0-9.]/g,'')):0; const saldoN=w?w.saldo:0; const paysW=w?s.pays.filter(p=>p.rid===w.r.id):[]; const okPays=paysW.filter(p=>p.st==='ok');
   const first=w?w.r.n.split(' ')[0]:''; const lastPay=okPays[okPays.length-1];
@@ -1328,7 +1354,7 @@ renderVals(){
  V.valList=V.valList.map((v,i)=>{ const vv=s.vals[i]||{}; return {...v,sub:v.isPend?'Toca aquí para cargar Corte 1':(v.isOk?v.tot+' · paga antes del '+vv.pago+' nov':v.fechas),cta:v.isPend||v.isNada,ctaTxt:v.isPend?'Subir relación':'¿Te llegó? Subir relación'}; });
  { const pf=s.payF||'todos'; const nPag=withSt.filter(x=>x.saldo<=0.001).length;
   const payAll=withSt.filter(x=>(!pq||me.nz(x.r.n+' '+colOf(x.r)+' '+((E0[x.r.id]||{}).tel||'')).indexOf(pq)>=0)&&(pf==='todos'||(pf==='pend'?x.saldo>0.001:x.saldo<=0.001))).sort((a,b)=>{ const dd=(s.payS==='desc')?-1:1; if(pf==='todos'){ const pa=a.saldo>0.001?0:1, pb=b.saldo>0.001?0:1; if(pa!==pb) return pa-pb; } return dd*a.r.n.localeCompare(b.r.n,'es'); });
-  V.hasPayRows=!!snap; V.payProg=nPag+' de '+withSt.length+' pagados';
+  V.allPaid=!!snap&&withSt.length>0&&withSt.every(x=>x.saldo<=0.001); V.payListTitle=V.allPaid?'Clientes':(s.closed?'Quedaron pendientes':'Pendientes por cobrar'); V.hasPayRows=!!snap; V.payProg=nPag+' de '+withSt.length+' pagados';
   V.markAllDis=!snap||withSt.every(x=>x.saldo<=0.001); V.unmarkAllDis=!s.pays.some(p=>p.st==='ok'&&!p.final);
   V.markAll=()=>{ if(!me.state.confMark){ me.setState({confMark:true}); return; } me.setState({confMark:false}); me.markAllPaid(); }; V.unmarkAll=()=>{ me.setState({confMark:false}); me.unmarkAllPaid(); }; V.markAllCls=s.confMark?'btn sm pri':'btn sm'; V.markAllTxt=s.confMark?'¿Seguro? Toca otra vez':'Marcar como pagados';
   { const totT=withSt.reduce((a,x)=>a+x.r.total,0), paidT=withSt.reduce((a,x)=>a+Math.min(x.paid,x.r.total),0); V.payTotTxt=fmt(totT); V.payPaidTxt=fmt(paidT); V.payPendTxt=fmt(Math.max(0,totT-paidT)); V.payPct=totT>0?Math.round(paidT/totT*100):0;
@@ -1336,7 +1362,7 @@ renderVals(){
    V.payMarkAsk=()=>me.setState({payM:null,confMark:true}); V.markAllYes=()=>{ me.setState({confMark:false}); me.markAllPaid(); }; V.markAllNo=()=>me.setState({confMark:false}); V.payConfMark=!!s.confMark&&!s.closed; }
   V.payFilters=[['todos','Todos ('+withSt.length+')'],['pend','Pendientes ('+(withSt.length-nPag)+')'],['pag','Pagados ('+nPag+')']].map(f=>({l:f[1],cls:pf===f[0]?'on':'',go:()=>me.upd({payF:f[0],payShow:10})}));
   V.payRows=payAll.slice(0,s.payShow).map(x=>({n:x.r.n,rowCls:x.saldo<=0.001?'is-paid':'is-pend',locTxt:locTxt(x.r),tipo:x.r.recN>0?'Embajador':'Cliente directo',estTxt:x.saldo<=0.001?'Pagado':(x.paid>0?'Abono · falta\u00a0'+fmt(x.saldo):'Pendiente · falta\u00a0'+fmt(x.saldo)),
-   chkCls:x.saldo<=0.001?'on':'',chkAria:x.saldo<=0.001?'true':'false',lbl:(x.saldo<=0.001?'Desmarcar como pagado: ':'Marcar como pagado: ')+x.r.n,toggle:()=>me.togglePaid(x.r.id),canPay:x.saldo>0.001,pay:()=>me.startPay(x.r.id)}));
+   chkCls:x.saldo<=0.001?'on':'',chkAria:x.saldo<=0.001?'true':'false',lbl:(x.saldo<=0.001?'Desmarcar como pagado: ':'Marcar como pagado: ')+x.r.n,toggle:()=>me.togglePaid(x.r.id),canPay:x.saldo>0.001&&!s.closed,pay:()=>me.startPay(x.r.id)}));
   if(scr==='pagos'&&snap&&!s.closed){ const nx1=withSt.filter(x=>x.saldo>0.001).sort((a,b)=>a.r.n.localeCompare(b.r.n,'es'))[0];
    V.nx=nx1?{t:'Registrar un pago',d:'Siguiente cliente pendiente: '+nx1.r.n+' · falta '+fmt(nx1.saldo)+'.',b:'Registrar pago',go:()=>me.startPay(nx1.r.id)}:{t:'Todos pagaron',d:'No queda ningún cliente pendiente en esta cobranza.',b:'Ver el resumen',go:g('cobranza')}; }
   V.payShown='Mostrando '+Math.min(s.payShow,payAll.length)+' de '+payAll.length+' clientes'; V.payMore=payAll.length>s.payShow; V.payMoreN=Math.min(10,payAll.length-s.payShow); V.morePay=()=>me.setState({payShow:me.state.payShow+10}); }
@@ -1369,11 +1395,11 @@ renderVals(){
  V.ribOpen=!!s.ribOpen; V.ribExp=s.ribOpen?'true':'false'; V.ribLbl=s.ribOpen?'Ocultar ▲':'Opciones ▼';
  V.toggleRibbon=()=>me.upd({ribOpen:!me.state.ribOpen});
  // ——— Ajustes del 18 nov ———
- V.closed=!!s.closed; V.closedLbl=s.closed?'Demo: reabrir quincena':'Demo: cerrar quincena';
+ if(s.closed) V.nx={t:'Empezar la siguiente quincena',d:'Empieza en cero: lo pendiente de este corte no pasa y lo consultas en Historial.',b:'Empezar la siguiente quincena',go:V.startNext}; V.closed=!!s.closed; V.closedCob=!!s.closed&&s.cobV!=='anterior'; V.notClosed=!s.closed; V.lblFalta=s.closed?'Quedó pendiente':'Falta cobrar'; V.closedLbl=s.closed?'Demo: reabrir quincena':'Demo: cerrar quincena';
  V.toggleClosed=()=>{ const st=me.state; if(!st.closed){ me.upd({closed:true,preCierre:false,toast:st.conf&&st.pays.length===0?'Quincena cerrada (demo). No hubo registro de pagos: todo queda como está y la siguiente quincena empieza en cero, sin saldos.':'Quincena cerrada (demo). Los pagos quedaron como los capturaste; lo pendiente no pasa al siguiente corte (empieza en cero) y se consulta en Historial.'}); } else me.upd({closed:false,toast:'Quincena reabierta (demo).'}); };
- V.preLbl=s.preCierre?'Demo: quitar aviso previo':'Demo: día antes del cierre'; V.togglePre=()=>me.upd({preCierre:!me.state.preCierre,preDismiss:false,confFinal:false,confPend:false,pendLock:false,toast:!me.state.preCierre?'Simulando el día antes del cierre. Si hay abonos sin registrar, verás el aviso.':''});
+ V.preLbl=s.preCierre?'Demo: quitar aviso previo':'Demo: día antes del cierre'; V.togglePre=()=>me.upd({payM:null,relM:null,cliM:null,preCierre:!me.state.preCierre,preDismiss:false,confFinal:false,confPend:false,pendLock:false,toast:!me.state.preCierre?'Simulando el día antes del cierre. Si hay abonos sin registrar, verás el aviso.':''});
  { const pend=withSt.filter(x=>x.saldo>0.001); const pTot=pend.reduce((a,x)=>a+x.saldo,0); const show=!!snap&&!s.closed&&!!s.preCierre&&!s.preDismiss&&s.pays.some(p=>p.st==='ok')&&pend.length>0;
-  V.preBan=show; V.preDet=pend.length+(pend.length===1?' recibo con saldo pendiente':' recibos con saldo pendiente')+' por '+fmt(pTot)+'.'; V.preAsk=!!s.confFinal; V.preAskP=!!s.confPend; V.preNotAsk=!s.confFinal&&!s.confPend;
+  V.preBan=show; V.preBanFull=show&&['inicio','cobranza','relacion','recibos','pagos'].indexOf(scr)>=0; V.preBanMini=show&&!V.preBanFull; V.preGoPagos=g('pagos'); V.pendStrip=!!s.pendLock&&!s.closed&&!!snap&&['inicio','pagos','cobranza'].indexOf(scr)>=0; V.preDet=pend.length+(pend.length===1?' recibo con saldo pendiente':' recibos con saldo pendiente')+' por '+fmt(pTot)+'.'; V.preAsk=!!s.confFinal; V.preAskP=!!s.confPend; V.preNotAsk=!s.confFinal&&!s.confPend;
   V.preMark=()=>me.setState({confFinal:true,confPend:false}); V.preNo=()=>me.setState({confFinal:false}); V.prePendAsk=()=>me.setState({confPend:true,confFinal:false}); V.prePendNo=()=>me.setState({confPend:false}); V.prePendYes=()=>me.upd({confPend:false,preDismiss:true,pendLock:true,toast:'Listo: el corte se cierra con lo pendiente tal como está. Lo consultas en Historial y no pasa al siguiente corte.'}); V.preLater=()=>me.upd({preDismiss:true});
   V.preYes=()=>{ const st=me.state; const r=me.markAllFinal('Marcado como pagado antes del cierre'); if(!r||!r.add.length){ me.setState({confFinal:false}); return; } me.upd({pays:[...st.pays,...r.add],confFinal:false,toast:'Marcaste '+r.add.length+(r.add.length===1?' recibo':' recibos')+' como pagados ('+fmt(r.tot)+'). Este movimiento no se puede revertir.'}); }; }
  V.cierreTxt=(()=>{ const a=s.vals.filter(v=>!v.otra).map(v=>v.corte2); const u=(a.length?Math.max.apply(null,a):23)+1; return u+' nov'; })();
@@ -1385,7 +1411,8 @@ renderVals(){
  V.bannerVal=!!s.bannerVal&&!!s.aprobada; V.bannerValTxt='Ahora '+(s.aprobada||'')+' está disponible en el catálogo';
  V.closeBanner=()=>me.upd({bannerVal:false}); V.bannerGo=()=>me.upd({bannerVal:false,screen:'catalogo',catQ:''});
  if(s.aprobada){ const ex={id:'G',n:s.aprobada,clave:'—',corte:6,pago:15,corte2:21,pago2:5,nota:'Plantilla de lectura lista.'}; V.catList=V.catList.filter(c=>me.nz(c.n)!==me.nz(s.aprobada)||c.est!=='En preparación').concat([{n:ex.n,sub:'Lectura lista · acaba de agregarse al catálogo',can:!s.vals.some(x=>x.id===ex.id),notCan:s.vals.some(x=>x.id===ex.id),est:'Ya la agregaste',add:()=>me.upd({vals:[...me.state.vals,ex],vst:{...me.state.vst,[ex.id]:'pend'},toast:ex.n+' agregada a tu lista.'})}]); V.catEmpty=V.catList.length===0; }
- V.catList=V.catList.map((c,i)=>({...c,lg:logoOf(c.n),t:i%6,sig:String(c.n).replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase(),cls:c.can?'':'dim',rank:c.can?0:(c.est==='En preparación'?1:2)})).sort((a,b)=>a.rank-b.rank);
+ V.catList=V.catList.map((c,i)=>({...c,lg:logoOf(c.n),t:i%6,sig:String(c.n).replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase(),cls:c.can?'':'dim',rank:(()=>{ const at=s.catIn||s.vals.map(v=>v.id); if(c.est==='En preparación') return 1; if(c.cid&&at.indexOf(c.cid)>=0) return 2; if(!c.cid&&!c.can) return 2; return 0; })()})).sort((a,b)=>a.rank-b.rank);
+ V.listoTxt='Listo, ver mis valeras'+(s.vals.length?' ('+s.vals.length+')':''); V.listoDis=s.vals.length===0;
  // ——— 19 nov: Inicio con dashboards, cortes y valeras con pasos ———
  { const CT=[{t:'Corte del 21 sep',s:'Del 7 al 21 sep',l:'21 sep',mes:1},{t:'Corte del 6 oct',s:'Del 22 sep al 6 oct',l:'6 oct',mes:2},{t:'Corte del 21 oct',s:'Del 7 al 21 oct',l:'21 oct',mes:2},{t:'Corte del 6 nov',s:'Del 22 oct al 6 nov · 1.ª de noviembre',l:'6 nov',mes:3}];
   const HIS={A:[1210,1330,1450],B:[1100,1190,1280],C:[560,600,640],D:[300,320,340],F:[150,170,190],G:[120,140,160]};
@@ -1407,7 +1434,7 @@ renderVals(){
   const tHere=totAt(ci), tCmp=totAt(cmpI);
   const qS=String(V.qLim).replace(' (según la valera)','');
   V.hCorte=CT[ci].t+' · '+CT[ci].s.replace(/ · .*$/,'').replace(/^Del/,'del');
-  if(ci===3){ V.hEy='Total a cobrar'; V.hBig=V.kTotal; V.hLine=snap?'Cobranza confirmada':'En preparación'; V.hW=V.heroW; V.hPaid=V.kPaid; V.hPaidTxt='cobrado'; V.hLim='Pago límite: '+qS; }
+  if(ci===3){ V.hEy='Total a cobrar'; V.hBig=V.kTotal; V.hLine=snap?'Cobranza confirmada':'En preparación'; V.hW=V.heroW; V.hPaid=V.kPaid; V.hPaidTxt='cobrado'; V.hLim='Pago límite: '+qS; if(s.closed&&snap){ V.hEy='Quincena cerrada'; V.hLine='Quedó pendiente '+fmt(totalAll-paidAll); V.hPaidTxt='cobrado ('+(totalAll?Math.round(paidAll/totalAll*100):0)+' %)'; V.hLim='Lo pendiente no pasa al siguiente corte'; } }
   else { const pc=MES[CT[ci].mes].v; V.hEy='Total cobrado'; V.hBig=fmt(tHere); V.hLine='Corte cerrado'; V.hW=String(Math.round(pc/5)*5); V.hPaid=fmt(Math.round(tHere*pc/100)); V.hPaidTxt='cobrado ('+pc+' %)'; V.hLim=''; }
   { const d=diff(tHere,tCmp,cmpNom); V.hDiff=d.t; V.hDiffC=d.c; }
   // gráfica de colocación por corte y valera
@@ -1423,7 +1450,7 @@ renderVals(){
   const mi=CT[ci].mes, mc=CT[cmpI].mes; const cv=meses[mi].v;
   V.cobBig=cv==null?'En curso':cv+' %'; V.cobHasDiff=cmpOn&&mi!==mc&&meses[mi].v!=null&&meses[mc].v!=null;
   { if(V.cobHasDiff){ const d=diff(meses[mi].v,meses[mc].v,'en '+meses[mc].l,'p'); V.cobDiff=d.t.replace(' que en en ',' que en '); V.cobDiffC=d.c; } else { V.cobDiff=''; V.cobDiffC='eq'; } }
-  V.cobCap=['Agosto','Septiembre','Octubre','Noviembre'][mi]+(mi===3?' (en curso)':''); V.cobBars=meses.map((m,i)=>({l:m.l,sub:i===3?'en curso':'',v:m.v==null?'En curso':m.v+' %',h:m.v==null?10:Math.round(m.v*0.9),cls:(i===mi?'sel ':'')+(m.v==null?'ghost':'')}));
+  V.cobCap=['Agosto','Septiembre','Octubre','Noviembre'][mi]+(mi===3?(s.closed?' (cerrado)':' (en curso)'):''); V.cobBars=meses.map((m,i)=>({l:m.l,sub:i===3?(s.closed?'cerrado':'en curso'):'',v:m.v==null?'En curso':m.v+' %',h:m.v==null?10:Math.round(m.v*0.9),cls:(i===mi?'sel ':'')+(m.v==null?'ghost':'')}));
   // clientes por tipo (corte actual)
   { const S=new Set(); let nuevosP=0; me.movsAll(s).filter(m=>s.vst[m.v]==='ok').forEach(m=>{ const c=me.cliOf(s,m); if(!c) return; if(String(c).indexOf('new:')===0&&!s.ncf[String(c).slice(4)]){ nuevosP++; return; } S.add(c); });
    const resp=s.resp; const embSet=new Set(); Object.keys(resp).forEach(k=>{ if(resp[k]!==k&&(S.has(k)||S.has(resp[k]))) embSet.add(resp[k]); });
@@ -1446,15 +1473,15 @@ renderVals(){
    else if(!d2){ tit='Revisa lo que se leyó'; desc='Confirma que está bien antes de sumarlo.'; nxt=v.review; short='revisar lo leído'; lbl='Revisar lo leído'; }
    else if(pm>0){ tit='Revisa nombres parecidos'; desc=pm+(pm===1?' nombre podría ser':' nombres podrían ser')+' de clientes que ya tienes.'; nxt=g('coincidencias'); short='nombres parecidos'; lbl='Ver nombres parecidos'; }
    else if(pn>0){ tit='Aclara los clientes nuevos'; desc=pn+(pn===1?' cliente nuevo':' clientes nuevos')+' por clasificar.'; nxt=g('clientes',{cliF:'conf'}); short='clientes nuevos'; lbl='Aclarar clientes nuevos'; }
-   else { tit='Esta valera está lista'; desc='Total de este corte: '+v.tot+'. Sus clientes ya entran a tus recibos.'; nxt=()=>me.go('inicio'); short=''; lbl='Finalizar'; }
+   else { const oth=s.vals.find(o=>o.id!==vv.id&&(s.vst[o.id]==='pend'||s.vst[o.id]==='rev')); tit='Esta valera está lista'; desc=v.n+' lista: '+v.nMov+(v.nMov===1?' movimiento':' movimientos')+' · '+v.tot+'. Sus clientes ya entran a tus recibos.'; if(oth){ nxt=g('valera',{vid:oth.id,reup:null}); lbl=(s.vst[oth.id]==='rev'?'Siguiente: revisar la relación de ':'Siguiente: subir la relación de ')+oth.n; } else { nxt=g('resumen'); lbl='Ir a confirmar la cobranza'; } short=''; }
    const stepsL=['Subir','Revisar','Clientes','Listo']; const dn=[d1,d2,d3,d3];
    const steps=stepsL.map((l,j)=>({n:dn[j]?'✓':String(j+1),l:l,cls:dn[j]?'done':(j===N-1?'cur':'')}));
    const ch2=d3?['Lista','ok']:(!flow?[(st==='nada'?'Sin relación':(vv.otra?'Otra quincena':v.chip)),v.chipC]:['Paso '+N+' de 4',st==='pend'?'warn':'info']);
    const mont=st==='ok'?v.tot:(st==='nada'?'Sin relación':(st==='rev'?'Por revisar':(vv.otra?'Otra quincena':'Por cargar')));
    const sub=!flow?(st==='nada'?'No la recibiste este corte':v.chip):(d3?'Lista para tus recibos':'Siguiente: '+short);
    const sg=j=>flow?((d3||j<N-1)?'done':(j===N-1?'cur':'')):'';
-   return {...v,sig:v.n.replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase(),lg:logoOf(v.n),t:i%6,flow:flow,steps:steps,pasoTxt:d3?'4 de 4':'Paso '+N+' de 4',pasoTit:tit,pasoDesc:desc,next:nxt,nextLbl:lbl,showNext:!d3,s1:sg(0),s2:sg(1),s3:sg(2),s4:sg(3),paso:ch2[0],pasoC:ch2[1],sub2:sub,monto:mont}; });
-  V.vcards=V.valList.map(v=>{ const ok=v.paso==='Lista'; const nada=v.paso==='Sin relación'; const otra=v.paso==='Otra quincena'; const estL=ok?'Listo':(nada?'Sin relación':(otra?'Otra quincena':'Pendiente')); const estS=nada?'S/R':(otra?'Otra':estL); return {estS:estS,n:v.n,sig:v.sig,lg:v.lg,t:v.t,est:ok?'Listo':(nada?'Sin relación':(otra?'Otra quincena':'Pendiente')),chipC:ok?'ok':(nada||otra?'neutral':'warn'),nm:v.flow?v.pasoTxt.replace('Paso ','').replace(' DE ',' de '):'',monto:v.isOk?v.tot:'—',open:v.open}; });
+   return {...v,sig:v.n.replace(/[^A-Za-zÁÉÍÓÚáéíóú]/g,'').slice(0,2).toUpperCase(),lg:logoOf(v.n),t:i%6,flow:flow,steps:steps,pasoTxt:d3?'4 de 4':'Paso '+N+' de 4',pasoTit:tit,pasoDesc:desc,next:nxt,nextLbl:lbl,showNext:true,s1:sg(0),s2:sg(1),s3:sg(2),s4:sg(3),paso:ch2[0],pasoC:ch2[1],chip:(st==='ok'?ch2[0]:v.chip),chipC:(st==='ok'?ch2[1]:v.chipC),sub2:sub,monto:mont}; });
+  V.vcards=V.valList.map(v=>{ const ok=v.paso==='Lista'; const nada=v.paso==='Sin relación'; const otra=v.paso==='Otra quincena'; const estL=ok?'Lista':(nada?'Sin relación':(otra?'Otra quincena':'Pendiente')); const estS=nada?'S/R':(otra?'Otra':estL); return {estS:estS,n:v.n,sig:v.sig,lg:v.lg,t:v.t,est:ok?'Lista':(nada?'Sin relación':(otra?'Otra quincena':'Pendiente')),chipC:ok?'ok':(nada||otra?'neutral':'warn'),nm:v.flow?v.pasoTxt.replace('Paso ','').replace(' DE ',' de '):'',monto:v.isOk?v.tot:'—',open:v.open}; });
   V.vd=V.valList.find(x=>x.id===s.vid)||V.valList[0]||V.vd;
   V.canAdd=me.cat().concat(s.aprobada?[{id:'G'}]:[]).some(c=>!s.vals.some(x=>x.id===c.id));
   const faltan2=s.vals.filter(v=>s.vst[v.id]==='pend');
@@ -1464,20 +1491,21 @@ renderVals(){
   { const nv=s.vals.length, okC=s.vals.filter(v=>s.vst[v.id]==='ok'||s.vst[v.id]==='nada').length, none=nv>0&&faltan2.length===nv, nxx=V.nx;
    V.cobEy='Siguiente paso'; V.cobKind=''; V.cobCls='pri glow';
    if(snap){ V.cobEy='Cobranza confirmada'; V.cobKind='ok'; V.cobTit='Ya puedes cobrar'; V.cobTxt='Imprime tus recibos o anota los pagos.'; V.cobBtn='Ir a Cobranza'; V.cobGo=g('cobranza');
-    const first=(V.vpay||[]).filter(x=>!x.paid).sort((a,b)=>a.day-b.day)[0]; if(first){ V.cobTit='Cobra primero lo de '+first.n+' antes del '+first.fecha; V.cobTxt='Debes pagarle '+first.owe+' a esta valera ('+first.due.toLowerCase()+'). Empieza por sus clientes. Registrar los pagos es opcional: puedes llevarlo con tus recibos impresos.'; V.cobBtn='Cobrar clientes de '+first.n; V.cobGo=first.cobrar; } }
-   else if(nv===0){ V.cobTit='Empieza agregando tus valeras'; V.cobTxt='Elige las que distribuyes.'; V.cobBtn='Agregar valeras'; V.cobGo=g('valeras'); }
+    const first=(V.vpay||[]).filter(x=>!x.paid).sort((a,b)=>a.day-b.day)[0]; const allCob=totalAll>0&&paidAll>=totalAll-0.001; if(first&&first.pct>=100){ V.cobTit='Paga a '+first.n+' antes del '+first.fecha; V.cobTxt='Ya cobraste lo de esta valera. Debes pagarle '+first.owe+' ('+first.due.toLowerCase()+'). Anótalo cuando lo hagas.'; V.cobBtn='Ya le pagué a '+first.n; V.cobGo=first.mark; } else if(first){ V.cobTit='Cobra primero lo de '+first.n+' antes del '+first.fecha; V.cobTxt='Debes pagarle '+first.owe+' a esta valera ('+first.due.toLowerCase()+'). Empieza por sus clientes. Registrar los pagos es opcional: puedes llevarlo con tus recibos impresos.'; V.cobBtn='Cobrar clientes de '+first.n; V.cobGo=first.cobrar; } else if(allCob&&(V.vpay||[]).length){ V.cobTit='Todo al corriente'; V.cobTxt='Cobraste todo y pagaste a tus valeras. Espera el cierre del corte.'; V.cobBtn='Ver resumen'; V.cobGo=g('cobranza'); } else if(!allCob&&paidAll>0&&V.payNext){ V.cobTit='Faltan '+V.kPend+' por cobrar'; V.cobTxt='Registrar los pagos es opcional: puedes llevarlo con tus recibos impresos.'; V.cobBtn='Registrar pago de '+V.payNextName; V.cobGo=V.payNextGo; } }
+   else if(nv===0){ V.cobTit='Empieza agregando tus valeras'; V.cobTxt='Elige las que distribuyes.'; V.cobBtn='Agregar valeras'; V.cobGo=()=>V.openCat(); }
    else if(none){ V.cobTit='Inicia la captura de tus relaciones'; V.cobTxt='Sube la relación de cada valera.'; V.cobBtn='Iniciar captura de relaciones'; V.cobGo=V.focoSubir; }
    else { V.cobEy='Siguiente paso · '+okC+' de '+nv+' valeras listas'; V.cobTit=nxx.t; V.cobTxt=''; V.cobBtn='Continuar con el proceso'; V.cobGo=nxx.go; } }
+  if(s.closed&&snap){ V.cobEy='Quincena cerrada'; V.cobKind='ok'; V.cobTit='Empezar la siguiente quincena'; V.cobTxt='Empieza en cero: lo pendiente de este corte no pasa y lo consultas en Historial.'; V.cobBtn='Empezar la siguiente quincena'; V.cobGo=()=>V.startNext(); }
   V.cobHasTxt=!!V.cobTxt; V.cobMin=!!s.cobMin&&V.cobHasTxt; V.cobShowTxt=V.cobHasTxt&&!V.cobMin; V.cobExp=V.cobMin?'false':'true'; V.cobTogLbl=V.cobMin?'Mostrar el detalle':'Ocultar el detalle'; V.cobTog=()=>me.upd({cobMin:!me.state.cobMin}); V.cobMinCls=V.cobMin?'min':'';
   // volver
   { const idv=scr==='subir'?s.upl:(scr==='revision'?s.rv:null); const vn2=idv?s.vals.find(x=>x.id===idv):null;
-   const bkR=s.bk==='resumen'; V.hasBk=bkR&&scr!=='valera'||false; V.hasVolver=!!vn2||bkR; { const PN={inicio:'Inicio',valeras:'Valeras',clientes:'Clientes',cobranza:'Cobranza',relacion:'Relación',pagos:'Pagos',hist:'Historial',recibos:'Recibos'}; const back=def=>{ const k=PN[s.prev]?s.prev:def; return ['‹ Volver a '+PN[k],()=>me.go(k)]; }; const pasos=bkR||vn2; const pasosTxt=vn2?'‹ Volver a '+vn2.n:'‹ Volver al resumen'; const go1=f=>()=>V[f](); const TB={ recibos:[s.recSel!=='list'?'‹ Volver a la lista':(pasos?pasosTxt:'‹ Volver a Cobranza'),s.recSel!=='list'?V.recBack:V.recAtras],catalogo:['‹ Volver a Valeras',V.gValeras], solicitar:['‹ Volver a Agregar valera',V.openCat],ficha:back('clientes'), detalle:back('relacion'), imprimir:['‹ Volver a Relación',V.gRelacion], histdet:['‹ Volver a Historial',V.gHist],valera:bkR?['‹ Volver a Valeras',()=>me.go('valeras')]:back('valeras') }; const tb=TB[scr]||(pasos&&scr!=='resumen'?[pasosTxt,go1('volverPasos')]:null); V.topBackShow=!!tb; V.topBackTxt=tb?tb[0]:''; V.topBackGo=tb?tb[1]:(()=>{}); } V.showHide=['inicio','resumen','cobranza','relacion','detalle','pago','pagos','hist','histdet'].indexOf(scr)>=0; V.volverTxt=vn2?'← Volver a '+vn2.n:(bkR?'← Volver al resumen':'← Volver a Inicio');
+   const bkR=s.bk==='resumen'; V.hasBk=bkR&&scr!=='valera'||false; V.hasVolver=!!vn2||bkR; { const PN={bienvenida:'Bienvenida',inicio:'Inicio',valeras:'Valeras',clientes:'Clientes',cobranza:'Cobranza',relacion:'Relación',pagos:'Pagos',hist:'Historial',recibos:'Recibos'}; const back=def=>{ const k=PN[s.prev]?s.prev:def; return ['‹ Volver a '+PN[k],()=>me.go(k)]; }; const pasos=bkR||vn2; const pasosTxt=vn2?'‹ Volver a '+vn2.n:'‹ Volver al resumen'; const go1=f=>()=>V[f](); const fromB=s.prev==='bienvenida'; const TB={ valeras:fromB?['‹ Volver a Bienvenida',()=>me.go('bienvenida')]:null, clientes:fromB?['‹ Volver a Bienvenida',()=>me.go('bienvenida')]:(s.prev==='coincidencias'?['‹ Volver a Parecidos',()=>me.go('coincidencias')]:null), coincidencias:s.prev==='valera'?['‹ Volver a '+((s.vals.find(x=>x.id===s.vid)||{}).n||'la valera'),()=>me.go('valera',{vid:s.vid,reup:null})]:null, solicitud:['‹ Volver a Valeras',V.gValeras], recibos:[s.recSel!=='list'?'‹ Volver a la lista':(pasos?pasosTxt:'‹ Volver a Cobranza'),s.recSel!=='list'?V.recBack:V.recAtras],catalogo:['‹ Volver a Valeras',V.gValeras], solicitar:['‹ Volver a Agregar valera',V.openCat],ficha:back('clientes'), detalle:back('relacion'), imprimir:['‹ Volver a Relación',V.gRelacion], histdet:['‹ Volver a Historial',V.gHist],valera:bkR?['‹ Volver a Valeras',()=>me.go('valeras')]:back('valeras') }; const tb=TB[scr]||(pasos&&['resumen','acceso','bienvenida','inicio'].indexOf(scr)<0?[pasosTxt,go1('volverPasos')]:null); V.topBackShow=!!tb; V.topBackTxt=tb?tb[0]:''; V.topBackGo=tb?tb[1]:(()=>{}); } V.showHide=['inicio','resumen','cobranza','relacion','detalle','pago','pagos','hist','histdet'].indexOf(scr)>=0; V.volverTxt=vn2?'← Volver a '+vn2.n:(bkR?'← Volver al resumen':'← Volver a Inicio');
    V.volverPasos=()=>{ if(bkR&&!vn2) me.go('resumen'); else if(vn2) me.go('valera',{vid:vn2.id,reup:null}); else me.go('inicio'); };
-   if(!me._fabRs){ me._fabRs=true; let tm=null; window.addEventListener('scroll',()=>{ const el=document.querySelector('.scrollfab'); if(!el) return; el.classList.add('show'); clearTimeout(tm); tm=setTimeout(()=>{ const e2=document.querySelector('.scrollfab'); if(e2&&!e2.matches(':hover')&&!e2.contains(document.activeElement)) e2.classList.remove('show'); },1600); },{passive:true}); } V.gInicio=()=>me.go('inicio'); V.showFab=['acceso','bienvenida','imprimir'].indexOf(scr)<0; V.scrollTop=()=>{ try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){} }; V.scrollBot=()=>{ try{window.scrollTo({top:document.documentElement.scrollHeight,behavior:'smooth'});}catch(e){} }; V.valBack=bkR?(()=>me.go('valeras')):(()=>me.go('inicio')); V.valBackTxt=bkR?'‹ Atrás':'‹ Volver a Inicio'; }
+   if(!me._fabRs){ me._fabRs=true; let tm=null; window.addEventListener('scroll',()=>{ const el=document.querySelector('.scrollfab'); if(!el) return; if(document.documentElement.scrollHeight<=window.innerHeight+60) return; el.classList.add('show'); clearTimeout(tm); tm=setTimeout(()=>{ const e2=document.querySelector('.scrollfab'); if(e2&&!e2.matches(':hover')&&!e2.contains(document.activeElement)) e2.classList.remove('show'); },1600); },{passive:true}); } V.gInicio=()=>me.go('inicio'); V.showFab=['acceso','bienvenida','imprimir'].indexOf(scr)<0; V.scrollTop=()=>{ try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){} }; V.scrollBot=()=>{ try{window.scrollTo({top:document.documentElement.scrollHeight,behavior:'smooth'});}catch(e){} }; V.valBack=bkR?(()=>me.go('valeras')):(()=>me.go('inicio')); V.valBackTxt=bkR?'‹ Atrás':'‹ Volver a Inicio'; }
  }
 
 
- V.isDash=scr==='inicio';
+ V.isDash=scr==='inicio'; V.valsSome=s.vals.length>0; V.valsNone=s.vals.length===0;
  V.qLim=String(V.qLim).replace(' (según la valera)','');
  // filtros y orden con iconos
  { const mset=o=>me.setState(o); const pm=s.payM||null, rm=s.relM||null;
@@ -1501,15 +1529,17 @@ renderVals(){
   const pcAt=i=>i<3?MESV[CT[i].mes]:(snap&&totalAll?Math.round(paidAll/totalAll*100):null);
   const hT=s.histT==='est'?'est':'cortes'; V.hCortes=hT==='cortes'; V.hEst=hT==='est'; V.hTabCc=hT==='cortes'?'on':''; V.hTabEc=hT==='est'?'on':'';
   V.hTabCortes=()=>me.upd({histT:'cortes'}); V.hTabEst=()=>me.upd({histT:'est'});
-  const sel=(s.histSel==null)?2:s.histSel;
+  const sel=(s.histSel==null)?((s.closed&&snap)?3:2):s.histSel;
   const pendAt=i=>s.vals.reduce((a,v)=>{ const x=valAt(v,i); return a+(x!=null?x-Math.round(x*(pcAt(i)||0)/100):0); },0);
-  V.hRows=[3,2,1,0].map(i=>{ const pc=pcAt(i); return {t:CT[i].t.replace('Corte del','Corte'),s:CT[i].s.replace(/^Del /,'').replace(' al ','–')+(i<3?' · quedó '+fmt(pendAt(i))+' pendiente':''),tot:fmt(i===3?totalAll:totAt(i)),chip:i===3?'En curso':(pc+' %'),chipC:i===3?(snap?'info':'warn'):'ok',cls:i===sel?'on':'',go:()=>me.upd({histSel:i})}; });
+  V.hRows=[3,2,1,0].map(i=>{ const pc=pcAt(i); return {t:CT[i].t.replace('Corte del','Corte'),s:CT[i].s.replace(/^Del /,'').replace(' al ','–')+(i<3?' · quedó '+fmt(pendAt(i))+' pendiente':((s.closed&&snap)?' · quedó '+fmt(totalAll-paidAll)+' pendiente':'')),tot:fmt(i===3?totalAll:totAt(i)),chip:i===3?((s.closed&&snap)?(pc+' %'):'En curso'):(pc+' %'),chipC:i===3?((s.closed&&snap)?'ok':(snap?'info':'warn')):'ok',cls:i===sel?'on':'',go:()=>me.upd({histSel:i})}; });
   const MOVN={A:[5,6,6],B:[4,5,5],C:[3,3,3],D:[2,2,2],F:[1,1,1],G:[1,1,1]};
   const hSub=s.hSub==='cob'?'cob':'cap'; V.hSubCapC=hSub==='cap'?'on':''; V.hSubCobC=hSub==='cob'?'on':''; V.hSubCap=()=>me.upd({hSub:'cap'}); V.hSubCob=()=>me.upd({hSub:'cob'});
   V.hSelT=CT[sel].t; V.hC1=hSub==='cap'?'Movim.':'Cobrado'; V.hC2=hSub==='cap'?'Importe':'Falta';
   const pcSel=pcAt(sel)||0; const movOf=(v,i)=>i<3?((MOVN[v.id]||[0,0,0])[i]):me.movsAll(s).filter(m=>m.v===v.id&&s.vst[v.id]==='ok').length;
-  const rowsD=s.vals.map(v=>{ const a=valAt(v,sel); const cob=a!=null?Math.round(a*pcSel/100):null; return {n:v.n,mov:a!=null?movOf(v,sel):null,imp:a,cob:cob,fal:a!=null?a-cob:null}; });
+  const cobReal=v=>Math.round(withSt.reduce((acc,x)=>acc+linesOf(x.r).filter(l=>l.v===v.id).reduce((q,l)=>q+l.imp*(x.r.total>0?Math.min(x.paid,x.r.total)/x.r.total:0),0),0));
+  const rowsD=s.vals.map(v=>{ const a=valAt(v,sel); const cob=a!=null?((sel===3&&snap)?cobReal(v):Math.round(a*pcSel/100)):null; return {n:v.n,mov:a!=null?movOf(v,sel):null,imp:a,cob:cob,fal:a!=null?a-cob:null}; });
   const sm=k=>rowsD.reduce((x,r)=>x+(r[k]||0),0);
+  V.cpTotal=fmt(totAt(2)); V.cpPend=fmt(pendAt(2)); V.cpPaid=fmt(totAt(2)-pendAt(2)); V.cpRows=s.vals.map(v=>({n:v.n,t:fmt(valAt(v,2)||0),m:movOf(v,2)+(movOf(v,2)===1?' movimiento':' movimientos'),p:totAt(2)?Math.round((valAt(v,2)||0)/totAt(2)*100)+' %':'0 %'}));
   V.hDet=rowsD.map(r=>({n:r.n,cls:'',a:hSub==='cap'?(r.mov!=null?String(r.mov):'—'):(r.cob!=null?fmt(r.cob):'—'),b:hSub==='cap'?(r.imp!=null?fmt(r.imp):'—'):(r.fal!=null?fmt(r.fal):'—')})).concat([{n:'Total',cls:'tot',a:hSub==='cap'?String(sm('mov')):fmt(sm('cob')),b:hSub==='cap'?fmt(sm('imp')):fmt(sm('fal'))}]);
   const tag=CT[sel].l.replace(' ','');
   V.hDlRec=()=>me.upd({toast:'Descarga lista: Recibos_corte_'+tag+'.pdf'}); V.hDlRel=()=>me.upd({toast:'Descarga lista: Relacion_corte_'+tag+'.pdf'}); const regDoc=()=>{ const base=(snap&&snap.recs)?snap.recs:[]; const f=(sel===3||!totalAll)?1:(totAt(sel)/totalAll); const rows=base.map(r=>({n:r.n,folio:r.folio,total:Math.round(r.total*f/5)*5})); let left=Math.round(rows.reduce((a,r)=>a+r.total,0)*pcSel/100); const mets=['Efectivo','Transferencia']; rows.forEach((r,i)=>{ const pg=left>=r.total?r.total:Math.max(0,left); left-=pg; r.paid=pg; r.falta=r.total-pg; r.est=pg>=r.total?'Pagado':(pg>0?'Abono':'Pendiente'); r.fecha=pg>0?CT[sel].l+' 2026':''; r.met=pg>0?mets[i%2]:''; }); return {rows:rows,tot:rows.reduce((a,r)=>a+r.total,0),paid:rows.reduce((a,r)=>a+r.paid,0)}; };
@@ -1518,7 +1548,7 @@ renderVals(){
   V.hPrXls=()=>{ const d=regDoc(); const m=n=>me.fmtR(n); const esc=x=>String(x).replace(/&/g,'&amp;').replace(/</g,'&lt;'); const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Registro de pagos</title><style>body{font:13px Arial,sans-serif;color:#000;margin:24px}h1{font-size:18px;margin:0 0 4px}p{margin:0 0 12px;color:#444}table{border-collapse:collapse;width:100%}th,td{border:1px solid #000;padding:5px 7px;text-align:left}td.n,th.n{text-align:right}tfoot td{font-weight:700}</style></head><body><h1>Registro de pagos</h1><p>'+esc(CT[sel].t)+' · Datos ficticios de demostración</p><table><thead><tr><th>Cliente</th><th>Folio</th><th class="n">Total</th><th class="n">Pagado</th><th class="n">Falta</th><th>Estado</th><th>Fecha</th><th>Método</th></tr></thead><tbody>'+d.rows.map(r=>'<tr><td>'+esc(r.n)+'</td><td>'+esc(r.folio)+'</td><td class="n">'+m(r.total)+'</td><td class="n">'+m(r.paid)+'</td><td class="n">'+m(r.falta)+'</td><td>'+r.est+'</td><td>'+esc(r.fecha)+'</td><td>'+r.met+'</td></tr>').join('')+'</tbody><tfoot><tr><td colspan="2">Total</td><td class="n">'+m(d.tot)+'</td><td class="n">'+m(d.paid)+'</td><td class="n">'+m(d.tot-d.paid)+'</td><td colspan="3"></td></tr></tfoot></table></body></html>'; try{ const fr=document.createElement('iframe'); fr.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0'; document.body.appendChild(fr); fr.contentDocument.open(); fr.contentDocument.write(html); fr.contentDocument.close(); setTimeout(()=>{ try{ fr.contentWindow.focus(); fr.contentWindow.print(); }catch(e){} setTimeout(()=>fr.remove(),1500); },300); }catch(e){ me.upd({toast:'No se pudo abrir la impresión en este navegador.'}); } }; V.hPrRec=()=>me.upd({toast:'Enviado a la impresora (demostración): Recibos_corte_'+tag+'.pdf'}); V.hPrRel=()=>me.upd({toast:'Enviado a la impresora (demostración): Relacion_corte_'+tag+'.pdf'});
   V.hDetShow=sel===2||sel===3; V.hDetBtn=sel===3?'Ir a Cobranza':'Ver detalle por responsable'; V.hDetGo=()=>{ if(sel===3) me.go('cobranza'); else me.go('histdet'); };
   const tots=[0,1,2,3].map(i=>i===3?totalAll:totAt(i)); const mx=Math.max.apply(null,tots.concat([1]));
-  V.eBars=[3,2,1,0].map(i=>({l:CT[i].l,sub:i===3?'en curso':'',w:Math.round(tots[i]/mx*100),v:fmt(tots[i])}));
+  V.eBars=[3,2,1,0].map(i=>({l:CT[i].l,sub:i===3?(s.closed?'cerrado':'en curso'):'',w:Math.round(tots[i]/mx*100),v:fmt(tots[i])}));
   V.eProm=Math.round(MESV.reduce((a,b)=>a+b,0)/MESV.length)+' %'; V.eTot=fmt(tots.reduce((a,b)=>a+b,0)); const bi=tots.indexOf(Math.max.apply(null,tots)); V.eBest=CT[bi].l;
   const A=(s.cmpA==null)?2:s.cmpA; let B=(s.cmpB==null)?1:s.cmpB; if(B===A) B=(A+1)%4;
   V.cmpAT=CT[A].t.replace('Corte del','Corte'); V.cmpBT=CT[B].t.replace('Corte del','Corte'); V.cmpAL=CT[A].l; V.cmpBL=CT[B].l;

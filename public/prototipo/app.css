@@ -1255,3 +1255,114 @@ svg.logo{background:none;border-radius:0;display:block;flex:none}
 .paper-wrap .hojalbl{margin:0 0 6px}
 
 .pref.wide{max-width:calc(100% - 150px);overflow:hidden;text-overflow:ellipsis}
+
+/* Relación: estado junto al nombre y datos cortos debajo */
+.rc-nm{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;min-width:0}
+.rc-info2{display:flex;flex-wrap:wrap;gap:2px 0}
+.rc-info2 .mut:not(:first-child)::before{content:"·";margin:0 6px}
+
+/* Resumen: entregables, pagos a valeras pulsables y comparativo plegable */
+.dlrow .ibtn.dlpr{width:48px;min-height:40px;flex:none}
+.dlrow .ibtn.dlpr[disabled]{opacity:.5;cursor:not-allowed}
+.vplink{display:block;text-align:left;background:none;border:0;padding:0 24px 0 0;font:inherit;color:inherit;cursor:pointer;width:100%;min-width:0;position:relative}
+.vplink:hover .vptop b{text-decoration:underline}
+.vpchev{position:absolute;right:0;top:0;font-size:26px;line-height:1;color:var(--brand)}
+.plegar{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:52px;margin-top:20px;padding:10px 16px;border:1.5px solid var(--bs);border-radius:14px;background:#fff;font:inherit;font-weight:700;font-size:17px;color:var(--ink);cursor:pointer;text-align:left}
+.plegar:hover{background:var(--tint)}
+.plegar .chev{color:var(--brand);transition:transform .25s var(--ease);flex:none}
+.plegar[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.pb-bot .mut{margin-left:auto}
+
+/* Historial: entregables por corte y etiqueta del corte en curso */
+.hdet .entreg{margin-top:12px}
+.hbl small.hbs{display:block;font-size:11px;font-weight:600;color:var(--muted);line-height:1.1}
+
+/* Inicio: botones de scroll solo al desplazar, tarjetas pulsables, noviembre en curso */
+.scrollfab{opacity:0;pointer-events:none;transition:opacity .25s var(--ease)}
+.scrollfab.show,.scrollfab:focus-within,.scrollfab:hover{opacity:1;pointer-events:auto}
+.bcol .bsub{font-size:11px;font-weight:600;color:var(--muted);min-height:13px;line-height:1}
+.cobcap{margin:-2px 0 6px}
+.vrlink{display:grid;grid-template-columns:auto minmax(0,1fr) auto 14px;align-items:center;gap:10px;width:100%;background:none;border:0;border-top:1px solid var(--line);font:inherit;color:inherit;text-align:left;cursor:pointer;padding:10px 0;min-height:56px}
+.vrlink:first-of-type{border-top:0}
+.vrlink:hover .vn b{text-decoration:underline}
+.vrg{color:var(--brand);font-size:22px;line-height:1}
+.seccion-titulo .btn.sm{min-height:40px}
+.seccion-titulo .link{font-weight:700;color:var(--brand)}
+
+/* Valeras: titulo con boton, accion en pendientes, catalogo */
+.ttlv{align-items:center;margin-bottom:14px}
+.ttlv .btn.sm{min-height:44px}
+.mcard .vcta{display:block;margin:8px 0 0 56px;font-weight:700;color:var(--brand);font-size:15px}
+.mcard.dim{opacity:.72;box-shadow:none;background:#fafbfa}
+
+/* Clientes: chips con contador, filas compactas, cobranza en ficha y recomendados */
+.toolbar.tb2{grid-template-columns:minmax(0,1fr) 48px}
+.fchips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 14px;position:relative;z-index:0}
+.toolbar.tb2{position:relative;z-index:1;margin-bottom:0}
+.fchip{min-height:40px;padding:0 14px;border:1.5px solid var(--bs);border-radius:999px;background:#fff;color:var(--ink);font:inherit;font-weight:600;font-size:14.5px;cursor:pointer}
+.fchip b{margin-left:4px;font-variant-numeric:tabular-nums}
+.fchip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.fchip.alert{background:#fff4de;border-color:#e0b050;color:#8a5300}
+.mcard.crd{padding:12px 14px;margin-bottom:8px}
+.crn{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
+.crn .cchips{display:flex;flex-wrap:wrap;gap:6px}
+.recrow{display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:8px;align-items:center;border-top:1px solid var(--line)}
+.recgo{display:flex;justify-content:space-between;align-items:center;gap:8px;background:none;border:0;font:inherit;color:inherit;text-align:left;min-height:52px;cursor:pointer;padding:0}
+.recgo:hover b{text-decoration:underline}
+.recx{width:48px;min-height:44px;color:#b42318;border-color:#f1c8c3}
+
+/* Revisar: archivo en una linea y movimientos en dos lineas */
+.rvfile{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;margin:0 0 10px}
+.rvfile b{font-size:17px;word-break:break-word}
+.tr.rv>.rvfv{display:contents}
+.nw .tr.rv{grid-template-columns:minmax(0,1fr) auto auto;gap:4px 12px;align-items:center}
+.nw .tr.rv>span:first-child{grid-column:1;grid-row:1}
+.nw .tr.rv>.num2{grid-column:2;grid-row:1;font-weight:700}
+.nw .tr.rv>.acts{grid-column:3!important;grid-row:1;display:flex;align-self:center!important;justify-content:flex-end}
+.nw .tr.rv>.rvfv{display:flex;flex-wrap:wrap;gap:2px 14px;grid-column:1 / -1;grid-row:2;font-size:14px;color:var(--muted)}
+.nw .tr.rv>.rvfv .lbl,.nw .tr.rv>.rvfv span{display:inline;font-size:14px;margin-right:4px}
+.nw .tr.rv>.num2 .lbl{display:none}
+@media (max-width:559px){
+ .tr.rv{grid-template-columns:minmax(0,1fr) auto auto;gap:4px 12px;align-items:center}
+ .tr.rv>span:first-child{grid-column:1;grid-row:1}
+ .tr.rv>.num2{grid-column:2;grid-row:1;font-weight:700}
+ .tr.rv>.acts{grid-column:3!important;grid-row:1;display:flex;align-self:center!important;justify-content:flex-end}
+ .tr.rv>.rvfv{display:flex;flex-wrap:wrap;gap:2px 14px;grid-column:1 / -1;grid-row:2;font-size:14px;color:var(--muted)}
+ .tr.rv>.rvfv .lbl,.tr.rv>.rvfv span{display:inline;font-size:14px;margin-right:4px}
+ .tr.rv>.num2 .lbl{display:none}
+}
+
+.tr.rv .rvsal{display:none}
+.nw .tr.rv>span:first-child .mut{display:none!important}
+.nw .tr.rv>.rvfv .rvsal{display:inline}
+@media (max-width:559px){
+ .tr.rv>span:first-child .mut{display:none!important}
+ .tr.rv>.rvfv .rvsal{display:inline}
+}
+
+.kpisrv .kpi{justify-content:flex-start;gap:4px}
+.kpisrv .kpi b{margin-top:0}
+
+/* Detalle del corte: filas compactas y pendientes primero */
+.tr.hdrow .smfal{display:none}
+.nw .tr.hdrow{grid-template-columns:repeat(3,minmax(0,1fr));gap:2px 10px;align-items:center}
+.nw .tr.hdrow>b.nm{grid-column:1 / 3;grid-row:1}
+.nw .tr.hdrow>span:nth-child(4){grid-column:3;grid-row:1;justify-self:end}
+.nw .tr.hdrow>span:nth-child(2){grid-column:1;grid-row:2}
+.nw .tr.hdrow>span:nth-child(3){grid-column:2;grid-row:2}
+.nw .tr.hdrow>.smfal{display:block;grid-column:3;grid-row:2;color:#8a5300;font-weight:700;font-size:14px}
+.nw .tr.hdrow .lbl{display:inline;margin-right:4px;font-size:14px}
+@media (max-width:559px){
+ .tr.hdrow{grid-template-columns:repeat(3,minmax(0,1fr));gap:2px 10px;align-items:center}
+ .tr.hdrow>b.nm{grid-column:1 / 3;grid-row:1}
+ .tr.hdrow>span:nth-child(4){grid-column:3;grid-row:1;justify-self:end}
+ .tr.hdrow>span:nth-child(2){grid-column:1;grid-row:2}
+ .tr.hdrow>span:nth-child(3){grid-column:2;grid-row:2}
+ .tr.hdrow>.smfal{display:block;grid-column:3;grid-row:2;color:#8a5300;font-weight:700;font-size:14px}
+ .tr.hdrow .lbl{display:inline;margin-right:4px;font-size:14px}
+}
+
+.opt.dimopt{opacity:.55;cursor:not-allowed}
+.inchint{margin:8px 0 6px;color:#8a5300;font-weight:600}
+
+.macts .btn.sm{white-space:nowrap}

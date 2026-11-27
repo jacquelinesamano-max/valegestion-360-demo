@@ -935,7 +935,7 @@ svg.logo{background:none;border-radius:0;display:block;flex:none}
 .dwgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .dwwa{display:flex;flex-wrap:wrap;gap:8px}
 .wabox{border:1px solid var(--bs);border-radius:14px;padding:14px;display:grid;gap:8px;background:#f9faf9}
-.wamsg{margin:0;padding:10px 12px;border-radius:10px;background:#e4f4ea;color:#0e2a27;line-height:1.45}
+.wamsg{white-space:pre-line;margin:0;padding:10px 12px;border-radius:10px;background:#e4f4ea;color:#0e2a27;line-height:1.45}
 .dwh3{font-size:15px;font-weight:700;margin:6px 0 0}
 .dwln{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
 .dwlt{flex:1;min-width:0}
@@ -1224,3 +1224,34 @@ svg.logo{background:none;border-radius:0;display:block;flex:none}
 .pgline .pgobs{grid-column:1 / -1}.pgline .pgobs:empty{display:none}
 .pgline .pgfix{font-size:15px;min-height:32px;margin:0}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Recibos: navegación entre recibos */
+.recnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 12px}
+.recnav .rnt{flex:1;text-align:center;font-weight:600}
+.recnav .rnph{min-width:96px}
+/* Recibos: la vista previa de un recibo se reduce para caber en el ancho (la hoja y su acomodo no cambian) */
+@media screen{
+ .paper-wrap.fitprev{container-type:inline-size;overflow-x:hidden}
+ .paper-wrap.fitprev .sheet{zoom:min(1,tan(atan2(100cqw,8.5in)))}
+ .paper-wrap.fitprev .sheet.layh,.paper-wrap.fitprev .sheet.layg{zoom:min(1,tan(atan2(100cqw,11in)))}
+}
+
+/* Recibo individual: hoja vertical con un solo recibo a todo el ancho, crece hacia abajo */
+.recbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:0 0 8px}
+.recbar .ibtn{width:48px;min-height:44px}
+.recbar .btn.sm{min-height:44px}
+.sheet.layv.per1 .rgrid{display:block;flex:none;height:auto;min-height:0;grid-template-rows:none}
+.sheet.layv.per1 .rec{padding:22px 24px;margin-bottom:0}
+.sheet.layv.per1 .rec .nt{min-height:90px}
+@media print{.sheet.layv.per1 .rgrid{height:auto}}
+
+.vprev{font-weight:700;margin:6px 0 4px;color:var(--ink,#16181d)}
+
+.pref.wide{margin-right:auto;padding:0 16px;font-weight:700;font-size:15px;white-space:nowrap}
+
+.vprevrow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0 8px}
+.vprevrow .vprev{margin:0}
+.vprevrow .recbar{margin:0}
+.paper-wrap .hojalbl{margin:0 0 6px}
+
+.pref.wide{max-width:calc(100% - 150px);overflow:hidden;text-overflow:ellipsis}

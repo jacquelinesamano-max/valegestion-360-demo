@@ -55,7 +55,7 @@
 <button class="nb tog" onClick="{{ toggleSide }}" aria-label="{{ sideLbl }}" aria-expanded="{{ sideExp }}" title="{{ sideLbl }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
 </aside>
 <main class="main">
-<div class="prefs noprint" role="group" aria-label="Preferencias de lectura"><button class="pref" aria-pressed="{{ hideOn }}" aria-label="{{ hideLbl }}" data-tip="{{ hideLbl }}" onClick="{{ toggleHide }}"><sc-if value="{{ isHide }}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/></svg></sc-if><sc-if value="{{ notHide }}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></sc-if></button><span class="fsz" role="group" aria-label="Tamaño de letra"><sc-for list="{{ fsOpts }}" as="o" hint-placeholder-count="3"><button class="fsb {{ o.cls }}" aria-pressed="{{ o.on }}" aria-label="Letra {{ o.l }}" data-tip="{{ o.l }}" onClick="{{ o.go }}"><span style="font-size: {{ o.px }}px; line-height: 1; font-weight: 800; letter-spacing: -.02em">Aa</span></button></sc-for></span></div>
+<div class="prefs noprint" role="group" aria-label="Preferencias de lectura"><sc-if value="{{ topBackShow }}" hint-placeholder-val="{{ false }}"><button class="pref wide" onClick="{{ topBackGo }}">{{ topBackTxt }}</button></sc-if><sc-if value="{{ showHide }}" hint-placeholder-val="{{ true }}"><button class="pref" aria-pressed="{{ hideOn }}" aria-label="{{ hideLbl }}" data-tip="{{ hideLbl }}" onClick="{{ toggleHide }}"><sc-if value="{{ isHide }}" hint-placeholder-val="{{ false }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/></svg></sc-if><sc-if value="{{ notHide }}" hint-placeholder-val="{{ true }}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></sc-if></button></sc-if><span class="fsz" role="group" aria-label="Tamaño de letra"><sc-for list="{{ fsOpts }}" as="o" hint-placeholder-count="3"><button class="fsb {{ o.cls }}" aria-pressed="{{ o.on }}" aria-label="Letra {{ o.l }}" data-tip="{{ o.l }}" onClick="{{ o.go }}"><span style="font-size: {{ o.px }}px; line-height: 1; font-weight: 800; letter-spacing: -.02em">Aa</span></button></sc-for></span></div>
 
 <sc-if value="{{ preBan }}" hint-placeholder-val="{{ false }}"><div class="prebanner noprint" role="alert"><div><b>Faltan abonos por registrar.</b> Mañana es el cierre de la quincena. ¿Qué quieres hacer con lo que falta?<span class="small" style="display:block;margin-top:2px">{{ preDet }}</span><span class="small" style="display:block;margin-top:4px">Si eliges «Ahora no» o no eliges nada, los pagos quedan como los capturaste (vacíos o parciales). Lo pendiente no pasa al siguiente corte y lo consultas en Historial.</span></div>
 <sc-if value="{{ preNotAsk }}" hint-placeholder-val="{{ true }}"><div class="row"><button class="btn pri sm" onClick="{{ preMark }}">Todos pagaron</button><button class="btn sm" onClick="{{ preLater }}">Ahora no</button><button class="btn sm" onClick="{{ prePendAsk }}">Cerrar con pendiente</button></div></sc-if>
@@ -162,7 +162,6 @@
 <sc-if value="{{ isValeras }}" hint-placeholder-val="{{ false }}">
 <section>
 <sc-if value="{{ bannerVal }}" hint-placeholder-val="{{ false }}"><div class="okb noprint"><b>{{ bannerValTxt }}</b><div class="row" style="margin-top:8px"><button class="btn sm pri" onClick="{{ bannerGo }}">Ver catálogo</button><button class="btn sm" onClick="{{ closeBanner }}">Cerrar</button></div></div></sc-if>
-<sc-if value="{{ hasBk }}" hint-placeholder-val="{{ false }}"><button class="link noprint" onClick="{{ volverPasos }}">‹ Atrás</button></sc-if>
 <h1 class="h1">Valeras</h1>
 <div class="row" style="margin-bottom:16px"><button class="btn pri" onClick="{{ openCat }}">Agregar valera</button></div>
 <sc-if value="{{ noVals }}" hint-placeholder-val="{{ false }}"><div class="card"><h2 class="h2">Todavía no agregas valeras</h2><p class="mut">Pulsa «Agregar valera» y elige del catálogo las que distribuyes.</p></div></sc-if>
@@ -173,13 +172,12 @@
 <h2 class="h2" style="margin-top:24px">Solicitudes de valeras nuevas</h2>
 <sc-for list="{{ reqList }}" as="q" hint-placeholder-count="1"><div class="mcard"><div class="row vrq"><span class="sp"><span class="who">{{ q.n }}</span><div class="mut small">{{ q.sub }}</div></span><span class="chip warn">{{ q.est }}</span></div></div></sc-for>
 </sc-if>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 </section>
 </sc-if>
 
 <sc-if value="{{ isCatalogo }}" hint-placeholder-val="{{ false }}">
 <section>
-<button class="link" onClick="{{ gValeras }}">‹ Atrás</button>
 <h1 class="h1">Agregar valera</h1>
 <div class="field"><label for="cvq">Buscar valera</label><input id="cvq" class="inp" placeholder="Escribe un nombre" value="{{ catQ }}" onChange="{{ setCatQ }}"></div>
 <sc-for list="{{ catList }}" as="c" hint-placeholder-count="5">
@@ -193,7 +191,6 @@
 
 <sc-if value="{{ isSolicitar }}" hint-placeholder-val="{{ false }}">
 <section>
-<button class="link" onClick="{{ openCat }}">‹ Atrás</button>
 <h1 class="h1">Solicitar una valera</h1>
 <div class="card">
 <div class="field"><label for="rqn">Nombre de la valera</label><input id="rqn" class="inp" value="{{ reqN }}" onChange="{{ setReqN }}"></div>
@@ -210,7 +207,6 @@
 
 <sc-if value="{{ isValera }}" hint-placeholder-val="{{ false }}">
 <section>
-<button class="link" onClick="{{ valBack }}">{{ valBackTxt }}</button>
 <div class="vhead"><span class="sigla tono-{{ vd.t }} {{ vd.lg.cls }}"><sc-if value="{{ vd.lg.has }}" hint-placeholder-val="{{ false }}"><img src="{{ vd.lg.src }}" alt=""></sc-if><sc-if value="{{ vd.lg.no }}" hint-placeholder-val="{{ true }}">{{ vd.sig }}</sc-if></span><div><h1 class="h1" style="margin:0">{{ vd.n }}</h1><span class="chip {{ vd.chipC }}">{{ vd.chip }}</span></div></div>
 <sc-if value="{{ vd.flow }}" hint-placeholder-val="{{ true }}">
 <ol class="hsteps" aria-label="Pasos de esta valera">
@@ -247,7 +243,6 @@
 
 <sc-if value="{{ isSubir }}" hint-placeholder-val="{{ false }}">
 <section>
-<sc-if value="{{ hasBk }}" hint-placeholder-val="{{ false }}"><button class="link noprint" onClick="{{ volverPasos }}">‹ Atrás</button></sc-if>
 <h1 class="h1">Subir relación de {{ upN }}</h1>
 <sc-if value="{{ reading }}" hint-placeholder-val="{{ false }}"><div class="card"><h2 class="h2">Leyendo {{ upFile }}…</h2></div></sc-if>
 <sc-if value="{{ notReading }}" hint-placeholder-val="{{ true }}">
@@ -258,13 +253,12 @@
 <button class="btn" onClick="{{ gValeras }}">Volver a valeras</button>
 </div>
 </sc-if>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 </section>
 </sc-if>
 
 <sc-if value="{{ isRevision }}" hint-placeholder-val="{{ false }}">
 <section>
-<sc-if value="{{ hasBk }}" hint-placeholder-val="{{ false }}"><button class="link noprint" onClick="{{ volverPasos }}">‹ Atrás</button></sc-if>
 <h1 class="h1">Revisar {{ rvName }}</h1>
 <div class="kpis">
 <div class="kpi"><span class="k">Archivo</span><b style="font-size:17px;word-break:break-word">{{ rvFile }}</b><span class="d">{{ rvTipo }}</span></div>
@@ -312,13 +306,12 @@
 <button id="btn-incorporar" class="btn pri" disabled="{{ incDisabled }}" onClick="{{ incorporate }}">{{ incLabel }}</button>
 <button class="btn" onClick="{{ rvCancel }}">Quitar este archivo y volver a subir</button>
 </div>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 </section>
 </sc-if>
 
 <sc-if value="{{ isCoinc }}" hint-placeholder-val="{{ false }}">
 <section>
-<sc-if value="{{ hasBk }}" hint-placeholder-val="{{ false }}"><button class="link noprint" onClick="{{ volverPasos }}">‹ Atrás</button></sc-if>
 <h1 class="h1">Revisar clientes · Parecidos</h1>
 <sc-if value="{{ noMatch }}" hint-placeholder-val="{{ false }}"><div class="card"><h2 class="h2">No hay nombres por revisar</h2><p class="mut">Cuando subas e incorpores relaciones, aquí aparecerán los nombres parecidos. {{ noMatchHint }}</p></div></sc-if>
 <sc-for list="{{ matchCards }}" as="m" hint-placeholder-count="2">
@@ -346,13 +339,12 @@
 </div>
 </sc-for>
 <div class="row"><button class="btn pri" onClick="{{ gClientes }}">Ir a clasificar clientes</button><button class="btn" onClick="{{ gResumen }}">Ir al resumen</button></div>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 </section>
 </sc-if>
 
 <sc-if value="{{ isClientes }}" hint-placeholder-val="{{ false }}">
 <section>
-<sc-if value="{{ hasBk }}" hint-placeholder-val="{{ false }}"><button class="link noprint" onClick="{{ volverPasos }}">‹ Atrás</button></sc-if>
 <h1 class="h1">Clientes</h1>
 <div class="toolbar noprint"><input id="cq" class="inp" placeholder="Buscar cliente" aria-label="Buscar cliente" value="{{ cliQ }}" onChange="{{ setCliQ }}"><button class="ibtn {{ cliFHas }}" aria-label="Filtrar" aria-expanded="{{ cliFExp }}" onClick="{{ toggleCliF }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg></button><button class="ibtn" aria-label="Ordenar" aria-expanded="{{ cliSExp }}" onClick="{{ toggleCliS }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M7 20l-3-3M7 20l3-3M17 20V4M17 4l-3 3M17 4l3 3"/></svg></button></div>
 <sc-if value="{{ cliMenuF }}" hint-placeholder-val="{{ false }}"><div class="pop"><span class="pgl">Mostrar</span><sc-for list="{{ cliFilters }}" as="f" hint-placeholder-count="5"><button class="popb {{ f.cls }}" onClick="{{ f.go }}">{{ f.l }}</button></sc-for></div></sc-if>
@@ -363,13 +355,12 @@
 </sc-for>
 <div class="row" style="margin:4px 0 12px"><span class="mut">{{ cliShown }}</span><sc-if value="{{ cliMore }}" hint-placeholder-val="{{ false }}"><button class="btn sm" onClick="{{ moreCli }}">Mostrar {{ cliMoreN }} más</button></sc-if></div>
 <sc-if value="{{ noCli }}" hint-placeholder-val="{{ false }}"><div class="card"><p class="mut">No encontramos a nadie con ese nombre. Revisa cómo está escrito: tus clientes salen de las relaciones de cobro que subes.</p></div></sc-if>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 </section>
 </sc-if>
 
 <sc-if value="{{ isFicha }}" hint-placeholder-val="{{ false }}">
 <section>
-<button class="link" onClick="{{ gClientes }}">‹ Atrás</button>
 <h1 class="h1">{{ fc.n }}</h1>
 <div class="row" style="margin-bottom:6px"><span class="chip info">{{ fc.roleChip }}</span></div>
 <p class="sub">{{ fc.meta }}</p>
@@ -417,7 +408,7 @@
 <sc-if value="{{ a.sepOpen }}" hint-placeholder-val="{{ false }}"><div class="warnb" style="margin-top:8px"><b>Qué pasaría:</b> {{ a.impact }}<div class="row" style="margin-top:8px"><button class="btn dang sm" onClick="{{ a.confirm }}">Separar y volver a revisar</button><button class="btn sm" onClick="{{ a.cancel }}">Cancelar</button></div></div></sc-if></div>
 </sc-for>
 </div>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 </section>
 </sc-if>
 
@@ -515,7 +506,7 @@
 <div class="row"><button class="btn" onClick="{{ gHistPrev }}">Ver el detalle por responsable</button></div>
 </sc-if>
 </div>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 </section>
 </sc-if>
 
@@ -549,7 +540,7 @@
 <sc-if value="{{ noRel }}" hint-placeholder-val="{{ false }}"><div class="card"><p class="mut">No hay nadie con ese nombre o estado. Prueba con otro filtro.</p></div></sc-if>
 </sc-if>
 </div>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 <div class="relprint" aria-hidden="true">
 <sc-for list="{{ relPages }}" as="pg" hint-placeholder-count="1">
 <div class="paper-wrap">
@@ -563,7 +554,6 @@
 
 <sc-if value="{{ isDetalle }}" hint-placeholder-val="{{ false }}">
 <section>
-<button class="link" onClick="{{ gRelacion }}">‹ Atrás</button>
 <h1 class="h1">{{ dt.n }}</h1>
 <div class="row" style="margin-bottom:12px"><span class="chip {{ dt.estC }}">{{ dt.est }}</span><span class="mut">Recibo {{ dt.folio }}{{ dt.locTxt }}</span></div>
 <div class="kpis"><div class="kpi"><span class="k">Total a cobrar</span><b>{{ dt.total }}</b></div><div class="kpi"><span class="k">Pagado</span><b>{{ dt.paid }}</b></div><div class="kpi lead"><span class="k">Falta</span><b>{{ dt.saldo }}</b></div></div>
@@ -579,7 +569,7 @@
 <div class="card"><h2 class="h2">Pagos registrados</h2>
 <sc-if value="{{ dt.noPays }}" hint-placeholder-val="{{ true }}"><p class="mut">Todavía no hay pagos registrados.</p></sc-if>
 <sc-for list="{{ dt.pays }}" as="p" hint-placeholder-count="1"><div class="row" style="padding:6px 0;border-top:1px solid var(--line)"><span class="sp"><b>{{ p.imp }}</b> · {{ p.fecha }}<div class="mut small">{{ p.obs }}{{ p.motivo }}</div></span><span class="chip {{ p.chipC }}">{{ p.st }}</span><sc-if value="{{ p.canFix }}" hint-placeholder-val="{{ false }}"><button class="btn sm" onClick="{{ p.fix }}">Corregir o anular</button></sc-if></div></sc-for></div>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 </section>
 </sc-if>
 
@@ -637,7 +627,7 @@
 <sc-if value="{{ payGMore }}" hint-placeholder-val="{{ false }}"><div class="row" style="margin:10px 0"><button class="btn sm" onClick="{{ morePayG }}">Mostrar {{ payGMoreN }} más</button></div></sc-if>
 </sc-if>
 </div>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 </section>
 </sc-if>
 
@@ -650,18 +640,20 @@
 <sc-if value="{{ isConf }}" hint-placeholder-val="{{ false }}">
 <sc-if value="{{ recList }}" hint-placeholder-val="{{ true }}"><div class="noprint">
 <div class="row" style="margin:0 0 12px"><button class="btn pri" onClick="{{ viewAll }}">Ver todos los recibos</button></div>
-<div class="field"><label for="rcq">Buscar un recibo por nombre</label><input id="rcq" class="inp" placeholder="Escribe un nombre" value="{{ recQ }}" onChange="{{ setRecQ }}"></div>
+<div class="field"><label for="rcq">Buscar un recibo</label><input id="rcq" class="inp" placeholder="Nombre, colonia o últimos 4 dígitos" value="{{ recQ }}" onChange="{{ setRecQ }}"></div>
 <div class="rlist"><sc-for list="{{ recRows }}" as="c" hint-placeholder-count="4"><button class="rrow" onClick="{{ c.go }}"><span class="rn"><b>{{ c.n }}</b><span class="mut">{{ c.t }}</span></span><span class="rt">{{ c.tot }}</span><span class="rg" aria-hidden="true">›</span></button></sc-for></div>
-<sc-if value="{{ recEmpty }}" hint-placeholder-val="{{ false }}"><p class="mut" style="margin:12px 0">No hay recibos con ese nombre.</p></sc-if>
+<sc-if value="{{ recEmpty }}" hint-placeholder-val="{{ false }}"><p class="mut" style="margin:12px 0">No hay recibos con esa búsqueda.</p></sc-if>
 <sc-if value="{{ recMore }}" hint-placeholder-val="{{ false }}"><div class="row" style="margin:12px 0"><button class="btn" onClick="{{ moreRec }}">Mostrar {{ recMoreN }} más</button></div></sc-if>
 </div></sc-if>
-<sc-if value="{{ recPaper }}" hint-placeholder-val="{{ false }}"><div class="noprint row" style="margin-bottom:16px"><button class="btn" onClick="{{ recBack }}">‹ Volver a la lista</button><sc-if value="{{ recOne }}" hint-placeholder-val="{{ true }}"><button class="btn pri" onClick="{{ printNow }}">Imprimir este recibo</button></sc-if><sc-if value="{{ recAll }}" hint-placeholder-val="{{ true }}"><button class="btn pri" onClick="{{ printNow }}">Imprimir</button></sc-if><button class="btn" onClick="{{ savePdf }}">Guardar PDF</button></div>
-<sc-if value="{{ recAll }}" hint-placeholder-val="{{ true }}"><div class="noprint" style="margin-bottom:12px"><div class="mut small" style="margin-bottom:6px">Recibos por hoja</div><div class="mut small swipehint" style="margin:-2px 0 8px">En pantallas angostas la hoja se desliza hacia un lado: se muestra a su tamaño real.</div><div class="row laypick"><sc-for list="{{ layOpts }}" as="o" hint-placeholder-count="7"><button class="lay {{ o.cls }}" aria-label="{{ o.aria }}" onClick="{{ o.go }}"><span class="{{ o.ic }}" aria-hidden="true"><sc-for list="{{ o.boxes }}" as="bx" hint-placeholder-count="2"><i></i></sc-for></span></button></sc-for></div><sc-if value="{{ recIsH }}" hint-placeholder-val="{{ false }}"><div style="margin-top:10px"><button class="fitbtn {{ fitCls }}" role="switch" aria-checked="{{ fitPress }}" onClick="{{ toggleFit }}"><span class="fitic" aria-hidden="true"></span>Ajustar</button></div></sc-if></div></sc-if>
+<sc-if value="{{ recPaper }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ recOne }}" hint-placeholder-val="{{ true }}"><div class="recnav noprint"><sc-if value="{{ recHasPrev }}" hint-placeholder-val="{{ true }}"><button class="btn sm" onClick="{{ recPrev }}">‹ Anterior</button></sc-if><sc-if value="{{ recNoPrev }}" hint-placeholder-val="{{ false }}"><span class="rnph"></span></sc-if><span class="mut rnt">{{ recNavTxt }}</span><sc-if value="{{ recHasNext }}" hint-placeholder-val="{{ true }}"><button class="btn sm" onClick="{{ recNext }}">Siguiente ›</button></sc-if><sc-if value="{{ recNoNext }}" hint-placeholder-val="{{ false }}"><span class="rnph"></span></sc-if></div>
+<div class="recbar noprint"><button class="btn sm" onClick="{{ savePdf }}">Descargar</button><button class="ibtn" aria-label="Imprimir este recibo" title="Imprimir" onClick="{{ printNow }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><path d="M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg></button><button class="ibtn" aria-label="Compartir recibo en PDF" title="Compartir" onClick="{{ recShare }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button></div>
+</sc-if>
+<sc-if value="{{ recAll }}" hint-placeholder-val="{{ true }}"><div class="noprint" style="margin-bottom:12px"><div class="row laypick"><sc-for list="{{ layOpts }}" as="o" hint-placeholder-count="7"><button class="lay {{ o.cls }}" aria-label="{{ o.aria }}" onClick="{{ o.go }}"><span class="{{ o.ic }}" aria-hidden="true"><sc-for list="{{ o.boxes }}" as="bx" hint-placeholder-count="2"><i></i></sc-for></span></button></sc-for></div><sc-if value="{{ recIsH }}" hint-placeholder-val="{{ false }}"><div style="margin-top:10px"><button class="fitbtn {{ fitCls }}" role="switch" aria-checked="{{ fitPress }}" onClick="{{ toggleFit }}"><span class="fitic" aria-hidden="true"></span>Ajustar</button></div></sc-if><div class="vprevrow"><div class="vprev">Vista previa</div><div class="recbar"><button class="btn sm" onClick="{{ savePdf }}">Descargar</button><button class="ibtn" aria-label="Imprimir" title="Imprimir" onClick="{{ printNow }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><path d="M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg></button></div></div></div></sc-if>
 <sc-for list="{{ pages }}" as="pg" hint-placeholder-count="1">
-<div class="paper-wrap">
+<div class="paper-wrap {{ pg.oneCls }}">
+<sc-if value="{{ pg.showHoja }}" hint-placeholder-val="{{ true }}"><div class="noprint mut small hojalbl" >Hoja {{ pg.n }} de {{ pg.total }} · {{ pg.perTxt }}</div></sc-if>
 <div class="sheet lay{{ pg.lay }} per{{ pg.per }} {{ pg.fit }} {{ pg.adjCls }}" style="--n:{{ pg.per }}">
-<div class="noprint mut small" style="margin-bottom:8px">Hoja {{ pg.n }} de {{ pg.total }} · {{ pg.perTxt }}</div>
-<sc-if value="{{ pg.adj }}" hint-placeholder-val="{{ false }}"><div class="adjtxt">Recibos ajustados por la cantidad de recomendados</div></sc-if>
+<sc-if value="{{ pg.adj }}" hint-placeholder-val="{{ false }}"><div class="adjtxt">Tamaño ajustado por cantidad de recomendados</div></sc-if>
 <div class="rgrid"><sc-for list="{{ pg.recs }}" as="r" hint-placeholder-count="2">
 <div class="rec">
 <div class="rh"><div><h3>Recibo de cobro</h3><div>{{ r.mayorista }}</div></div><div style="text-align:right"><div><b>Folio {{ r.folio }}</b></div><div>Fecha de pago: <b>{{ r.limite }}</b></div></div></div>
@@ -678,13 +670,12 @@
 </sc-for></sc-if>
 </sc-if>
 </div>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 </section>
 </sc-if>
 
 <sc-if value="{{ isImprimir }}" hint-placeholder-val="{{ false }}">
 <section>
-<button class="link noprint" onClick="{{ gRelacion }}">‹ Atrás</button>
 <h1 class="h1 noprint">Cobranza · Relación para imprimir</h1>
 <div class="tabs noprint" role="tablist" aria-label="Cobranza"><button class="tab" role="tab" aria-selected="false" onClick="{{ gCobranza }}">Resumen</button><button class="tab on" role="tab" aria-selected="true">Relación</button><button class="tab" role="tab" aria-selected="false" onClick="{{ gRecibos }}">Recibos</button><button class="tab" role="tab" aria-selected="false" onClick="{{ gPagos }}">Pagos</button></div>
 <div class="folder">
@@ -705,7 +696,7 @@
 </sc-for>
 </sc-if>
 </div>
-<div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div>
+<sc-if value="{{ hasVolver }}" hint-placeholder-val="{{ false }}"><div class="row noprint volverq"><button class="btn lg" onClick="{{ volverPasos }}">{{ volverTxt }}</button></div></sc-if>
 </section>
 </sc-if>
 
@@ -835,7 +826,7 @@ fresh(){ return { screen:'acceso', welcomed:false, vals:[], catOpen:false, vid:n
  cliQ:'', cliF:'todos', relQ:'', relF:'todos', fid:null, chg:null, addQ:'', chk:{}, sep:null, det:null, recSel:'list',
  addVal:false, avN:'', avC:'6', avP:'15', addCli:false, acN:'', toast:'' }; }
 save(){ try{ const s={...this.state}; delete s.toast; delete s.reading; localStorage.setItem(this.key(),JSON.stringify(s)); }catch(e){} }
-upd(p,cb){ this.setState(p,()=>{ this.save(); if(cb)cb(); }); }
+upd(p,cb){ if(p&&p.screen&&p.screen!==this.state.screen) p={...p,prev:this.state.screen}; this.setState(p,()=>{ this.save(); if(cb)cb(); }); }
 go(scr,x){ this.upd({screen:scr,toast:'',...(['inicio','resumen','cobranza','hist','historial','relacion','recibos','pagos'].indexOf(scr)>=0?{bk:null}:{}),...(x||{})},()=>{ try{window.scrollTo(0,0);}catch(e){} }); }
 nz(t){ return (t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase(); }
 fmt(n){ if(this.state.hide&&['recibos','imprimir'].indexOf(this.state.screen)<0) return '$\u00a0•••'; return this.fmtR(n); }
@@ -1285,14 +1276,21 @@ renderVals(){
  const ord=(s.recSel==='all')?items.slice().sort((a,b)=>a.recList.length-b.recList.length||a.name.localeCompare(b.name,'es')):items;
  const capC=CAP[lay[0]]; const lad=LADDER[lay[0]]; ord.forEach(it=>{ const n=it.recList.length; if(n<=capC||!lad.length){ segs[0].items.push(it); return; } const k=lad.find(x=>CAP[x]>=n)||lad[lad.length-1]; segOf(k).items.push(it); });
  const pgs=[]; segs.forEach((sg,si)=>{ const L=byKey(sg.k); for(let i=0;i<sg.items.length;i+=L[1]) pgs.push({g:sg.items.slice(i,i+L[1]),per:L[1],lay:L[2],k:sg.k,adj:si>0}); });
- if(!pgs.length) pgs.push({g:[],per:rpp,lay:lay[2],k:lay[0],adj:false});
+ if(!pgs.length) pgs.push({g:[],per:rpp,lay:lay[2],k:lay[0],adj:false}); if(s.recSel!=='all'&&s.recSel!=='list'){ pgs.length=0; pgs.push({g:items,per:1,lay:'v',k:'1v',adj:false}); }
  V.layOpts=LAYS.map(x=>({l:x[3],cls:(x[0]===lay[0]?'on ':'')+(x[2]==='h'?'land':''),ic:'lic '+x[2]+(x[2]!=='v'?' land':''),boxes:Array.from({length:x[1]},()=>({})),aria:x[1]+' recibos por hoja, '+(x[2]==='v'?'uno debajo del otro, hoja vertical':x[2]==='h'?'uno junto al otro, hoja horizontal':'en cuadrícula de 2 por 2, hoja horizontal'),go:()=>me.upd({recLay:x[0]})})); V.recAll=s.recSel==='all';
  V.recIsH=lay[2]==='h'; V.fitCls=s.recFit?'on':''; V.fitPress=s.recFit?'true':'false'; V.toggleFit=()=>me.upd({recFit:!s.recFit});
- V.pages=pgs.map((o,i)=>{ const gr=o.g; return {adj:o.adj,adjCls:o.adj?'adj':'',fit:(o.lay==='h'&&s.recFit)?'fit':'',lay:o.lay,per:o.per,n:i+1,total:pgs.length,recs:gr,perTxt:gr.length===1?'1 recibo en esta hoja':gr.length+' recibos en esta hoja'}; });
+ V.pages=pgs.map((o,i)=>{ const gr=o.g; return {adj:o.adj,adjCls:o.adj?'adj':'',oneCls:'fitprev',showHoja:s.recSel==='all',fit:(o.lay==='h'&&s.recFit)?'fit':'',lay:o.lay,per:o.per,n:i+1,total:pgs.length,recs:gr,perTxt:gr.length===1?'1 recibo en esta hoja':gr.length+' recibos en esta hoja'}; });
  V.recList=s.recSel==='list'; V.recPaper=s.recSel!=='list'; V.recOne=s.recSel!=='list'&&s.recSel!=='all';
  V.printNow=()=>{ try{window.print();}catch(e){} }; V.viewAll=()=>me.upd({recSel:'all',recShow:99999}); V.savePdf=()=>me.upd({toast:'Descarga lista: '+(s.recSel==='all'?'Recibos_cobranza.pdf':'Recibo_cobranza.pdf')+' · '+lay[1]+' recibos por hoja'}); V.recBack=()=>me.upd({recSel:'list',recShow:12});
- const rflt=recs.filter(r=>!rcq||me.nz(r.n).indexOf(rcq)>=0); const rshow=rflt.slice(0,s.recShow);
- V.recRows=rshow.map(p=>({n:p.n,t:(p.recN>0?'Embajador · '+p.recN+(p.recN===1?' recomendado':' recomendados'):'Cliente directo')+' · '+p.folio,tot:fmt(p.total),go:()=>me.upd({recSel:p.id})}));
+ const recLoc=r=>{ const e=E0[r.id]||{}; return me.nz([e.col,e.tel].filter(Boolean).join(' ')); };
+ const rflt=recs.filter(r=>!rcq||me.nz(r.n).indexOf(rcq)>=0||recLoc(r).indexOf(rcq)>=0); const rshow=rflt.slice(0,s.recShow);
+ V.recRows=rshow.map(p=>({n:p.n,t:(p.recN>0?'Embajador · '+p.recN+(p.recN===1?' recomendado':' recomendados'):'Cliente directo')+locTxt(p)+' · '+p.folio,tot:fmt(p.total),go:()=>me.upd({recSel:p.id})}));
+ { const ri=recs.findIndex(r=>r.id===s.recSel); const one=ri>=0;
+   V.recHasPrev=one&&ri>0; V.recNoPrev=!V.recHasPrev; V.recHasNext=one&&ri<recs.length-1; V.recNoNext=!V.recHasNext;
+   V.recNavTxt=one?'Recibo '+(ri+1)+' de '+recs.length:'';
+   V.recPrev=()=>{ if(ri>0) me.upd({recSel:recs[ri-1].id}); }; V.recNext=()=>{ if(ri>=0&&ri<recs.length-1) me.upd({recSel:recs[ri+1].id}); };
+   V.recShare=()=>{ const sr=one?recs[ri]:null; me.setState({toast:sr?'Recibo_'+sr.folio+'.pdf listo para compartir. (En la demostración no se envía.)':''}); };
+   V.recTopBack=s.recSel==='list'; V.recBackTop=scr==='recibos'&&s.recSel!=='list'; V.recAtras=()=>{ if(V.hasBk) V.volverPasos(); else V.gCobranza(); }; }
  V.recEmpty=rflt.length===0; V.recMore=rflt.length>rshow.length; V.recMoreN=Math.min(12,rflt.length-rshow.length); V.moreRec=()=>me.setState({recShow:me.state.recShow+12});
  // relación imprimible
  const per=14; const rp=[]; for(let i=0;i<recs.length;i+=per) rp.push(recs.slice(i,i+per));
@@ -1469,7 +1467,7 @@ renderVals(){
   V.cobHasTxt=!!V.cobTxt; V.cobMin=!!s.cobMin&&V.cobHasTxt; V.cobShowTxt=V.cobHasTxt&&!V.cobMin; V.cobExp=V.cobMin?'false':'true'; V.cobTogLbl=V.cobMin?'Mostrar el detalle':'Ocultar el detalle'; V.cobTog=()=>me.upd({cobMin:!me.state.cobMin}); V.cobMinCls=V.cobMin?'min':'';
   // volver
   { const idv=scr==='subir'?s.upl:(scr==='revision'?s.rv:null); const vn2=idv?s.vals.find(x=>x.id===idv):null;
-   const bkR=s.bk==='resumen'; V.hasBk=bkR&&scr!=='valera'||false; V.volverTxt=vn2?'← Volver a '+vn2.n:(bkR?'← Volver al resumen':'← Volver a Inicio');
+   const bkR=s.bk==='resumen'; V.hasBk=bkR&&scr!=='valera'||false; V.hasVolver=!!vn2||bkR; { const PN={inicio:'Inicio',valeras:'Valeras',clientes:'Clientes',cobranza:'Cobranza',relacion:'Relación',pagos:'Pagos',hist:'Historial',recibos:'Recibos'}; const back=def=>{ const k=PN[s.prev]?s.prev:def; return ['‹ Volver a '+PN[k],()=>me.go(k)]; }; const pasos=bkR||vn2; const pasosTxt=vn2?'‹ Volver a '+vn2.n:'‹ Volver al resumen'; const go1=f=>()=>V[f](); const TB={ recibos:[s.recSel!=='list'?'‹ Volver a la lista':(pasos?pasosTxt:'‹ Volver a Cobranza'),s.recSel!=='list'?V.recBack:V.recAtras],valeras:pasos&&bkR?[pasosTxt,go1('volverPasos')]:null, catalogo:['‹ Volver a Valeras',V.gValeras], solicitar:['‹ Volver a Agregar valera',V.openCat],subir:bkR?[pasosTxt,go1('volverPasos')]:null, revision:bkR?[pasosTxt,go1('volverPasos')]:null, coincidencias:bkR?[pasosTxt,go1('volverPasos')]:null, clientes:bkR?[pasosTxt,go1('volverPasos')]:null,ficha:back('clientes'), detalle:back('relacion'), imprimir:['‹ Volver a Relación',V.gRelacion],valera:bkR?['‹ Volver a Valeras',()=>me.go('valeras')]:back('valeras') }; const tb=TB[scr]||null; V.topBackShow=!!tb; V.topBackTxt=tb?tb[0]:''; V.topBackGo=tb?tb[1]:(()=>{}); } V.showHide=['inicio','resumen','cobranza','relacion','detalle','pago','pagos','hist','histdet'].indexOf(scr)>=0; V.volverTxt=vn2?'← Volver a '+vn2.n:(bkR?'← Volver al resumen':'← Volver a Inicio');
    V.volverPasos=()=>{ if(bkR&&!vn2) me.go('resumen'); else if(vn2) me.go('valera',{vid:vn2.id,reup:null}); else me.go('inicio'); };
    V.gInicio=()=>me.go('inicio'); V.showFab=['acceso','bienvenida','imprimir'].indexOf(scr)<0; V.scrollTop=()=>{ try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){} }; V.scrollBot=()=>{ try{window.scrollTo({top:document.documentElement.scrollHeight,behavior:'smooth'});}catch(e){} }; V.valBack=bkR?(()=>me.go('valeras')):(()=>me.go('inicio')); V.valBackTxt=bkR?'‹ Atrás':'‹ Volver a Inicio'; }
  }

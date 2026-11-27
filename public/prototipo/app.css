@@ -1393,3 +1393,6 @@ svg.logo{background:none;border-radius:0;display:block;flex:none}
 .chk::after{display:none}
 .pg2 .pgfix,.pgline .pgfix,.dwln .link{min-height:44px}
 .mcard .row.macts{flex-wrap:wrap}
+/* verificación táctil: mínimo 44 px */
+.fchip,.dlrow .ibtn.dlpr,.seccion-titulo .btn.sm,.toast button,.tr .acts .btn:not(.pri){min-height:44px}
+.cobtog{width:44px;height:44px}.cobcard:has(.cobtog){padding-right:66px}@media (max-width:559px){.cobcard:has(.cobtog){padding-right:16px}}
